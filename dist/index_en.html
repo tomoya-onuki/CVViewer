@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js"></script>
+    <style>
+        body {
+            font-family: Helvetica, Arial, san-serif;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="left-box">
+        <h1>viwer</h1>
+        <div class="info">
+            <div>このアプリではデータを可視化します。</div>
+
+            <div>
+
+            </div>
+        </div>
+        <div class="block">
+            <h2>File Loader</h2>
+            <!-- <div class="label">ファイル読み込み / File Loader</div> -->
+            <input id="file-input" type="file" value="" multiple />
+            <label id="file-drop" for="file-input">
+                Drop files or Click to select from a folder
+            </label>
+            <div class="info">
+                <ul>
+                    <li>Only csv files are supported.</li>
+                    <li>Multiple files can be loaded at once.</li>
+                    <li>Files are NOT uploaded to a server.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="block">
+            <h2>File List</h2>
+            <div id="file-list">
+                <div class="item def">nothing</div>
+            </div>
+        </div>
+
+        <div class="block">
+            <h2>Save Figure</h2>
+            <button id="save-fig">save</button>
+            <div class="info">Save as an image file (png format).</div>
+        </div>
+
+        <div class="block">
+            <h2>Console</h2>
+            <div id="console"></div>
+        </div>
+
+        <div class="footer">
+            <div>
+                <a href="./" target="_blank">GitHub</a> / 
+                <a href="./">日本語版</a>
+            </div>
+            <div class="info">&copy; 2022. Onuki Tomoya.</div>
+        </div>
+    </div>
+
+    <div class="right-box">
+        <div id="view"></div>
+    </div>
+</body>
+
+</html>
