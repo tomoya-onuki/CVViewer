@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js"></script>
+    <style>
+        body {
+            font-family: '游ゴシック', 'Yu Gothic', san-serif;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="left-box">
+        <h1>viwer</h1>
+        <div class="info">
+            <div>このアプリではデータを可視化します。</div>
+        </div>
+        <div class="block">
+            <h2>ファイル読み込み</h2>
+            <!-- <div class="label">ファイル読み込み / File Loader</div> -->
+            <input id="file-input" type="file" value="" multiple />
+            <label id="file-drop" for="file-input">
+                ファイルをドロップ or クリックしてファイルを選択
+            </label>
+            <div class="info">
+                <ul>
+                    <li>csvファイルのみをサポートしています。</li>
+                    <li>複数のファイルをまとめて読み込めます。</li>
+                    <li>ファイルはサーバーにアップロードされません。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="block">
+            <h2>ファイル一覧</h2>
+            <div id="file-list">
+                <div class="item def">ファイルがありません</div>
+            </div>
+        </div>
+
+        <div class="block">
+            <h2>グラフを保存</h2>
+            <button id="save-fig">保存</button>
+            <div class="info">画像ファイル(png形式)で保存します。</div>
+        </div>
+
+        <div class="footer">
+            <div>
+                <a href="./" target="_blank">GitHub</a> /
+                <a href="./index_en.html">English Ver</a>
+            </div>
+            <div class="info">&copy; 2022. Onuki Tomoya / 小貫智弥.</div>
+        </div>
+    </div>
+
+    <div class="right-box">
+        <div id="view"></div>
+    </div>
+</body>
+
+</html>

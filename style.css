@@ -1,0 +1,157 @@
+body {
+    font-size: 80%;
+}
+
+.left-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 40px);
+    margin: 20px 0px 20px 40px;
+    padding: 0 20px 0 0;
+    color: #222;
+    border-right: #aaa solid 1px;
+}
+
+.right-box {
+    position: fixed;
+    top: 0;
+    left: 300px;
+    /* background: #222; */
+    width: calc(100vw - 300px - 60px);
+    height: calc(100vh - 40px);
+    margin: 20px 40px 20px 0px;
+    padding: 0 0 0 20px;
+}
+
+.left-box .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 0px 0px 0px 40px;
+    vertical-align: bottom;
+    font-size: 100%;
+    color: #666;
+    background-color: #fff;
+    width: 100%;
+    padding: 10px 0 10px 0;
+}
+
+a {
+    color: #666;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    opacity: 0.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 0 0;
+}
+
+h1 {
+    font-family: Helvetica, Arial, san-serif;
+}
+
+h2 {
+    color: #222;
+    font-weight: bold;
+    font-size: 100%;
+    margin-bottom: 5px;
+}
+
+.block {
+    margin: 15px 0px 20px 0px;
+}
+
+.info {
+    color: #888;
+    font-size: 50%;
+    margin: 5px 0px 5px 0px;
+}
+
+.label {
+    color: #222;
+    font-weight: bold;
+    font-size: 80%;
+    margin: 0 0 5px 0;
+}
+
+#file-input {
+    margin: 3px 0 3px 0;
+    font-size: 100%;
+    display: none;
+}
+
+#file-drop {
+    font-size: 90%;
+    padding: 8px 12px 8px 10px;
+    border-radius: 4px;
+    width: 90%;
+    height: auto;
+    /* height: 65px; */
+    border: #888 solid 1px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+#file-drop div {
+    margin-bottom: 5px;
+}
+
+#file-drop:hover {
+    border-color: #239efc;
+    color: #239efc;
+}
+
+#file-list {
+    margin: 0 0 0 0;
+    overflow-y: scroll;
+    max-height: 100px;
+    border-bottom: #eee solid 1px;
+    padding: 5px 0px 10px 0px;
+}
+
+#file-list .item {
+    margin: 3px 0px 3px 0px;
+    font-size: 80%;
+    color: #666;
+}
+
+input[type='radio'] {
+    vertical-align: -0.18em;
+    margin-right: 6px;
+}
+
+.info li {
+    margin-left: -28px;
+}
+
+button {
+    -webkit-user-appearance: none;
+    -moz-user-appearance: none;
+    -ms-user-appearance: none;
+    appearance: none;
+
+    background: #fff;
+    border: #666 solid 1px;
+    color: #222;
+    border-radius: 5px;
+    width: 120px;
+    height: 24px;
+    cursor: pointer;
+
+    text-align: center;
+    display: list-item;
+
+    font-size: 80%;
+    margin: 5px 0px 5px 0px;
+}
+
+button:hover {
+    opacity: 0.6;
+}
