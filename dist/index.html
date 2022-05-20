@@ -34,20 +34,32 @@
                     <li>csvファイルのみをサポートしています。</li>
                     <li>複数のファイルをまとめて読み込めます。</li>
                     <li>ファイルはサーバーにアップロードされません。</li>
+                    <li>ファイル名で識別します。同じ名前のファイルは2つ以上読み込めません。</li>
                 </ul>
             </div>
         </div>
 
         <div class="block">
             <h2>ファイル一覧</h2>
+            <div class="info">
+                ファイルがありません。
+            </div>
+            <div class="info" style="display:none">
+                ファイルを選択するとグラフが表示されます。
+            </div>
             <div id="file-list">
-                <div class="item def">ファイルがありません</div>
             </div>
         </div>
 
         <div class="block">
-            <h2>グラフを保存</h2>
-            <button id="save-fig">保存</button>
+            <h2>グラフの編集</h2>
+            <div>タイトル　: <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル"></div>
+            <div>横軸ラベル: <input id="set-graph-label-x" type="text" value="" placeholder="横軸のラベル"></div>
+            <div>縦軸ラベル: <input id="set-graph-label-y" type="text" value="" placeholder="縦軸のラベル"></div>
+        </div>
+
+        <div class="block">
+            <button id="save-fig">グラフを保存</button>
             <div class="info">画像ファイル(png形式)で保存します。</div>
         </div>
 

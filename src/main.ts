@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { DSVRowArray, DSVRowString } from 'd3';
 import $ = require('jquery');
+import { Chart } from './Chart';
 import { Data } from './Data';
 import { ReadFiles } from './ReadFiles';
 declare var require: any;
@@ -10,17 +11,17 @@ $(function () {
 });
 
 export class Main {
-    private dataList: Data[] = [];
+    private chart: Chart = new Chart();
 
     constructor() {
-
+        this.chart.init();
     }
 
     public init(): void {
         const me: Main = this;
         const fReader: ReadFiles = new ReadFiles();
 
-        drawTest();
+        // drawTest();
 
         // イベントリスナ
         // ファイルを選択
@@ -68,42 +69,64 @@ export class Main {
         $('#save-fig').on('click', function () {
             me.saveFig();
         });
-        $('.close').each(function () {
-            $(this).on('click', function() {
-                console.log('close')
-                $(this).parent().fadeOut();
-                $(this).parent().remove();
-            });
+
+        $('#set-graph-label-x').on('input', function() {
+            me.chart.setAxisLabelX(String($(this).val()));
+        });
+        $('#set-graph-label-y').on('input', function() {
+            me.chart.setAxisLabelY(String($(this).val()));
+        });
+        $('#set-graph-title').on('input', function() {
+            me.chart.setTitleLabel(String($(this).val()));
         });
     }
 
     private setData(dataList: Data[]): void {
-
+        const me: Main = this;
         dataList.forEach((data: Data) => {
-            this.dataList.push(data); // 配列のマージ
+            // そのデータラベルを持っているかのチェック
+            // 持っていないとき = 新規
+            if (!this.chart.includesData(data.getLabel())) {
 
-            // UIに追加
-            $('#file-list > .def').remove();
-            $('<div></div>')
-                .attr('class', 'item')
-                .append(
-                    $('<input/>')
-                        .attr('type', 'radio')
-                        .attr('id', data.getLabel())
-                        .attr('value', data.getLabel())
-                        .attr('name', 'files')
-                )
-                .append(
-                    $('<label></label>')
-                        .attr('for', data.getLabel())
-                        .text(data.getLabel() + '.csv')
-                )
-                .appendTo($('#file-list'));
+                // データの追加
+                this.chart.addData(data);
+
+                // "ファイルがありません" が消えて
+                // "ファイルを選択するとグラフが表示されます" が表示される
+                $('#file-list').prev().show(); 
+                $('#file-list').prev().prev().hide(); 
+
+                // UIに追加
+                $('<div></div>')
+                    .attr('class', 'item')
+                    .append(
+                        $('<input>')
+                            .attr('type', 'radio')
+                            .attr('id', data.getLabel())
+                            .attr('class', 'file-radio-btn')
+                            .attr('value', data.getLabel())
+                            .attr('name', 'files')
+                    )
+                    .append(
+                        $('<label></label>')
+                            .attr('for', data.getLabel())
+                            .text(data.getLabel() + '.csv')
+                    )
+                    .appendTo($('#file-list'));
+
+
+                // イベントリスナの登録
+                $('#' + data.getLabel()).on('click', function () {
+                    let label: string = String($(this).val());
+                    me.chart.setVisLabel(label);
+                });
+            }
+            // データラベルが既に存在するとき、
+            else {
+                alert(`${data.getLabel()}.csv は既に読み込んだファイルと、ファイル名が重複しています。ファイル名を変更して再度読み込んでください。`)
+            }
         });
 
-        this.dataList.forEach((data: Data) => {
-            data.dump();
-        });
     }
 
 
