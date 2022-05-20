@@ -36,9 +36,7 @@ export class ReadFiles {
                     resolve(true);
                 }
             } else {
-                // console.log(file.name + ' is not csv file')
-                msg(`${file.name} はcsvファイルではありません。`);
-                // alert(`${file.name} はcsvファイルではありません。`);
+                alert(`${file.name} はcsvファイルではありません。\n${file.name} is not csv format.\n`);
                 resolve(true);
             }
 
@@ -70,18 +68,4 @@ export class ReadFiles {
             });
         });
     }
-}
-
-function msg(text: string): void {
-    var date: Date = new Date();
-    var str: string = date.getFullYear()
-        + '/' + ('0' + (date.getMonth() + 1)).slice(-2)
-        + '/' + ('0' + date.getDate()).slice(-2)
-        + ' ' + ('0' + date.getHours()).slice(-2)
-        + ':' + ('0' + date.getMinutes()).slice(-2)
-        + ':' + ('0' + date.getSeconds()).slice(-2)
-        + '(JST)';
-    $('<div></div>')
-        .text(str + ' : ' + text)
-        .prependTo($('#console'));
 }

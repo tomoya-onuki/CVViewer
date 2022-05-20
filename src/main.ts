@@ -68,6 +68,13 @@ export class Main {
         $('#save-fig').on('click', function () {
             me.saveFig();
         });
+        $('.close').each(function () {
+            $(this).on('click', function() {
+                console.log('close')
+                $(this).parent().fadeOut();
+                $(this).parent().remove();
+            });
+        });
     }
 
     private setData(dataList: Data[]): void {
@@ -111,8 +118,8 @@ export class Main {
 
         image.addEventListener('load', () => {
             const canvas = document.createElement('canvas');
-            const width: number = input.getAttribute('width');
-            const height: number = input.getAttribute('height');
+            const width: number = input.getAttribute('width') * devicePixelRatio;
+            const height: number = input.getAttribute('height') * devicePixelRatio;
 
             canvas.setAttribute('width', String(width));
             canvas.setAttribute('height', String(height));

@@ -29,10 +29,13 @@ body {
     position: fixed;
     bottom: 0;
     left: 0;
-    margin: 0px 0px 10px 40px;
+    margin: 0px 0px 0px 40px;
     vertical-align: bottom;
     font-size: 100%;
     color: #666;
+    background-color: #fff;
+    width: 100%;
+    padding: 10px 0 10px 0;
 }
 
 a {
@@ -107,10 +110,14 @@ h2 {
 
 #file-list {
     margin: 0 0 0 0;
+    overflow-y: scroll;
+    max-height: 100px;
+    border-bottom: #eee solid 1px;
+    padding: 5px 0px 10px 0px;
 }
 
 #file-list .item {
-    margin: 5px 0px 0px 0px;
+    margin: 3px 0px 3px 0px;
     font-size: 80%;
     color: #666;
 }
@@ -147,15 +154,4 @@ button {
 
 button:hover {
     opacity: 0.6;
-}
-
-#console {
-    width: calc(100% - 20px);
-    height: 100px;
-    background: #eee;
-    overflow-wrap: break-word;
-    overflow-y: scroll;
-    padding: 5px 5px 5px 5px;
-    font-size: 80%;
-    color: #555;
 }
