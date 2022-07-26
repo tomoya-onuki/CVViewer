@@ -3,54 +3,60 @@ import { DSVRowArray, DSVRowString } from 'd3';
 
 export class Data {
     private csvData: string[][] = [];
-    private label: string;
-    private titleLabel: string = 'グラフタイトル';
-    private labelX: string = '横軸のラベル';
-    private labelY: string = '縦軸のラベル';
+    private _label: string;
+    private _titleLabel: string = 'Title';
+    private _labelX: string = 'Label X';
+    private _labelY: string = 'Label Y';
 
     constructor(csv: string[][], label: string) {
         this.csvData = csv;
-        this.label = label;
+        this._label = label;
     }
 
     private init(): void {
 
     }
 
-    public getLabel(): string {
-        return this.label;
+    public getCSVstr(): string {
+        let ret: string = '';
+        this.csvData.forEach((row) => {
+            row.forEach(col => ret += (col + ','))
+            ret += '\n'
+        })
+        return ret;
+    }
+    public get label(): string {
+        return this._label
     }
 
-
-
-    public getTitleLabel(): string {
-        return this.titleLabel;
+    public get titleLabel(): string {
+        return this._titleLabel;
     }
 
-    public getAxisLabelX(): string {
-        return this.labelX;
+    public get labelX(): string {
+        return this._labelX;
     }
 
-    public getAxisLabelY(): string {
-        return this.labelY;
+    public get labelY(): string {
+        return this._labelY;
     }
 
-    public setTitleLabel(label: string): void {
-        this.titleLabel = label;
+    public set titleLabel(label: string) {
+        this._titleLabel = label;
     }
 
-    public setAxisLabelX(label: string): void {
-        this.labelX = label;
+    public set labelX(label: string) {
+        this._labelX = label;
     }
 
-    public setAxisLabelY(label: string): void {
-        this.labelY = label;
+    public set labelY(label: string) {
+        this._labelY = label;
     }
 
     public dump(): void {
-        console.log(this.label);
+        console.log(this.label, this._labelX, this._labelY);
         this.csvData.forEach((row) => {
-            console.log(row);
+            // console.log(row);
         });
     }
 }

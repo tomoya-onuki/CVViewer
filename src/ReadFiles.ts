@@ -25,7 +25,7 @@ export class ReadFiles {
             const file = files[idx];
             // csvファイルのみを処理
             if (file.name.indexOf('.csv') != -1) {
-                const label = file.name.replace('.csv', '');
+                const label = file.name.replace('.', '-')
                 var fileReader = new FileReader();
                 fileReader.readAsText(file);
                 // console.log('read '+file.name)
@@ -35,7 +35,54 @@ export class ReadFiles {
                     dataList.push(new Data(csvData, label));
                     resolve(true);
                 }
-            } else {
+            }
+            // SVGの処理
+            else if (file.name.indexOf('.svg') != -1) {
+                const label = file.name.replace('.', '-')
+                var fileReader = new FileReader();
+                fileReader.readAsText(file);
+                fileReader.onloadend = (e: any) => {
+                    const text: string = e.target.result;
+                    // パース
+                    let html = $.parseHTML(text)
+                    let csvText: string = ''
+
+                    // csvデータを抽出
+                    let csv: any = html.find(elem => elem.nodeName === 'CSV')
+                    if (csv != undefined) {
+
+                        // Dataを作成
+                        csvText = csv.innerText
+                        let csvData = me.parseCsv(csvText)
+                        let data = new Data(csvData, label)
+
+                        // SVG部分を抽出し、値をDataに渡す
+                        let svg: any = html.find(elem => elem.nodeName === 'svg')
+                        if (svg != undefined) {
+                            console.log(svg.innerHTML)
+                            let token: any[] = $.parseHTML(svg.innerHTML)
+                            console.log(token)
+                            token.forEach(elem => {
+                                // console.log(elem.id)
+                                if (elem.id === 'svg-x-axis') {
+                                    data.labelX = elem.innerText
+                                }
+                                else if (elem.id === 'svg-y-axis') {
+                                    data.labelY = elem.innerText
+                                }
+                                else if (elem.id === 'svg-title') {
+                                    data.titleLabel = elem.innerText
+                                }
+                            })
+                            dataList.push(data);
+                        }
+                    } else {
+                        alert(`${file.name} の読み込みに失敗しました`);
+                    }
+                    resolve(true);
+                }
+            }
+            else {
                 alert(`${file.name} はcsvファイルではありません。\n${file.name} is not csv format.\n`);
                 resolve(true);
             }

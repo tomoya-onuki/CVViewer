@@ -10,7 +10,7 @@
     <script src="main.js"></script>
     <style>
         body {
-            font-family: '游ゴシック', 'Yu Gothic', san-serif;
+            font-family: '游ゴシック', 'Yu Gothic', Arial, san-serif;
         }
     </style>
     <title>Document</title>
@@ -18,57 +18,66 @@
 
 <body>
     <div class="left-box">
-        <h1>viwer</h1>
+        <h1>仮タイトル</h1>
         <div class="info">
-            <div>このアプリではデータを可視化します。</div>
+            <div class="highlight">注意:タブを閉じたり、リロードをすると編集データが破棄されます。</div>
+            <div>対応ブラウザ : GoogleChrome, FireFox, Safari</div>
         </div>
         <div class="block">
-            <h2>ファイル読み込み</h2>
-            <!-- <div class="label">ファイル読み込み / File Loader</div> -->
+            <!-- <h2>ファイル読み込み</h2> -->
             <input id="file-input" type="file" value="" multiple />
             <label id="file-drop" for="file-input">
                 ファイルをドロップ or クリックしてファイルを選択
             </label>
             <div class="info">
                 <ul>
-                    <li>csvファイルのみをサポートしています。</li>
+                    <li>csvとsvgファイルをサポートしています。</li>
                     <li>複数のファイルをまとめて読み込めます。</li>
                     <li>ファイルはサーバーにアップロードされません。</li>
-                    <li>ファイル名で識別します。同じ名前のファイルは2つ以上読み込めません。</li>
+                    <li>同じ名前のファイルは2つ以上読み込めません。</li>
                 </ul>
             </div>
         </div>
 
         <div class="block">
-            <h2>ファイル一覧</h2>
-            <div class="info">
-                ファイルがありません。
-            </div>
-            <div class="info" style="display:none">
-                ファイルを選択するとグラフが表示されます。
-            </div>
-            <div id="file-list">
-            </div>
+            <h2>データの選択</h2>
+            <select id="file-selector">
+                <option id="def" value="none">ファイルがありません</option>
+            </select>
         </div>
 
         <div class="block">
             <h2>グラフの編集</h2>
-            <div>タイトル　: <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル"></div>
-            <div>横軸ラベル: <input id="set-graph-label-x" type="text" value="" placeholder="横軸のラベル"></div>
-            <div>縦軸ラベル: <input id="set-graph-label-y" type="text" value="" placeholder="縦軸のラベル"></div>
+            <div><div class="label">タイトル</div><input id="set-graph-title" type="text" value="" placeholder="タイトルラベル"></div>
+            <div><div class="label">横軸ラベル</div><input id="set-graph-label-x" type="text" value="" placeholder="横軸のラベル"></div>
+            <div><div class="label">縦軸ラベル</div><input id="set-graph-label-y" type="text" value="" placeholder="縦軸のラベル"></div>
         </div>
 
         <div class="block">
-            <button id="save-fig">グラフを保存</button>
-            <div class="info">画像ファイル(png形式)で保存します。</div>
+            <h2>グラフの保存</h2>
+            <div>ファイル名 <input type="text" value="figure" id="save-fig-name"><span id="save-fig-ext">.png</span></div>
+            <div style="display: inline-block;">
+                形式 
+                <select id="fig-type">
+                    <option value="png">PNG</option>
+                    <option value="svg">SVG</option>
+                </select>
+            </div>
+            <button id="save-fig">保存</button>
+            <div class="info">
+                <ul>
+                    <li>このツールで作成したsvgファイルは、このツールで再編集が可能です。</li>
+                    <li>ファイルはブラウザに指定しているダウンロード先に保存されます。</li>
+                </ul>
+            </div>
         </div>
 
         <div class="footer">
             <div>
-                <a href="./" target="_blank">GitHub</a> /
-                <a href="./index_en.html">English Ver</a>
+                <a>Japanese</a> / 
+                <a href="./index_en.html">English</a>
             </div>
-            <div class="info">&copy; 2022. Onuki Tomoya / 小貫智弥.</div>
+            <div class="info">&copy; 2022, Onuki Tomoya. / <a href="./" target="_blank">GitHub</a></div>
         </div>
     </div>
 

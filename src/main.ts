@@ -12,6 +12,7 @@ $(function () {
 
 export class Main {
     private chart: Chart = new Chart();
+    private outputName: string = 'figure.png'
 
     constructor() {
         this.chart.init();
@@ -22,6 +23,8 @@ export class Main {
         const fReader: ReadFiles = new ReadFiles();
 
         // drawTest();
+        // console.log($('#file-list').length)
+        // console.log($('#file-list').is(':empty'))
 
         // イベントリスナ
         // ファイルを選択
@@ -67,17 +70,39 @@ export class Main {
             });
 
         $('#save-fig').on('click', function () {
-            me.saveFig();
+            const type: string = String($('#fig-type > option:selected').val())
+            me.saveFig(type);
         });
 
-        $('#set-graph-label-x').on('input', function() {
+        $('#fig-type').on('change', function () {
+            let extension: string = String($(this).find('option:selected').val())
+            $('#save-fig-ext').text(`.${extension}`)
+            let fname: string = String($('#save-fig-name').val()) + '.' + extension
+            me.outputName = fname;
+        })
+        $('#save-fig-name').on('change', function () {
+            let extension: string = String($('#fig-type > option:selected').val())
+            let fname: string = String($(this).val()) + '.' + extension
+            me.outputName = fname;
+        });
+
+        $('#set-graph-label-x').on('input', function () {
             me.chart.setAxisLabelX(String($(this).val()));
         });
-        $('#set-graph-label-y').on('input', function() {
+        $('#set-graph-label-y').on('input', function () {
             me.chart.setAxisLabelY(String($(this).val()));
         });
-        $('#set-graph-title').on('input', function() {
+        $('#set-graph-title').on('input', function () {
             me.chart.setTitleLabel(String($(this).val()));
+        });
+
+        // イベントリスナの登録
+        $('#file-selector').on('change', function () {
+            let label: string = String($(this).find('option:selected').val());
+            console.log(label)
+            me.chart.setVisLabel(label);
+            me.chart.draw();
+            // me.chart.dump()
         });
     }
 
@@ -86,51 +111,65 @@ export class Main {
         dataList.forEach((data: Data) => {
             // そのデータラベルを持っているかのチェック
             // 持っていないとき = 新規
-            if (!this.chart.includesData(data.getLabel())) {
+            if (!this.chart.includesData(data.label)) {
 
                 // データの追加
                 this.chart.addData(data);
 
-                // "ファイルがありません" が消えて
-                // "ファイルを選択するとグラフが表示されます" が表示される
-                $('#file-list').prev().show(); 
-                $('#file-list').prev().prev().hide(); 
-
+                // セレクタ版
                 // UIに追加
-                $('<div></div>')
-                    .attr('class', 'item')
-                    .append(
-                        $('<input>')
-                            .attr('type', 'radio')
-                            .attr('id', data.getLabel())
-                            .attr('class', 'file-radio-btn')
-                            .attr('value', data.getLabel())
-                            .attr('name', 'files')
-                    )
-                    .append(
-                        $('<label></label>')
-                            .attr('for', data.getLabel())
-                            .text(data.getLabel() + '.csv')
-                    )
-                    .appendTo($('#file-list'));
-
-
-                // イベントリスナの登録
-                $('#' + data.getLabel()).on('click', function () {
-                    let label: string = String($(this).val());
-                    me.chart.setVisLabel(label);
-                });
+                $('#file-selector > #def').remove()
+                $('<option></option>')
+                    .val(data.label)
+                    .text(data.label.replace('-', '.'))
+                    .prop('selected', true)
+                    .appendTo($('#file-selector'))
+                me.chart.setVisLabel(data.label);
+                me.chart.draw();
+                // me.chart.dump();
             }
             // データラベルが既に存在するとき、
             else {
-                alert(`${data.getLabel()}.csv は既に読み込んだファイルと、ファイル名が重複しています。ファイル名を変更して再度読み込んでください。`)
+                alert(`${data.label}.csv は既に読み込んだファイルと、ファイル名が重複しています。ファイル名を変更して再度読み込んでください。`)
             }
         });
 
     }
 
 
-    private saveFig(): void {
+    private saveFig(type: string): void {
+        if ($('#fig').length === 0) {
+            alert('グラフがありません')
+            return;
+        }
+        switch (type) {
+            case 'png':
+                this.saveFigbyPNG();
+                break;
+            case 'svg':
+                this.saveFigbySVG()
+                break;
+            default:
+                alert('保存に失敗しました')
+                break;
+        }
+    }
+
+    private saveFigbySVG(): void {
+        // console.log($('#view').html())
+        let content: string = String($('#view').html())
+        content += `<csv>${this.chart.getCSVstr()}</csv>`
+        
+        const url: any = URL.createObjectURL(new Blob([content], { type: 'text/svg' }))
+        let outname = (this.outputName.indexOf('.svg') != -1) ? this.outputName : this.outputName + '.svg'
+
+        $('<a>', {
+            href: url,
+            download: outname
+        })[0].click()
+    }
+
+    private saveFigbyPNG(): void {
 
         const input: any = document.querySelector('#fig');
         const svgData = new XMLSerializer().serializeToString(input);
@@ -152,12 +191,12 @@ export class Main {
 
             canvas.toBlob((blob: any) => {
                 const url: any = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                document.body.appendChild(a);
-                a.download = 'fig.png';
-                a.href = url;
-                a.click();
-                a.remove();
+                let outname = (this.outputName.indexOf('.png') != -1) ? this.outputName : this.outputName + '.png'
+                $('<a>', {
+                    href: url,
+                    download: outname
+                })[0].click()
+                
                 setTimeout(() => {
                     URL.revokeObjectURL(url);
                 }, 1E4);

@@ -11,6 +11,7 @@
     <style>
         body {
             font-family: Helvetica, Arial, san-serif;
+            font-size: 90%;
         }
     </style>
     <title>Document</title>
@@ -20,11 +21,8 @@
     <div class="left-box">
         <h1>viwer</h1>
         <div class="info">
-            <div>このアプリではデータを可視化します。</div>
-
-            <div>
-
-            </div>
+            <div class="highlight">Caution : Closing tab or Reload are lost edit.</div>
+            <div>Supported : GoogleChrome, FireFox, Safari</div>
         </div>
         <div class="block">
             <h2>File Loader</h2>
@@ -35,7 +33,7 @@
             </label>
             <div class="info">
                 <ul>
-                    <li>Only csv files are supported.</li>
+                    <li>CSV and SVG files are supported.</li>
                     <li>Multiple files can be loaded at once.</li>
                     <li>Files are NOT uploaded to a server.</li>
                 </ul>
@@ -43,25 +41,45 @@
         </div>
 
         <div class="block">
-            <h2>File List</h2>
-            <div id="file-list">
-                <div class="item def">nothing</div>
-            </div>
+            <h2>Data Selector</h2>
+            <select id="file-selector">
+                <option id="def" value="none">nothing</option>
+            </select>
         </div>
 
         <div class="block">
-            <h2>Save Figure</h2>
-            <button id="save-fig">save</button>
-            <div class="info">Save as an image file (png format).</div>
+            <h2>Edit</h2>
+            <div><div class="label">Title</div><input id="set-graph-title" type="text" value="" placeholder="title label"></div>
+            <div><div class="label">Horizontal</div><input id="set-graph-label-x" type="text" value="" placeholder="label0"></div>
+            <div><div class="label">Vertical</div><input id="set-graph-label-y" type="text" value="" placeholder="label1"></div>
+        </div>
+
+        <div class="block">
+            <h2>Save</h2>
+            <div>File Name <input type="text" value="figure" id="save-fig-name"><span id="save-fig-ext">.png</span></div>
+            <div style="display: inline-block;">
+                Format:
+                <select id="fig-type">
+                    <option value="png">PNG</option>
+                    <option value="svg">SVG</option>
+                </select>
+            </div>
+            <button id="save-fig">SAVE</button>
+            <div class="info">
+                <ul>
+                    <li>SVG files can be re-edit in this tool.</li>
+                    <li>The download folder is the same as your browser settings.</li>
+                </ul>
+            </div>
         </div>
 
 
         <div class="footer">
             <div>
-                <a href="./" target="_blank">GitHub</a> / 
-                <a href="./">日本語版</a>
+                <a href="./">Japanese</a> / 
+                <a>English</a>
             </div>
-            <div class="info">&copy; 2022. Onuki Tomoya.</div>
+            <div class="info">&copy; 2022, Onuki Tomoya. / <a href="./" target="_blank">GitHub</a></div>
         </div>
     </div>
 

@@ -23,7 +23,7 @@ export class Chart {
     }
 
     public addData(data: Data): void {
-        this.dataList[data.getLabel()] = data;
+        this.dataList[data.label] = data;
     }
 
     public includesData(label: string): boolean {
@@ -40,17 +40,20 @@ export class Chart {
         this.draw();
     }
 
-    private draw(): void {
+    public draw(): void {
+        console.log('draw')
         if (this.includesData(this.visLabel)) {
             const data: Data = this.dataList[this.visLabel];
-            const titleLabel = data.getTitleLabel();
-            const labelX = data.getAxisLabelX();
-            const labelY = data.getAxisLabelY();
+            const titleLabel = data.titleLabel;
+            const labelX = data.labelX;
+            const labelY = data.labelY;
+            
+            console.log(this.visLabel)
 
             $('#set-graph-title').val(titleLabel);
             $('#set-graph-label-x').val(labelX);
             $('#set-graph-label-y').val(labelY);
-            
+
             d3.select("svg").remove();
 
             const svg = d3.select("#view")
@@ -61,6 +64,7 @@ export class Chart {
 
             // X軸ラベルの描画
             svg.append('text')
+                .attr("id", "svg-x-axis")
                 .attr("x", this.width / 2)
                 .attr("y", this.height - 5)
                 .attr("text-anchor", "bottom")
@@ -70,6 +74,7 @@ export class Chart {
 
             // Y軸ラベルの描画
             svg.append('text')
+                .attr("id", "svg-y-axis")
                 .attr("y", 10)
                 .attr("x", -this.height / 2)
                 .attr("text-anchor", "top")
@@ -80,6 +85,7 @@ export class Chart {
 
             // タイトルラベル
             svg.append("text")
+                .attr("id", "svg-title")
                 .attr("x", this.width / 2)
                 .attr("y", this.margin.top - 10)
                 .attr("font-size", "10px")
@@ -91,28 +97,32 @@ export class Chart {
 
     public setTitleLabel(label: string): void {
         if (this.includesData(this.visLabel)) {
-            this.dataList[this.visLabel].setTitleLabel(label);
+            this.dataList[this.visLabel].titleLabel = label;
             this.draw();
         }
     }
 
     public setAxisLabelX(label: string): void {
         if (this.includesData(this.visLabel)) {
-            this.dataList[this.visLabel].setAxisLabelX(label);
+            this.dataList[this.visLabel].labelX = label;
             this.draw();
         }
     }
 
     public setAxisLabelY(label: string): void {
         if (this.includesData(this.visLabel)) {
-            this.dataList[this.visLabel].setAxisLabelY(label);
+            this.dataList[this.visLabel].labelY = label;
             this.draw();
         }
     }
 
     public setVisLabel(label: string): void {
         this.visLabel = label;
-        this.draw();
+        // this.draw();
+    }
+
+    public getCSVstr(): string {
+        return this.dataList[this.visLabel].getCSVstr()
     }
 
     public dump(): void {
