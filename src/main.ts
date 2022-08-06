@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { DSVRowArray, DSVRowString } from 'd3';
+import { DSVRowArray, DSVRowString, easeCircle } from 'd3';
 import $ = require('jquery');
 import { Chart } from './Chart';
 import { Data } from './Data';
@@ -69,22 +69,52 @@ export class Main {
                 });
             });
 
-        $('#save-fig').on('click', function () {
+
+        // タブ
+        $('#file-ui-select').on('click', function () {
+            changeUiPane($(this), $('#file-ui'));
+        });
+        $('#graph-ui-select').on('click', function () {
+            changeUiPane($(this), $('#graph-ui'));
+        });
+        function changeUiPane(selectorElem: any, uiElem: any) {
+            $('.ui-parts').hide();
+            uiElem.show();
+
+            $('.view-selector').css({
+                'border': 'none',
+                'border-bottom': '#888 1px solid',
+            });
+            selectorElem.css({
+                'border': '#888 1px solid',
+                'border-bottom': 'none'
+            });
+        }
+
+        // グラフの保存
+        $('#save-fig-btn').on('click', function () {
             const type: string = String($('#fig-type > option:selected').val())
             me.saveFig(type);
         });
 
-        $('#fig-type').on('change', function () {
-            let extension: string = String($(this).find('option:selected').val())
-            $('#save-fig-ext').text(`.${extension}`)
-            let fname: string = String($('#save-fig-name').val()) + '.' + extension
-            me.outputName = fname;
-        })
-        $('#save-fig-name').on('change', function () {
+        $('#fig-type').on('change', () => changeFname())
+        $('#save-fig-name').on('change', () => changeFname())
+        const changeFname = () => {
             let extension: string = String($('#fig-type > option:selected').val())
-            let fname: string = String($(this).val()) + '.' + extension
+            let val: string = String($('#save-fig-name').val())
+            let fname: string = ''
+            if (val.indexOf('.') != -1) {
+                let token: string[] = val.split('.')
+                token.slice(0, -1).forEach(str => fname += (str + '.'))
+                fname += extension
+            } else if (val === '') {
+                fname = 'figure.' + extension
+            } else {
+                fname = val + '.' + extension
+            }
             me.outputName = fname;
-        });
+            $('#save-fig-name').val(fname)
+        }
 
         $('#set-graph-label-x').on('input', function () {
             me.chart.setAxisLabelX(String($(this).val()));
@@ -96,13 +126,24 @@ export class Main {
             me.chart.setTitleLabel(String($(this).val()));
         });
 
-        // イベントリスナの登録
         $('#file-selector').on('change', function () {
             let label: string = String($(this).find('option:selected').val());
             console.log(label)
             me.chart.setVisLabel(label);
             me.chart.draw();
             // me.chart.dump()
+        });
+
+        // フォーカスが外れたら自動保存
+        $('#graph-ui').find('input').blur(function () {
+            const flag: boolean = Boolean($('#auto-save').prop('checked'))
+            console.log(`auto save ${flag}`)
+            if (flag) {
+                let tmp = me.outputName
+                me.outputName = 'auto-save-' + new Date().toLocaleString() + '-' + me.outputName.replace('.png', '')
+                me.saveFig('svg')
+                me.outputName = tmp
+            }
         });
     }
 
@@ -159,7 +200,7 @@ export class Main {
         // console.log($('#view').html())
         let content: string = String($('#view').html())
         content += `<csv>${this.chart.getCSVstr()}</csv>`
-        
+
         const url: any = URL.createObjectURL(new Blob([content], { type: 'text/svg' }))
         let outname = (this.outputName.indexOf('.svg') != -1) ? this.outputName : this.outputName + '.svg'
 
@@ -196,7 +237,7 @@ export class Main {
                     href: url,
                     download: outname
                 })[0].click()
-                
+
                 setTimeout(() => {
                     URL.revokeObjectURL(url);
                 }, 1E4);
@@ -205,106 +246,3 @@ export class Main {
         image.src = svgDataUrl;
     }
 }
-
-
-
-
-
-function drawTest(): void {
-    let width: number = 400;
-    let height: number = 300;
-
-    // SVGの設定
-    const svg: any = d3.select("#view")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("id", "fig");
-
-    // データの読み込み
-    d3.csv("../temp.csv")
-        .then((data) => {
-            draw(svg, data);
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-}
-function draw(svg: any, data: DSVRowArray): void {
-    let width: number = 400;
-    let height: number = 300;
-    let marginTop: number = 50;
-    let marginRight: number = 10;
-    let marginBottom: number = 50;
-    let marginLeft: number = 70;
-
-    let chartWidth: number = width - marginLeft - marginRight;
-    let chartHeight: number = height - marginTop - marginBottom;
-
-    // console.log(data);
-
-    // x axis
-    let xScale: any = d3.scaleLinear()
-        .domain([1, 12])
-        .range([0, chartWidth]);
-    let xLabel: any = svg.append("g")
-        .attr("transform", "translate(" + marginLeft + "," + Number(marginTop + chartHeight) + ")")
-        .call(d3.axisBottom(xScale));
-
-    xLabel.selectAll("text")
-        .attr("text-anchor", "middle")
-        .attr("font-size", "10px")
-        .attr("font-family", "Arial")
-
-    svg.append("text")
-        .attr("y", height - 10)
-        .attr("x", chartWidth / 2 + marginLeft)
-        .attr("text-anchor", "middle")
-        .attr("font-size", "10px")
-        .attr("font-family", "Arial")
-        .text("月")
-
-    // y axis
-    let yScale: any = d3.scaleLinear()
-        .domain([0, 30])
-        .range([chartHeight, 0]);
-    let yLabel: any = svg.append("g")
-        .attr("transform", "translate(" + marginLeft + "," + marginTop + ")")
-        .call(d3.axisLeft(yScale));
-
-    yLabel.selectAll("text")
-        .attr("text-anchor", "end")
-        .attr("font-size", "10px")
-        .attr("font-family", "Arial")
-
-    svg.append("text")
-        .attr("y", height / 2)
-        .attr("x", 40)
-        .attr("text-anchor", "end")
-        .attr("font-size", "10px")
-        .attr("font-family", "Arial")
-        .text("気温(℃)")
-
-
-    const line: any = d3.line()
-        .x((d: any) => xScale(d.month))
-        .y((d: any) => yScale(d.temp));
-
-    svg.append("path")
-        .datum(data)
-        .attr("transform", "translate(" + marginLeft + "," + marginTop + ")")
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("d", line);
-
-    svg.append("text")
-        .attr("x", marginLeft)
-        .attr("y", marginTop - 10)
-        .attr("font-size", "10px")
-        .attr("text-anchor", "top")
-        .attr("font-family", "Arial")
-        .text("月平均気温の推移(東京都)");
-}
-
-

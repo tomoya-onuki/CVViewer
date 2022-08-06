@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./lib/toggle.css">
     <script src="main.js"></script>
+    <script src="./lib/toggle.js"></script>
     <style>
         body {
-            font-family: Helvetica, Arial, san-serif;
-            font-size: 90%;
+            font-family: '游ゴシック', 'Yu Gothic', Arial, san-serif;
         }
     </style>
     <title>Document</title>
@@ -19,59 +21,92 @@
 
 <body>
     <div class="left-box">
-        <h1>viwer</h1>
+        <h1>仮タイトル</h1>
         <div class="info">
             <div class="highlight">Caution : Closing tab or Reload are lost edit.</div>
             <div>Supported : GoogleChrome, FireFox, Safari</div>
         </div>
-        <div class="block">
-            <h2>File Loader</h2>
-            <!-- <div class="label">ファイル読み込み / File Loader</div> -->
-            <input id="file-input" type="file" value="" multiple />
-            <label id="file-drop" for="file-input">
-                Drop files or Click to select from a folder
-            </label>
-            <div class="info">
-                <ul>
-                    <li>CSV and SVG files are supported.</li>
-                    <li>Multiple files can be loaded at once.</li>
-                    <li>Files are NOT uploaded to a server.</li>
-                </ul>
+
+        <div id="selectors">
+            <div id="file-ui-select" class="view-selector">File</div>
+            <div id="graph-ui-select" class="view-selector">Edit</div>
+            <!-- <div class="view-selector non-selector">　</div> -->
+        </div>
+
+        <div id="file-ui" class="ui-parts">
+            <div class="block">
+                <!-- <h2>ファイル読み込み</h2> -->
+                <input id="file-input" type="file" value="" multiple />
+                <label id="file-drop" for="file-input">
+                    Drop files or Click to select from a folder
+                </label>
+                <div class="info">
+                    <ul>
+                        <li>CSV and SVG files are supported.</li>
+                        <li>Multiple files can be loaded at once.</li>
+                        <li>Files are NOT uploaded to a server.</li>
+                        <li>Files with the same name cannot be read.</li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
-        <div class="block">
-            <h2>Data Selector</h2>
-            <select id="file-selector">
-                <option id="def" value="none">nothing</option>
-            </select>
-        </div>
-
-        <div class="block">
-            <h2>Edit</h2>
-            <div><div class="label">Title</div><input id="set-graph-title" type="text" value="" placeholder="title label"></div>
-            <div><div class="label">Horizontal</div><input id="set-graph-label-x" type="text" value="" placeholder="label0"></div>
-            <div><div class="label">Vertical</div><input id="set-graph-label-y" type="text" value="" placeholder="label1"></div>
-        </div>
-
-        <div class="block">
-            <h2>Save</h2>
-            <div>File Name <input type="text" value="figure" id="save-fig-name"><span id="save-fig-ext">.png</span></div>
-            <div style="display: inline-block;">
-                Format:
-                <select id="fig-type">
-                    <option value="png">PNG</option>
-                    <option value="svg">SVG</option>
+            <div class="block">
+                <h2>Data Selector</h2>
+                <select id="file-selector">
+                    <option id="def" value="none">Nothing</option>
                 </select>
             </div>
-            <button id="save-fig">SAVE</button>
-            <div class="info">
-                <ul>
-                    <li>SVG files can be re-edit in this tool.</li>
-                    <li>The download folder is the same as your browser settings.</li>
-                </ul>
+
+            <div class="block">
+                <h2>Download</h2>
+                <div>Name <input type="text" value="figure.png" id="save-fig-name"></div>
+
+                <div style="display: inline-block;">
+                    Format
+                    <select id="fig-type">
+                        <option value="png">PNG</option>
+                        <option value="svg">SVG</option>
+                    </select>
+                </div>
+                <button id="save-fig-btn">Download</button>
+
+                <!-- <input type="checkbox" id="auto-save" class="toggle" />自動保存 -->
+
+
+                <div class="info">
+                    <ul>
+                        <li>SVG files created with this tool can be re-edit.</li>
+                        <li>The file will be saved in the download folder you specify in your browser.</li>
+                    </ul>
+                </div>
             </div>
         </div>
+
+
+
+
+
+        <div id="graph-ui" class="ui-parts">
+            <div class="block">
+                <h2>Label</h2>
+                <div>
+                    <div class="label">Title</div><input id="set-graph-title" type="text" value="" placeholder="title">
+                </div>
+                <div>
+                    <div class="label">Horizontal</div><input id="set-graph-label-x" type="text" value=""
+                        placeholder="label0">
+                </div>
+                <div>
+                    <div class="label">Vertical</div><input id="set-graph-label-y" type="text" value=""
+                        placeholder="label1">
+                </div>
+            </div>
+
+            <div class="block">
+                <h2>Axis</h2>
+            </div>
+        </div>
+
 
 
         <div class="footer">
@@ -79,7 +114,7 @@
                 <a href="./">Japanese</a> / 
                 <a>English</a>
             </div>
-            <div class="info">&copy; 2022, Onuki Tomoya. / <a href="./" target="_blank">GitHub</a></div>
+            <div class="info">&copy; 2022, Onuki Tomoya.</div>
         </div>
     </div>
 

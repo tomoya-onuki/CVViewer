@@ -6,12 +6,7 @@ export class Chart {
     private margin: { [key: string]: number } = {
         'top': 50, 'bottom': 50, 'right': 10, 'left': 10
     };
-    // private titleLabel: string = 'グラフタイトル';
-    // private labelX: string = '横軸のラベル';
-    // private labelY: string = '縦軸のラベル';
-
     private dataList: { [key: string]: Data } = {};
-
     private visLabel: string = '';
 
     constructor() {

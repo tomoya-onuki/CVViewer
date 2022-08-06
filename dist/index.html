@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./lib/toggle.css">
     <script src="main.js"></script>
+    <script src="./lib/toggle.js"></script>
     <style>
         body {
             font-family: '游ゴシック', 'Yu Gothic', Arial, san-serif;
@@ -23,61 +26,95 @@
             <div class="highlight">注意:タブを閉じたり、リロードをすると編集データが破棄されます。</div>
             <div>対応ブラウザ : GoogleChrome, FireFox, Safari</div>
         </div>
-        <div class="block">
-            <!-- <h2>ファイル読み込み</h2> -->
-            <input id="file-input" type="file" value="" multiple />
-            <label id="file-drop" for="file-input">
-                ファイルをドロップ or クリックしてファイルを選択
-            </label>
-            <div class="info">
-                <ul>
-                    <li>csvとsvgファイルをサポートしています。</li>
-                    <li>複数のファイルをまとめて読み込めます。</li>
-                    <li>ファイルはサーバーにアップロードされません。</li>
-                    <li>同じ名前のファイルは2つ以上読み込めません。</li>
-                </ul>
+
+        <div id="selectors">
+            <div id="file-ui-select" class="view-selector">ファイル</div>
+            <div id="graph-ui-select" class="view-selector">編集</div>
+            <!-- <div class="view-selector non-selector">　</div> -->
+        </div>
+
+        <div id="file-ui" class="ui-parts">
+            <div class="block">
+                <!-- <h2>ファイル読み込み</h2> -->
+                <input id="file-input" type="file" value="" multiple />
+                <label id="file-drop" for="file-input">
+                    ファイルをドロップ or クリックしてファイルを選択
+                </label>
+                <div class="info">
+                    <ul>
+                        <li>csvとsvgファイルをサポートしています。</li>
+                        <li>複数のファイルをまとめて読み込めます。</li>
+                        <li>ファイルはサーバーにアップロードされません。</li>
+                        <li>同じ名前のファイルは2つ以上読み込めません。</li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
-        <div class="block">
-            <h2>データの選択</h2>
-            <select id="file-selector">
-                <option id="def" value="none">ファイルがありません</option>
-            </select>
-        </div>
-
-        <div class="block">
-            <h2>グラフの編集</h2>
-            <div><div class="label">タイトル</div><input id="set-graph-title" type="text" value="" placeholder="タイトルラベル"></div>
-            <div><div class="label">横軸ラベル</div><input id="set-graph-label-x" type="text" value="" placeholder="横軸のラベル"></div>
-            <div><div class="label">縦軸ラベル</div><input id="set-graph-label-y" type="text" value="" placeholder="縦軸のラベル"></div>
-        </div>
-
-        <div class="block">
-            <h2>グラフの保存</h2>
-            <div>ファイル名 <input type="text" value="figure" id="save-fig-name"><span id="save-fig-ext">.png</span></div>
-            <div style="display: inline-block;">
-                形式 
-                <select id="fig-type">
-                    <option value="png">PNG</option>
-                    <option value="svg">SVG</option>
+            <div class="block">
+                <h2>データの選択</h2>
+                <select id="file-selector">
+                    <option id="def" value="none">ファイルがありません</option>
                 </select>
             </div>
-            <button id="save-fig">保存</button>
-            <div class="info">
-                <ul>
-                    <li>このツールで作成したsvgファイルは、このツールで再編集が可能です。</li>
-                    <li>ファイルはブラウザに指定しているダウンロード先に保存されます。</li>
-                </ul>
+
+            <div class="block">
+                <h2>グラフの保存</h2>
+                <div><div class="btn-label0">名前</div> <input type="text" value="figure.png" id="save-fig-name"></div>
+
+                <div style="display: inline-block;">
+                    <div class="btn-label0">形式</div>
+                    <select id="fig-type">
+                        <option value="png">PNG</option>
+                        <option value="svg">SVG</option>
+                    </select>
+                </div>
+                <button id="save-fig-btn">ダウンロード</button>
+
+                <!-- <input type="checkbox" id="auto-save" class="toggle" />自動保存 -->
+
+                
+                <div class="info">
+                    <ul>
+                        <li>このツールで作成したsvgファイルは、このツールで再編集が可能です。</li>
+                        <li>ファイルはブラウザで指定しているダウンロード先に保存されます。</li>
+                    </ul>
+                </div>
             </div>
         </div>
+
+
+
+
+
+        <div id="graph-ui" class="ui-parts">
+            <div class="block">
+                <h2>ラベル</h2>
+                <div>
+                    <div class="label">タイトル</div><input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
+                </div>
+                <div>
+                    <div class="label">横軸ラベル</div><input id="set-graph-label-x" type="text" value=""
+                        placeholder="横軸のラベル">
+                </div>
+                <div>
+                    <div class="label">縦軸ラベル</div><input id="set-graph-label-y" type="text" value=""
+                        placeholder="縦軸のラベル">
+                </div>
+            </div>
+
+            <div class="block">
+                <h2>軸</h2>
+            </div>
+        </div>
+
+
 
         <div class="footer">
             <div>
-                <a>Japanese</a> / 
+                <a>Japanese</a> /
                 <a href="./index_en.html">English</a>
             </div>
-            <div class="info">&copy; 2022, Onuki Tomoya. / <a href="./" target="_blank">GitHub</a></div>
+            <div class="info">&copy; 2022, Onuki Tomoya.</div>
         </div>
     </div>
 
