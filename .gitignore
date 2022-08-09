@@ -1,3 +1,6 @@
 *.csv
 node_modules
 *.json
+data
+*.txt
+img

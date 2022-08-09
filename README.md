@@ -1,6 +1,5 @@
-# viewer
-2022.05.18  
+# CVViewer
+2022.08.9  
 小貫智弥  
 
-## 参考
-1. [jQueryでdrag & drop](https://blog.webcreativepark.net/2013/12/08-172957.html)
+## 使い方
