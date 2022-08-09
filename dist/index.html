@@ -5,23 +5,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.js"
-        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./lib/toggle.css">
     <script src="main.js"></script>
-    <script src="./lib/toggle.js"></script>
+    <!-- <script src="./lib/toggle.js"></script> -->
     <style>
         body {
             font-family: '游ゴシック', 'Yu Gothic', Arial, san-serif;
         }
     </style>
-    <title>Document</title>
+    <title>CVViewer</title>
 </head>
 
 <body>
-    <div class="left-box">
-        <h1>仮タイトル</h1>
+    <div id="left-box">
+        <div class="title">
+            <div class="text0">CVViewer</div>
+            <div class="text1">Cyclic Voltammogram Viewer</div>
+        </div>
         <div class="info">
             <div class="highlight">注意:タブを閉じたり、リロードをすると編集データが破棄されます。</div>
             <div>対応ブラウザ : GoogleChrome, FireFox, Safari</div>
@@ -29,7 +30,9 @@
 
         <div id="selectors">
             <div id="file-ui-select" class="view-selector">ファイル</div>
-            <div id="graph-ui-select" class="view-selector">編集</div>
+            <div id="edit-ui-select" class="view-selector">編集</div>
+            <div id="vis-ui-select" class="view-selector">表示</div>
+            <div id="save-ui-select" class="view-selector">保存</div>
             <!-- <div class="view-selector non-selector">　</div> -->
         </div>
 
@@ -38,75 +41,170 @@
                 <!-- <h2>ファイル読み込み</h2> -->
                 <input id="file-input" type="file" value="" multiple />
                 <label id="file-drop" for="file-input">
-                    ファイルをドロップ or クリックしてファイルを選択
+                    <div class="bold">ファイルをドロップ or</div>
+                    <div class="bold">クリックしてファイルを選択</div>
+                    <div class="info">txtファイルをサポートしています。</div>
+                    <div class="info">複数のファイルをまとめて読み込めます。</div>
+                    <div class="info">ファイルはサーバーにアップロードされません。</div>
+                    <div class="info">同じ名前のファイルは2つ以上読み込めません。</div>
                 </label>
+            </div>
+
+            <div class="block">
+                <h2>データの選択と平均化</h2>
+                データ検索
+                <input type="text" id="data-search" placeholder="Search">
+
+                <input id="data-group-label" type="text" value="" placeholder="Group Label">
+                <button id="data-grouping-btn">平均化</button>
+
+                <div class="info">平均化されたデータセットの一覧は編集タブから見ることができます。</div>
+
+                <div id="file-list"></div>
+            </div>
+        </div>
+
+
+
+        <div id="edit-ui" class="ui-parts">
+            <div class="block">
+                <h2>平均化されたデータセット</h2>
+                <div id="group-list"></div>
+                <button id="group-all-show">全表示</button>
+                <button id="group-all-hide">全解除</button>
+            </div>
+
+
+            <div class="block">
+                <h2>タイトル</h2>
+                <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
+                <input type="checkbox" id="title-vis" class="toggle" checked>
+            </div>
+
+
+            <div class="block">
+                <h2>横軸</h2>
+                <div class="set-axis-label">
+                    <div class="label">ラベル</div>
+                    <input id="set-graph-label-x" type="text" value="" placeholder="横軸のラベル">
+                    <input type="checkbox" id="labelx-vis" class="toggle" checked>
+                </div>
+                <div class="set-axis-seg">
+                    <div class="label">範囲</div>
+                    <input type="number" name="" id="x-axis-min" step="0.1">
+                    <span>~</span>
+                    <input type="number" name="" id="x-axis-max" step="0.1">
+                </div>
+            </div>
+
+
+            <div class="block">
+                <h2>縦軸</h2>
+                <div class="set-axis-label">
+                    <div class="label">ラベル</div>
+                    <input id="set-graph-label-y" type="text" value="" placeholder="縦軸のラベル">
+                    <input type="checkbox" id="labely-vis" class="toggle" checked>
+                </div>
+                <div class="set-axis-seg">
+                    <div class="label">範囲</div>
+                    <input type="text" name="" id="y-axis-min">
+                    <span>~</span>
+                    <input type="text" name="" id="y-axis-max">
+                </div>
+            </div>  
+        </div>
+
+        <div id="vis-ui" class="ui-parts">
+            <div class="block">
+                <div class="label">線のタイプ</div>
+                <select name="line-type" id="line-type-selector">
+                    <option value="mono">単色</option>
+                    <option value="hue">色相</option>
+                    <option value="bri">明度</option>
+                    <option value="sat_blue">彩度(青)</option>
+                    <option value="sat_orange">彩度(オレンジ)</option>
+                    <option value="dash">破線</option>
+                </select>
                 <div class="info">
-                    <ul>
-                        <li>csvとsvgファイルをサポートしています。</li>
-                        <li>複数のファイルをまとめて読み込めます。</li>
-                        <li>ファイルはサーバーにアップロードされません。</li>
-                        <li>同じ名前のファイルは2つ以上読み込めません。</li>
-                    </ul>
+                    自動で線の種別を設定します. 編集タブから細かい調整が可能です.
                 </div>
             </div>
 
             <div class="block">
-                <h2>データの選択</h2>
-                <select id="file-selector">
-                    <option id="def" value="none">ファイルがありません</option>
-                </select>
+                <div class="label">線の太さ : 1.5pt</div>
+                <input type="range" id="line-weight-slider" min="0.5" max="3.0" step="0.5" value="1.5"
+                    list="line-weight-segment">
+                <datalist id="line-weight-segment">
+                    <option value="0.5"></option>
+                    <option value="1.0"></option>
+                    <option value="1.5"></option>
+                    <option value="2.0"></option>
+                    <option value="2.5"></option>
+                    <option value="3.0"></option>
+                </datalist>
             </div>
 
+
+            <div class="block">
+                <div class="label">文字サイズ: 100%</div>
+                <input type="range" id="legend-slider" min="0" max="200" step="10" value="100" list="legend-segment">
+                <datalist id="legend-segment">
+                    <option value="0"></option>
+                    <option value="50"></option>
+                    <option value="100"></option>
+                    <option value="150"></option>
+                    <option value="200"></option>
+                </datalist>
+            </div>
+
+            <div class="block">
+                <div class="label">
+                    <input type="checkbox" id="peak-vis" class="toggle" checked>
+                    ピーク値
+                </div>
+                <div class="label">
+                    <input type="checkbox" id="grid-vis" class="toggle">
+                    グリッド
+                </div>
+                <div class="label">
+                    <input type="checkbox" id="legend-vis" class="toggle" checked>
+                    凡例
+                </div>
+                <div>
+                    <input type="checkbox" id="legend-mouse" class="toggle">
+                    凡例をマウスで位置調整
+                    <div class="info">
+                        マウスでクリックした位置に凡例を移動します。
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="block">
+                <div class="label">図のサイズ</div>
+                <input type="number" value="600" id="svg-width">px
+                <span>&times;</span>
+                <input type="number" value="450" id="svg-height">px
+                <button id="svg-size-optimize-btn">最適化</button>
+            </div>
+        </div>
+
+
+
+        <div id="save-ui" class="ui-parts">
             <div class="block">
                 <h2>グラフの保存</h2>
-                <div><div class="btn-label0">名前</div> <input type="text" value="figure.png" id="save-fig-name"></div>
-
-                <div style="display: inline-block;">
-                    <div class="btn-label0">形式</div>
-                    <select id="fig-type">
-                        <option value="png">PNG</option>
-                        <option value="svg">SVG</option>
-                    </select>
+                <div>
+                    <div class="btn-label0">名前</div> <input type="text" value="figure.png" id="save-fig-name">
                 </div>
                 <button id="save-fig-btn">ダウンロード</button>
-
-                <!-- <input type="checkbox" id="auto-save" class="toggle" />自動保存 -->
-
-                
                 <div class="info">
                     <ul>
-                        <li>このツールで作成したsvgファイルは、このツールで再編集が可能です。</li>
                         <li>ファイルはブラウザで指定しているダウンロード先に保存されます。</li>
                     </ul>
                 </div>
             </div>
         </div>
-
-
-
-
-
-        <div id="graph-ui" class="ui-parts">
-            <div class="block">
-                <h2>ラベル</h2>
-                <div>
-                    <div class="label">タイトル</div><input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
-                </div>
-                <div>
-                    <div class="label">横軸ラベル</div><input id="set-graph-label-x" type="text" value=""
-                        placeholder="横軸のラベル">
-                </div>
-                <div>
-                    <div class="label">縦軸ラベル</div><input id="set-graph-label-y" type="text" value=""
-                        placeholder="縦軸のラベル">
-                </div>
-            </div>
-
-            <div class="block">
-                <h2>軸</h2>
-            </div>
-        </div>
-
 
 
         <div class="footer">
@@ -118,8 +216,12 @@
         </div>
     </div>
 
-    <div class="right-box">
+    <div id="right-box">
         <div id="view"></div>
+        <div id="table">
+            <div id="table-close" class="close">&times;</div>
+            <div id="table-title"></div>
+        </div>
     </div>
 </body>
 
