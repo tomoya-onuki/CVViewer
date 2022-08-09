@@ -346,12 +346,15 @@ export class Chart {
         this.draw()
     }
 
-    public gruopingData(labelList: string[], groupLabel: string) {
+    public hasGroupLabel(label: string): boolean {
+        return Object.keys(this.groupList).includes(label)
+    }
+    public groupingData(labelList: string[], groupLabel: string) {
         // console.log(labelList)
         let groupDataList: Data[] = labelList.map(label => this.dataList[label])
+
         if (groupDataList.length > 0) {
             this.groupList[groupLabel] = new DataSet(groupLabel, groupDataList)
-
 
             // 最小-最大の設定
             let potentialMinList: number[] = []
@@ -394,7 +397,7 @@ export class Chart {
 
 
     public changeDataVisibleAll(flag: boolean) {
-        for(let key in this.groupList) {
+        for (let key in this.groupList) {
             this.groupList[key].visible = flag
         }
         this.draw()
@@ -494,7 +497,7 @@ export class Chart {
     public getGroup(label: string): DataSet {
         return this.groupList[label]
     }
-    public removeDataFromGroup(groupLabel:string, dataLabel: string) {
+    public removeDataFromGroup(groupLabel: string, dataLabel: string) {
         this.groupList[groupLabel].removeData(dataLabel)
         console.log(this.groupList)
         this.draw()

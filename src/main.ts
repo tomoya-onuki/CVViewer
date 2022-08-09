@@ -105,7 +105,7 @@ export class Main {
 
         $('#data-search').on('input', function () {
             const query: string = String($(this).val()).toLowerCase()
-            if(query != '') {
+            if (query != '') {
                 $('.file-item').hide()
                 $('.file-item').each(function () {
                     const fname: string = String($(this).find('label').text()).toLowerCase()
@@ -132,8 +132,9 @@ export class Main {
                     selectedDataLabelList.push(label)
                 }
             })
-            if (selectedDataLabelList.length > 0) {
-                me.chart.gruopingData(selectedDataLabelList, groupKey)
+            const hasGroupLabel: boolean = me.chart.hasGroupLabel(groupKey)
+            if (selectedDataLabelList.length > 0 && !hasGroupLabel) {
+                me.chart.groupingData(selectedDataLabelList, groupKey)
                 const $checkbox = $('<input>')
                     .attr('type', 'checkbox')
                     .attr('id', `${groupKey}-check`)
@@ -229,6 +230,8 @@ export class Main {
                     // $detail.fadeIn()
                     // $('#group-detail-modal').fadeIn()
                 })
+            } else if (hasGroupLabel) {
+                alert(`${groupKey}はすでに存在しています`)
             } else {
                 alert('平均化が出来ませんでした. データが選択されていません.')
             }
