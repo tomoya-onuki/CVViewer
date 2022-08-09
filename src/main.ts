@@ -13,7 +13,7 @@ const parseHTMLcode = (code: string): string => {
 
 $(function () {
     new myUI().toggle()
-    new Main().init();
+    new Main().init()
 });
 
 export class Main {
