@@ -97,6 +97,9 @@ body {
     width: 250px;
     padding: 10px 0 10px 0;
 }
+#left-box .footer a {
+    margin: 0 2px 0 2px;
+}
 
 #view {
     position: fixed;
