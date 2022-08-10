@@ -450,11 +450,13 @@ input[type='text'] {
 
     background: #fff;
     padding: 0;
-    margin: 0 6px 0 0;
+    margin: 0 2px 0 0;
     border: none;
 
     height: 24px;
-    width: 32px;
+    width: 23px;
+
+    cursor: pointer;
 }
 
 .group-item input[type='text'] {
@@ -470,6 +472,10 @@ input[type='text'] {
     border-bottom: #222 1px solid;
 }
 
+.group-item .item-btn {
+    width: 30px;
+}
+
 .group-detail-show {
     -webkit-user-appearance: none;
     -moz-user-appearance: none;
@@ -481,6 +487,7 @@ input[type='text'] {
     transform: translate(10px, 0);
     cursor: pointer;
     font-size: 120%;
+    color: #666;
 }
 
 .group-detail-show-label:hover {
@@ -509,10 +516,12 @@ input[type='text'] {
 }
 
 .item-btn {
-    width: 56px;
+    width: 60px;
     font-size: 90%;
     height: 20px;
     margin: 0 0 0 5px;
+    text-align: center;
+    padding: 0;
 }
 
 
