@@ -6,6 +6,9 @@ https://tomoya-onuki.github.io/CVViewer/en/
 
 [Japanese](./README.md)
 
+## Introduction
+A tool for visualizing electrochemical measurement data called cyclic voltammetry (CV). Cyclic voltammetry is a technique for measuring response current, and is the most basic and frequently used measurement method in the field of electrochemistry.
+
 ## Usage
 ### 1.Loading Data and Averaging
 1. In "File" tab, Drop files or Click to select from folder.
@@ -55,5 +58,11 @@ https://tomoya-onuki.github.io/CVViewer/en/
 
 <br><br><br>
 
-## Release Note.
-### ver1.0 (2022/8/10)
+## Release Note
+- ver1.1 (2022/ 8/10) Users can change the order of overlaying charts.
+- ver1.0 (2022/ 8/ 9) Basic
+
+<br><br><br>
+
+## Reference
+1. https://ja.wikipedia.org/wiki/%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%83%9C%E3%83%AB%E3%82%BF%E3%83%B3%E3%83%A1%E3%83%88%E3%83%AA%E3%83%BC

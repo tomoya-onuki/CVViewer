@@ -6,6 +6,9 @@ https://tomoya-onuki.github.io/CVViewer/
 
 [English](./readme_en.md)
 
+## CVViewerとは
+サイクリックボルタンメトリー (cyclic voltammetry, CV) という電気化学計測データを可視化するためのツールです。サイクリックボルタンメトリーとは応答電流を測定する手法であり、電気化学分野において最も基本的かつ多用される測定法です。
+
 ## 使い方
 ### 1.データの読み込みと平均化
 1. 「ファイルタブ」上で、ファイルをドロップして読み込みます
@@ -56,5 +59,10 @@ https://tomoya-onuki.github.io/CVViewer/
 <br><br><br>
 
 ## リリースノート
-### ver1.0 (2022/8/10)
-基本機能
+- ver1.1 (2022/ 8/10) グラフの重ね順を変える機能を追加
+- ver1.0 (2022/ 8/ 9) 基本機能
+
+<br><br><br>
+
+## 参考文献
+1. https://ja.wikipedia.org/wiki/%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%83%9C%E3%83%AB%E3%82%BF%E3%83%B3%E3%83%A1%E3%83%88%E3%83%AA%E3%83%BC
