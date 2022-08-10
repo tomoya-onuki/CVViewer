@@ -13,6 +13,7 @@ export class Chart {
     };
     private dataList: { [key: string]: Data } = {};
     private groupList: { [key: string]: DataSet } = {};
+    private groupKeyList: string[] = []
 
     private potentialMin: number = 0
     private potentialMax: number = 0
@@ -77,7 +78,7 @@ export class Chart {
 
     public draw(): void {
         d3.select("svg").remove()
-        if (Object.keys(this.groupList).length > 0) {
+        if (this.groupKeyList.length > 0) {
             let chartW = this.width - this.margin.left - this.margin.right
             let chartH = this.height - this.margin.top - this.margin.bottom
 
@@ -144,9 +145,7 @@ export class Chart {
 
 
             // Supreposeで描画
-            let leX = this.legendPos.x
-            let leY = this.legendPos.y
-            for (let key in this.groupList) {
+            this.groupKeyList.forEach(key => {
                 const data: DataSet = this.groupList[key]
 
                 if (data.visible) {
@@ -159,28 +158,6 @@ export class Chart {
                         .attr("stroke-width", this.lineWeight)
                         .attr("stroke-dasharray", data.dash)
                         .attr("d", line)
-
-
-                    // 凡例
-                    if (this.legendVis) {
-                        svg.append("line")
-                            .attr("x1", leX)
-                            .attr("x2", leX + 30)
-                            .attr("y1", leY - 3)
-                            .attr("y2", leY - 3)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("stroke-dasharray", data.dash)
-                            .attr("stroke-width", 2)
-                            .attr("stroke", data.color);
-                        svg.append('text')
-                            .attr("x", leX + 35)
-                            .attr("y", leY)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("font-size", `${this.fontSize}px`)
-                            .text(data.label)
-
-                        leY += 20
-                    }
 
                     // ピーク値
                     if (this.peakVis) {
@@ -233,6 +210,33 @@ export class Chart {
                             .attr("stroke-width", 1)
                             .attr("stroke", '#444');
                     }
+                }
+            })
+
+            // 凡例
+            let leX = this.legendPos.x
+            let leY = this.legendPos.y
+            for (let i = this.groupKeyList.length - 1; i > -1; i--) {
+                const key: string = this.groupKeyList[i]
+                const data: DataSet = this.groupList[key]
+                if (data.visible && this.legendVis) {
+                    svg.append("line")
+                        .attr("x1", leX)
+                        .attr("x2", leX + 30)
+                        .attr("y1", leY - 3)
+                        .attr("y2", leY - 3)
+                        .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+                        .attr("stroke-dasharray", data.dash)
+                        .attr("stroke-width", 2)
+                        .attr("stroke", data.color);
+                    svg.append('text')
+                        .attr("x", leX + 35)
+                        .attr("y", leY)
+                        .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+                        .attr("font-size", `${this.fontSize}px`)
+                        .text(data.label)
+
+                    leY += 20
                 }
             }
 
@@ -347,7 +351,7 @@ export class Chart {
     }
 
     public hasGroupLabel(label: string): boolean {
-        return Object.keys(this.groupList).includes(label)
+        return this.groupKeyList.includes(label)
     }
     public groupingData(labelList: string[], groupLabel: string) {
         // console.log(labelList)
@@ -381,11 +385,18 @@ export class Chart {
             this.yAxisMin = this.currentMin
             this.yAxisMax = this.currentMax
 
+            this.sortGroupKeyList(Object.keys(this.groupList))
             this.draw()
             this.setUI()
         }
-        console.log(groupDataList)
-        console.log(this.groupList)
+        // console.log(groupDataList)
+        // console.log(this.groupList)
+
+    }
+
+    public sortGroupKeyList(list: string[]) {
+        this.groupKeyList = list.reverse()
+        this.draw()
     }
 
 
@@ -412,10 +423,12 @@ export class Chart {
     }
     public removeGroup(label: string) {
         delete this.groupList[label]
+        this.sortGroupKeyList(Object.keys(this.groupList))
         this.draw()
     }
     public changeGroupLabel(key: string, newLabel: string) {
         this.groupList[key].label = newLabel
+        this.sortGroupKeyList(Object.keys(this.groupList))
         this.draw()
     }
 
@@ -429,50 +442,49 @@ export class Chart {
         this.draw()
     }
     public changeLineType(type: string) {
-        const keyList: string[] = Object.keys(this.groupList)
         if (type === 'hue') {
             let hue = 0;
-            keyList.forEach(key => {
+            this.groupKeyList.forEach(key => {
                 let color = chroma.hsv(hue, 0.5, 0.9)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
                 this.groupList[key].dash = '1,0'
-                hue += 360 / keyList.length
+                hue += 360 / this.groupKeyList.length
             })
         }
         else if (type === 'sat_blue') {
             let sat = 0.2;
-            keyList.forEach(key => {
+            this.groupKeyList.forEach(key => {
                 let color = chroma.hsv(210, sat, 1.0)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
                 this.groupList[key].dash = '1,0'
-                sat += 0.8 / keyList.length
+                sat += 0.8 / this.groupKeyList.length
             })
         }
         else if (type === 'sat_orange') {
             let sat = 0.2;
-            keyList.forEach(key => {
+            this.groupKeyList.forEach(key => {
                 let color = chroma.hsv(20, sat, 1.0)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
                 this.groupList[key].dash = '1,0'
-                sat += 0.8 / keyList.length
+                sat += 0.8 / this.groupKeyList.length
             })
         }
         else if (type === 'bri') {
             let bri = 0.2;
-            keyList.forEach(key => {
+            this.groupKeyList.forEach(key => {
                 let color = chroma.hsv(210, 0, bri)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
                 this.groupList[key].dash = '1,0'
-                bri += 0.8 / keyList.length
+                bri += 0.8 / this.groupKeyList.length
             })
         }
         else if (type === 'dash') {
             let segment = 1;
-            keyList.forEach(key => {
+            this.groupKeyList.forEach(key => {
                 this.groupList[key].dash = `${segment}, ${segment}`
                 this.groupList[key].color = '#000'
                 $('#' + key + '-color').val('#000')
@@ -480,7 +492,7 @@ export class Chart {
             })
         }
         else if (type === 'mono') {
-            keyList.forEach(key => {
+            this.groupKeyList.forEach(key => {
                 this.groupList[key].dash = '1,0'
                 this.groupList[key].color = '#000'
                 $('#' + key + '-color').val('#000')
@@ -499,7 +511,8 @@ export class Chart {
     }
     public removeDataFromGroup(groupLabel: string, dataLabel: string) {
         this.groupList[groupLabel].removeData(dataLabel)
-        console.log(this.groupList)
+        // console.log(this.groupList)
+        this.sortGroupKeyList(Object.keys(this.groupList))
         this.draw()
     }
 

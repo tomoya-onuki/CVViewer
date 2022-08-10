@@ -148,7 +148,7 @@ export class Main {
                     .attr('type', 'color')
                     .attr('id', `${groupKey}-color`)
                 const $delete = $('<button></button>')
-                    .text('delete')
+                    .text('del')
                     .attr('id', `${groupKey}-delete`)
                     .addClass('item-btn')
                 const $detailBtn = $('<input>')
@@ -161,10 +161,16 @@ export class Main {
                     .addClass('group-detail-show-label')
                 const $detail = $('<div></div>')
                     .addClass('group-detail')
+                const $downBtn = $('<button></button>')
+                    .text(parseHTMLcode('&darr;'))
+                    .addClass('item-btn')
+                const $upBtn = $('<button></button>')
+                    .text(parseHTMLcode('&uarr;'))
+                    .addClass('item-btn')
 
                 const $div0 = $('<div></div>')
                     .addClass('col0')
-                    .append($color, $text, $checkbox, $delete, $detailBtn, $detailBtnLabel)
+                    .append($color, $text, $checkbox, $delete, $detailBtn, $downBtn, $upBtn, $detailBtnLabel)
                 const $item = $('<div></div>')
                     .addClass('group-item')
                     .attr('name', groupKey)
@@ -194,6 +200,44 @@ export class Main {
                         me.chart.removeGroup(groupKey)
                     }
                 })
+                $downBtn.on('click', function () {
+                    let myIdx: number = 0
+                    $('.group-item').each(function (i) {
+                        if (String($(this).attr('name')) === groupKey) {
+                            myIdx = i
+                        }
+                    })
+                    if (myIdx < $('.group-item').length - 1) {
+                        let nextIdx: number = myIdx + 1
+                        $('.group-item').eq(nextIdx).after($('.group-item').eq(myIdx))
+                    }
+
+                    let keyList: string[] = []
+                    $('.group-item').each(function (i) {
+                        let key: string = String($(this).find('input[type="text"]').val())
+                        keyList.push(key)
+                    })
+                    me.chart.sortGroupKeyList(keyList)
+                })
+                $upBtn.on('click', function () {
+                    let myIdx: number = 0
+                    $('.group-item').each(function (i) {
+                        if (String($(this).attr('name')) === groupKey) {
+                            myIdx = i
+                        }
+                    })
+                    if (myIdx > 0) {
+                        let preIdx: number = myIdx - 1
+                        $('.group-item').eq(preIdx).before($('.group-item').eq(myIdx))
+                    }
+
+                    let keyList: string[] = []
+                    $('.group-item').each(function (i) {
+                        let key: string = String($(this).find('input[type="text"]').val())
+                        keyList.push(key)
+                    })
+                    me.chart.sortGroupKeyList(keyList)
+                })
                 $detailBtn.on('input', function () {
                     const isShow: boolean = Boolean($detailBtn.prop('checked'))
                     if (isShow) {
@@ -201,7 +245,7 @@ export class Main {
                         $detail.empty()
                         dataLabelList.forEach(flabel => {
                             const $gdelete = $('<button></button>')
-                                .text('delete')
+                                .text('del')
                                 .addClass('item-btn')
                             const $gtext = $('<div></div>')
                                 .text(flabel.replace('-', '.'))
@@ -363,6 +407,8 @@ export class Main {
         let legendMouseMode: boolean = false
         $('#legend-mouse').on('input', function () {
             legendMouseMode = $(this).prop('checked')
+            let cursorMode = legendMouseMode ? 'crosshair' : 'default'
+            $('#view').css('cursor', cursorMode)
         })
         $('#view').on('mousedown', function (e) {
             // console.log('mousedown')
