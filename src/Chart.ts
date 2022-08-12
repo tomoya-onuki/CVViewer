@@ -1,4 +1,4 @@
-import chroma from 'chroma-js';
+import chroma, { random } from 'chroma-js';
 import * as d3 from 'd3';
 import $ = require('jquery');
 import { Data } from './Data';
@@ -147,7 +147,6 @@ export class Chart {
             // Supreposeで描画
             this.groupKeyList.forEach(key => {
                 const data: DataSet = this.groupList[key]
-
                 if (data.visible) {
                     // 描画
                     svg.append("path")
@@ -158,58 +157,6 @@ export class Chart {
                         .attr("stroke-width", this.lineWeight)
                         .attr("stroke-dasharray", data.dash)
                         .attr("d", line)
-
-                    // ピーク値
-                    if (this.peakVis) {
-                        let maxCurrent: number = data.max().current
-                        let minCurrent: number = data.min().current
-
-                        let maxPotential: number = 0
-                        let minPotential: number = 0
-                        data.values.forEach(v => {
-                            if (v.current === maxCurrent) {
-                                maxPotential = v.potential
-                            }
-                            if (v.current === minCurrent) {
-                                minPotential = v.potential
-                            }
-                        })
-
-                        const maxX = xScale(maxPotential)
-                        const maxY = yScale(maxCurrent)
-                        const minX = xScale(minPotential)
-                        const minY = yScale(minCurrent)
-
-                        svg.append('text')
-                            .attr('x', maxX + 13)
-                            .attr('y', maxY - 13)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("font-size", `${this.fontSize}px`)
-                            .text(`(${maxPotential}, ${this.expFromat(maxCurrent)})`)
-                        svg.append('line')
-                            .attr("x1", maxX + 2)
-                            .attr("x2", maxX + 10)
-                            .attr("y1", maxY - 2)
-                            .attr("y2", maxY - 10)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("stroke-width", 1)
-                            .attr("stroke", '#444');
-
-                        svg.append('text')
-                            .attr('x', minX + 13)
-                            .attr('y', minY - 13)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("font-size", `${this.fontSize}px`)
-                            .text(`(${minPotential}, ${this.expFromat(minCurrent)})`)
-                        svg.append('line')
-                            .attr("x1", minX + 2)
-                            .attr("x2", minX + 10)
-                            .attr("y1", minY - 2)
-                            .attr("y2", minY - 10)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("stroke-width", 1)
-                            .attr("stroke", '#444');
-                    }
                 }
             })
 
@@ -236,9 +183,153 @@ export class Chart {
                         .attr("font-size", `${this.fontSize}px`)
                         .text(data.label)
 
+
+                    if (this.peakVis) {
+                        leY += 12
+                        let maxCurrent: number = data.max().current
+                        let minCurrent: number = data.min().current
+
+                        let maxPotential: number = 0
+                        let minPotential: number = 0
+                        data.values.forEach(v => {
+                            if (v.current === maxCurrent) {
+                                maxPotential = v.potential
+                            }
+                            if (v.current === minCurrent) {
+                                minPotential = v.potential
+                            }
+                        })
+
+                        const maxX = xScale(maxPotential)
+                        const maxY = yScale(maxCurrent)
+                        const minX = xScale(minPotential)
+                        const minY = yScale(minCurrent)
+                        svg.append("circle")
+                            .attr('cx', maxX)
+                            .attr('cy', maxY)
+                            .attr('r', 2)
+                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+                            .attr("fill", data.color)
+                        svg.append("circle")
+                            .attr('cx', minX)
+                            .attr('cy', minY)
+                            .attr('r', 2)
+                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+                            .attr("fill", data.color)
+
+                        svg.append('text')
+                            .attr('x', leX + 20)
+                            .attr('y', leY)
+                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+                            .attr("font-size", `${this.fontSize}px`)
+                            .text(`max(${maxPotential}, ${this.expFromat(maxCurrent)}), min(${minPotential}, ${this.expFromat(minCurrent)})`)
+                    }
                     leY += 20
                 }
             }
+
+            // ピーク値
+            // if (this.peakVis) {
+            //     let maxPosList: number[][] = []
+            //     let maxLabelPosList: number[][] = []
+            //     let minPosList: number[][] = []
+            //     let minLabelPosList: number[][] = []
+            //     this.groupKeyList.forEach(key => {
+            //         const data: DataSet = this.groupList[key]
+            //         let maxCurrent: number = data.max().current
+            //         let minCurrent: number = data.min().current
+
+            //         let maxPotential: number = 0
+            //         let minPotential: number = 0
+            //         data.values.forEach(v => {
+            //             if (v.current === maxCurrent) {
+            //                 maxPotential = v.potential
+            //             }
+            //             if (v.current === minCurrent) {
+            //                 minPotential = v.potential
+            //             }
+            //         })
+
+            //         const maxX = xScale(maxPotential)
+            //         const maxY = yScale(maxCurrent)
+            //         maxPosList.push([maxX, maxY])
+            //         maxLabelPosList.push([
+            //             maxX + (Math.random() * 40 - 20),
+            //             maxY - (Math.random() * 20 + 10)
+            //         ])
+
+            //         const minX = xScale(minPotential)
+            //         const minY = yScale(minCurrent)
+            //         minPosList.push([minX, minY])
+            //         minLabelPosList.push([
+            //             minX + (Math.random() * 40 - 20),
+            //             minY - (Math.random() * 20 + 10)
+            //         ])
+            //     })
+            //     // let offsetY = Math.max(...minLabelPosList)
+            //     // let offsetY = Math.max(...minLabelPosList)
+            //     maxLabelPosList = this.layoutLabel(maxLabelPosList, maxPosList)
+            //     minLabelPosList = this.layoutLabel(minLabelPosList, minPosList)
+
+            //     this.groupKeyList.forEach((key, idx) => {
+            //         const data: DataSet = this.groupList[key]
+            //         if (data.visible) {
+            //             let maxPos: number[] = maxPosList[idx]
+            //             let minPos: number[] = minPosList[idx]
+            //             let maxLabelPos: number[] = maxLabelPosList[idx]
+            //             let minLabelPos: number[] = minLabelPosList[idx]
+
+            //             let maxCurrent: number = data.max().current
+            //             let minCurrent: number = data.min().current
+
+            //             let maxPotential: number = 0
+            //             let minPotential: number = 0
+            //             data.values.forEach(v => {
+            //                 if (v.current === maxCurrent) {
+            //                     maxPotential = v.potential
+            //                 }
+            //                 if (v.current === minCurrent) {
+            //                     minPotential = v.potential
+            //                 }
+            //             })
+
+            //             let anchor = maxPos[0] < maxLabelPos[0] ? 'start' : 'end'
+            //             svg.append('text')
+            //                 .attr('x', maxLabelPos[0])
+            //                 .attr('y', maxLabelPos[1])
+            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+            //                 .attr("font-size", `${this.fontSize}px`)
+            //                 .attr('text-anchor', anchor)
+            //                 .text(`(${maxPotential}, ${this.expFromat(maxCurrent)})`)
+            //             svg.append('line')
+            //                 .attr("x1", maxLabelPos[0])
+            //                 .attr("x2", maxPos[0])
+            //                 .attr("y1", maxLabelPos[1])
+            //                 .attr("y2", maxPos[1])
+            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+            //                 .attr("stroke-width", 1)
+            //                 .attr("stroke", '#444');
+
+            //             anchor = minPos[0] < minLabelPos[0] ? 'start' : 'end'
+            //             svg.append('text')
+            //                 .attr('x', minLabelPos[0])
+            //                 .attr('y', minLabelPos[1])
+            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+            //                 .attr("font-size", `${this.fontSize}px`)
+            //                 .text(`(${minPotential}, ${this.expFromat(minCurrent)})`)
+            //             svg.append('line')
+            //                 .attr("x1", minLabelPos[0])
+            //                 .attr("x2", minPos[0])
+            //                 .attr("y1", minLabelPos[1])
+            //                 .attr("y2", minPos[1])
+            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+            //                 .attr("stroke-width", 1)
+            //                 .attr("stroke", '#444');
+            //         }
+            //     })
+            // }
+
+
 
 
             // X軸ラベルの描画
@@ -258,8 +349,8 @@ export class Chart {
             if (this.labelyVis) {
                 svg.append('text')
                     .attr("id", "svg-y-axis")
-                    .attr("y", 20)
                     .attr("x", -this.height / 2)
+                    .attr("y", 10)
                     .attr("text-anchor", "top")
                     .attr("font-size", `${this.fontSize}px`)
                     .attr("font-family", "Arial")
@@ -272,12 +363,74 @@ export class Chart {
                 svg.append("text")
                     .attr("id", "svg-title")
                     .attr("x", this.width / 2)
-                    .attr("y", this.margin.top - 10)
+                    .attr("y", 10)
                     .attr("font-size", `${this.fontSize}px`)
                     .attr("text-anchor", "top")
                     .attr("font-family", "Arial")
                     .text(this.titleLabel);
             }
+        }
+    }
+
+    private layoutLabel(labelPosList: number[][], rootPosList: number[][]): number[][] {
+        const k = 20 // ばね定数
+        const c = 10 // 定数
+        const equilibriumLen = 10 // ばねの自然長
+        let speed: number = 0 // ノードの速度
+        let mass: number = 1 // ノードの質量
+        const dt: number = 0.1 // 微小時間
+        const easeing: number = 1 // 減衰定数
+        let kineticEnergy: number = 0 // 運動エネルギーの合計
+        const keThreshold: number = 10000 * labelPosList.length // 運動エネルギーの閾値
+        const labelW = 30
+        const labelH = 10
+
+        const dist = (p0: number[], p1: number[]) => {
+            return Math.sqrt(Math.pow(p1[0] - p0[0], 2) + Math.pow(p1[1] - p0[1], 2))
+        }
+
+        if (labelPosList.length === 1) {
+            return labelPosList
+        } else {
+            let counter = 0
+            do {
+                for (let i = 0; i < labelPosList.length; i++) {
+                    let power: number = 0
+
+                    // クーロン力
+                    labelPosList.forEach(lp => {
+                        let d = dist(labelPosList[i], lp)
+                        if (d != 0) power += c / Math.pow(d, 2)
+                    })
+                    rootPosList.forEach(p => {
+                        let d = dist(labelPosList[i], p)
+                        if (d != 0) power += c / Math.pow(d, 2)
+                    })
+
+                    // フックの法則
+                    power += k * (dist(labelPosList[i], rootPosList[i]) - equilibriumLen)
+
+                    // 更新
+                    speed = (speed + dt * power / mass) * easeing
+                    labelPosList[i][0] += dt * speed
+                    // labelPosList[i][0] = rootPosList[i][0] + 10
+                    labelPosList[i][1] += dt * speed
+                    kineticEnergy += mass * speed * speed
+                }
+                counter++
+                console.log(kineticEnergy)
+                // if (counter > 1000) break
+                // } while (counter < 1000)
+            } while (kineticEnergy < keThreshold)
+
+            // ラベルの位置をrootの右上になるように操作
+            for (let i = 0; i < labelPosList.length; i++) {
+                // let diffX = Math.abs(rootPosList[i][0] - labelPosList[i][0])
+                // labelPosList[i][0] = rootPosList[i][0] + diffX
+                // let diffY = Math.abs(rootPosList[i][1] - labelPosList[i][1])
+                // labelPosList[i][1] = rootPosList[i][1] - diffY
+            }
+            return labelPosList
         }
     }
 

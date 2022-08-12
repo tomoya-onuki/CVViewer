@@ -103,6 +103,21 @@ export class Main {
             });
         }
 
+
+        $('#file-all-select').on('click', function () {
+            $('.file-item').each(function () {
+                if ($(this).is(':visible')) {
+                    $(this).find('input[type="checkbox"]').prop('checked', true)
+                }
+            })
+        })
+        $('#file-all-clear').on('click', function () {
+            $('.file-item').each(function () {
+                if ($(this).is(':visible')) {
+                    $(this).find('input[type="checkbox"]').prop('checked', false)
+                }
+            })
+        })
         $('#data-search').on('input', function () {
             const query: string = String($(this).val()).toLowerCase()
             if (query != '') {
