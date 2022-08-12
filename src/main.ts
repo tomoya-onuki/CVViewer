@@ -210,7 +210,7 @@ export class Main {
                     me.chart.changeDataColor(groupKey, color)
                 })
                 $delete.on('click', function () {
-                    if (confirm('削除します')) {
+                    if (confirm('Delete.')) {
                         $item.remove()
                         me.chart.removeGroup(groupKey)
                     }
@@ -272,7 +272,7 @@ export class Main {
                             $detail.append($gitem)
 
                             $gdelete.on('click', function () {
-                                if (confirm(`${groupKey}から${flabel}を削除します`)) {
+                                if (confirm(`Delete ${flabel} from ${groupKey}.`)) {
                                     me.chart.removeDataFromGroup(groupKey, flabel)
                                     $gitem.remove()
                                 }
@@ -290,9 +290,9 @@ export class Main {
                     // $('#group-detail-modal').fadeIn()
                 })
             } else if (hasGroupLabel) {
-                alert(`${groupKey}はすでに存在しています`)
+                alert(`${groupKey} is already exist.`)
             } else {
-                alert('平均化が出来ませんでした. データが選択されていません.')
+                alert(' Failed to average. Selected data is none.')
             }
         })
 
@@ -410,13 +410,13 @@ export class Main {
         })
         $('#line-weight-slider').on('input', function () {
             const val: number = Number($(this).val())
-            $(this).prev().text(`太さ : ${val.toFixed(1)}pt`)
+            $(this).prev().text(`Line Weight : ${val.toFixed(1)}pt`)
             me.chart.changeLineWeight(val)
         })
         $('#legend-slider').on('input', function () {
             const val: number = Number($(this).val())
             const ratio = val / 100
-            $(this).prev().text(`文字サイズ : ${val}%`)
+            $(this).prev().text(`Text Size : ${val}%`)
             me.chart.chageFontSize(ratio)
         })
         let legendMouseMode: boolean = false
@@ -472,7 +472,7 @@ export class Main {
                 me.chart.entry(data)
 
                 $delete.on('click', function () {
-                    if (confirm('ファイルを削除します')) {
+                    if (confirm('Remove File.')) {
                         me.chart.removeData(data.label)
                         $item.remove()
                     }
@@ -506,7 +506,7 @@ export class Main {
             }
             // データラベルが既に存在するとき、
             else {
-                alert(`${data.label}.csv は既に読み込んだファイルと、ファイル名が重複しています。ファイル名を変更して再度読み込んでください。`)
+                alert(`${data.label}.csv is already load, or file name is duplicated.`)
             }
         });
 
@@ -515,7 +515,7 @@ export class Main {
 
     private saveFig(type: string): void {
         if ($('#fig').length === 0) {
-            alert('グラフがありません')
+            alert('Chart is not exist.')
             return;
         }
         this.saveFigbyPNG()

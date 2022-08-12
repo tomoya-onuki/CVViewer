@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./lib/toggle.css">
-    <script src="main.js"></script>
+    <script src="./main.js"></script>
+    <!-- <script src="./lib/toggle.js"></script> -->
     <style>
         body {
-            font-family: '游ゴシック', 'Yu Gothic', Arial, san-serif;
+            font-family: Arial, san-serif;
         }
     </style>
     <title>CVViewer</title>
@@ -23,15 +24,15 @@
             <div class="text1">Cyclic Voltammogram Viewer</div>
         </div>
         <div class="info">
-            <div class="highlight">注意:タブを閉じたり、リロードをすると編集データが破棄されます。</div>
-            <div>対応ブラウザ : GoogleChrome, FireFox, Safari</div>
+            <div class="highlight">Caution : Closing tab or Reload are lost edit.</div>
+            <div>Supported : GoogleChrome, FireFox, Safari</div>
         </div>
 
         <div id="selectors">
-            <div id="file-ui-select" class="view-selector">ファイル</div>
-            <div id="edit-ui-select" class="view-selector">編集</div>
-            <div id="vis-ui-select" class="view-selector">表示</div>
-            <div id="save-ui-select" class="view-selector">保存</div>
+            <div id="file-ui-select" class="view-selector">File</div>
+            <div id="edit-ui-select" class="view-selector">Edit</div>
+            <div id="vis-ui-select" class="view-selector">View</div>
+            <div id="save-ui-select" class="view-selector">Save</div>
             <!-- <div class="view-selector non-selector">　</div> -->
         </div>
 
@@ -40,28 +41,28 @@
                 <!-- <h2>ファイル読み込み</h2> -->
                 <input id="file-input" type="file" value="" multiple />
                 <label id="file-drop" for="file-input">
-                    <div class="bold">ファイルをドロップ or</div>
-                    <div class="bold">クリックしてファイルを選択</div>
-                    <div class="info">txtファイルをサポートしています。</div>
-                    <div class="info">複数のファイルをまとめて読み込めます。</div>
-                    <div class="info">ファイルはサーバーにアップロードされません。</div>
-                    <div class="info">同じ名前のファイルは2つ以上読み込めません。</div>
+                    <div class="bold">Drop files or </div>
+                    <div class="bold">Click to select from a folder</div>
+                    <div class="info">CSV and SVG files are supported.</div>
+                    <div class="info">Multiple files can be loaded at once.</div>
+                    <div class="info">Files are NOT uploaded to a server.</div>
+                    <div class="info">Files with the same name cannot be read.</div>
                 </label>
             </div>
 
             <div class="block">
-                <h2>データの選択と平均化</h2>
-                データ検索
+                <h2>Data Selection and Averaging</h2>
+                Search
                 <input type="text" id="data-search" placeholder="Search">
 
                 <input id="data-group-label" type="text" value="" placeholder="Group Label">
-                <button id="data-grouping-btn">平均化</button>
+                <button id="data-grouping-btn">Averaging</button>
 
-                <div class="info">平均化されたデータセットの一覧は編集タブから見ることができます。</div>
+                <div class="info">A list of averaged data sets can be found on the Edit tab.</div>
 
                 <div id="file-list"></div>
-                <button id="file-all-select">全選択</button>
-                <button id="file-all-clear">全解除</button>
+                <button id="file-all-select">All Select</button>
+                <button id="file-all-clear">Clear</button>
             </div>
         </div>
 
@@ -69,29 +70,29 @@
 
         <div id="edit-ui" class="ui-parts">
             <div class="block">
-                <h2>平均化されたデータセット</h2>
+                <h2>Averaged Data Set</h2>
                 <div id="group-list"></div>
-                <button id="group-all-show">全表示</button>
-                <button id="group-all-hide">全解除</button>
+                <button id="group-all-show">All Show</button>
+                <button id="group-all-hide">All Hide</button>
             </div>
 
 
             <div class="block">
-                <h2>タイトル</h2>
-                <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
+                <h2>Title</h2>
+                <input id="set-graph-title" type="text" value="" placeholder="Title Label">
                 <input type="checkbox" id="title-vis" class="toggle" checked>
             </div>
 
 
             <div class="block">
-                <h2>横軸</h2>
+                <h2>Horizontal Axis</h2>
                 <div class="set-axis-label">
-                    <div class="label">ラベル</div>
-                    <input id="set-graph-label-x" type="text" value="" placeholder="横軸のラベル">
+                    <div class="label">Label</div>
+                    <input id="set-graph-label-x" type="text" value="" placeholder="Horizontal Axis Label">
                     <input type="checkbox" id="labelx-vis" class="toggle" checked>
                 </div>
                 <div class="set-axis-seg">
-                    <div class="label">範囲</div>
+                    <div class="label">Range</div>
                     <input type="number" name="" id="x-axis-min" step="0.1">
                     <span>~</span>
                     <input type="number" name="" id="x-axis-max" step="0.1">
@@ -100,39 +101,39 @@
 
 
             <div class="block">
-                <h2>縦軸</h2>
+                <h2>Vertical Axis</h2>
                 <div class="set-axis-label">
-                    <div class="label">ラベル</div>
-                    <input id="set-graph-label-y" type="text" value="" placeholder="縦軸のラベル">
+                    <div class="label">Label</div>
+                    <input id="set-graph-label-y" type="text" value="" placeholder="Vertical Axis Label">
                     <input type="checkbox" id="labely-vis" class="toggle" checked>
                 </div>
                 <div class="set-axis-seg">
-                    <div class="label">範囲</div>
+                    <div class="label">Range</div>
                     <input type="text" name="" id="y-axis-min">
                     <span>~</span>
                     <input type="text" name="" id="y-axis-max">
                 </div>
-            </div>  
+            </div>
         </div>
 
         <div id="vis-ui" class="ui-parts">
             <div class="block">
-                <div class="label">線のタイプ</div>
+                <div class="label">Line Type</div>
                 <select name="line-type" id="line-type-selector">
-                    <option value="mono">単色</option>
-                    <option value="hue">色相</option>
-                    <option value="bri">明度</option>
-                    <option value="sat_blue">彩度(青)</option>
-                    <option value="sat_orange">彩度(オレンジ)</option>
-                    <option value="dash">破線</option>
+                    <option value="mono">Monochrome</option>
+                    <option value="hue">Hue</option>
+                    <option value="bri">Brightness</option>
+                    <option value="sat_blue">Satiration(Blue)</option>
+                    <option value="sat_orange">Satiration(Orange))</option>
+                    <option value="dash">Dashed</option>
                 </select>
                 <div class="info">
-                    自動で線の種別を設定します。編集タブから細かい調整が可能です。
+                    The type of line is automatically set. Fine-tuning is possible from the Edit tab.
                 </div>
             </div>
 
             <div class="block">
-                <div class="label">線の太さ : 1.5pt</div>
+                <div class="label">Line Weight : 1.5pt</div>
                 <input type="range" id="line-weight-slider" min="0.5" max="3.0" step="0.5" value="1.5"
                     list="line-weight-segment">
                 <datalist id="line-weight-segment">
@@ -147,7 +148,7 @@
 
 
             <div class="block">
-                <div class="label">文字サイズ: 100%</div>
+                <div class="label">Font Size: 100%</div>
                 <input type="range" id="legend-slider" min="0" max="200" step="10" value="100" list="legend-segment">
                 <datalist id="legend-segment">
                     <option value="0"></option>
@@ -161,32 +162,32 @@
             <div class="block">
                 <div class="label">
                     <input type="checkbox" id="peak-vis" class="toggle" checked>
-                    ピーク値
+                    Peak value
                 </div>
                 <div class="label">
                     <input type="checkbox" id="grid-vis" class="toggle">
-                    グリッド
+                    Grid
                 </div>
                 <div class="label">
                     <input type="checkbox" id="legend-vis" class="toggle" checked>
-                    凡例
+                    Legend
                 </div>
                 <div>
                     <input type="checkbox" id="legend-mouse" class="toggle">
-                    凡例をマウスで位置調整
+                    Mouse Mode : Move legend position.
                     <div class="info">
-                        マウスでクリックした位置に凡例を移動します。
+                        Move the legend to the position clicked with the mouse.
                     </div>
                 </div>
             </div>
 
 
             <div class="block">
-                <div class="label">図のサイズ</div>
+                <div class="label">Fugure Size</div>
                 <input type="number" value="600" id="svg-width">px
                 <span>&times;</span>
                 <input type="number" value="450" id="svg-height">px
-                <button id="svg-size-optimize-btn">最適化</button>
+                <button id="svg-size-optimize-btn">Optimize</button>
             </div>
         </div>
 
@@ -194,14 +195,14 @@
 
         <div id="save-ui" class="ui-parts">
             <div class="block">
-                <h2>グラフの保存</h2>
+                <h2>Download</h2>
                 <div>
-                    <div class="btn-label0">名前</div> <input type="text" value="figure.png" id="save-fig-name">
+                    <div class="btn-label0">Name</div> <input type="text" value="figure.png" id="save-fig-name">
                 </div>
-                <button id="save-fig-btn">ダウンロード</button>
+                <button id="save-fig-btn">Download</button>
                 <div class="info">
                     <ul>
-                        <li>ファイルはブラウザで指定しているダウンロード先に保存されます。</li>
+                        <li>The file will be saved to the download destination you specify in your browser.</li>
                     </ul>
                 </div>
             </div>
@@ -210,9 +211,9 @@
 
         <div class="footer">
             <div>
-                <a><u>Japanese</u></a> /
-                <a href="./en/">English</a> /
-                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md" target="_blank">マニュアル</a> /
+                <a href="../">Japanese</a> /
+                <a><u>English</u></a> /
+                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md" target="_blank">Manuel</a> /
                 <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
             </div>
             <div class="info">&copy; 2022, Onuki Tomoya.</div>
