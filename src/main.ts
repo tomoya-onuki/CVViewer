@@ -475,11 +475,6 @@ export class Main {
                     case 52: // 4
                         me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
                         break
-
-                    // JSON保存
-                    case 83: // s
-                        me.saveFigByJson()
-                        break
                     
                     case 71: // g 
                         var flag = $('#grid-vis').prop('checked') ? false : true
@@ -509,21 +504,21 @@ export class Main {
                 }
 
                 // PNG保存
-                if (e.shiftKey && e.keyCode === 83) {
-                    me.saveFigbyPNG()
+                if (e.keyCode === 83) {
+                    if (e.shiftKey) {
+                        me.saveFigbyPNG()
+                    } else {
+                        me.saveFigByJson()
+                    }
                 }
             }
         })
     }
 
     private optimizeChartSize() {
-        let w = Number($('#right-box').width()) * 0.8
-        let h = Number($('#right-box').height()) * 0.8
-        if (w < h) {
-            h = w * 3 / 4
-        } else {
-            w = h * 4 / 3
-        }
+        let w = Number($('#right-box').width()) * 0.9
+        let h = Number($('#right-box').height()) * 0.9
+        if (w < h) h = w
         $('#svg-width').val(w)
         $('#svg-height').val(h)
         this.chart.resize(w, h)
