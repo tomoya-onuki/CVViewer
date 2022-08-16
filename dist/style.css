@@ -116,7 +116,8 @@ svg {
     z-index: 1;
 }
 
-#table {
+#data-modal {
+    position: absolute;
     top: 10px;
     left: 360px;
     padding: 20px 20px 20px 20px;
@@ -124,15 +125,16 @@ svg {
     overflow: scroll;
     text-align: left;
     background: #FFF;
-    width: 100%;
+    width: calc(100vw - 420px);
     z-index: 2;
+    overflow: scroll;
 }
 
-th {
+#data-modal th {
     width: 100px;
 }
 
-#table-title {
+#data-modal-title {
     font-size: 150%;
     display: inline-block;
 }
@@ -651,4 +653,25 @@ span6 {
 span7 {
     display: inline-block;
     width: 10px;
+}
+
+
+#help-modal {
+    position: fixed;
+    top: 50%;
+    left: 340px;
+    transform: translate(0%, -50%);
+    background: #FFF;
+    padding: 20px;
+    display: none;
+    border-radius: 5px;
+    border: #eee 1px solid;
+    z-index: 5;
+}
+
+#help-modal td,
+#help-modal th {
+    width: 120px;
+    text-align: left;
+    height: 30px;
 }
