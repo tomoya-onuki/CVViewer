@@ -1,21 +1,25 @@
+[Japanese](./README.md) / [English](./readme_en.md)
+
 # CVViewer
 2022.08.10  
 Tomoya Onuki  
 
-https://tomoya-onuki.github.io/CVViewer/en/
+<a href="https://tomoya-onuki.github.io/CVViewer/en/" target="_blank">https://tomoya-onuki.github.io/CVViewer/en/</a>
 
-[Japanese](./README.md)
+
+Translated by [deepl.com](https://www.deepl.com/)
 
 ## Introduction
 A tool for visualizing electrochemical measurement data called cyclic voltammetry (CV). Cyclic voltammetry is a technique for measuring response current, and is the most basic and frequently used measurement method in the field of electrochemistry.
 
 ## Usage
-### 1.Loading Data and Averaging
+### 1. Loading Data
 1. In "File" tab, Drop files or Click to select from folder.
   
    <img src="./img/01_en.png" width="60%">  
 
-1. Tick check boxs to average.
+### 2. Averaging
+1. In "Data" tab, Tick check boxs to average.
 2. Click to "Averaging" button. Be able to set labels.
 
    <img src="./img/02_en.png" width="60%">
@@ -24,41 +28,51 @@ A tool for visualizing electrochemical measurement data called cyclic voltammetr
 
 <br><br>
 
-### 2.Datasets and Edit Chart
+### 3. Datasets and Edit Chart
 1. In "Edit" tab, check averaged datasets.
 2. Labels of datasets ware setted in 1-3. Label ware setted automaticaly, when you did't set labels. You are abele to edit label to click text form.
+3. Click the black rectangl to set up line color.
+4. Click "▼", to check data that are concluded in a dataset.
+5. Set labels of title and axes.
+6. Set ranges of axes
   
    <img src="./img/03_en.png" width="60%">
    
    *Graphs are mosaicked.
 
-1. Click the black rectangl to set up line color.
-  
-   <img src="./img/05_en.png" width="60%">
-
-2. Click "▼", to check data that are concluded in a dataset.
-3. Set labels of title and axes.
-4. Set ranges of axes
 
    <br><br>
 
-### 3.Chart Design
+### 4. Chart Design
 1. In "View" tab.
 2. Select line type.
 3. If necessary, Show / hide peak values, grid line and legend.
 
-   <img src="./img/06_en.png" width="60%">
+   <img src="./img/04_en.png" width="60%">
 
 <br><br>
 
-### 4.Donwload chart
-1. In "Save" tab, you download a chart. The format is PNG.
-  *You can not re-edit the chart.
+### 5. Donwload Chart
+1. you can download the graph from the "File tab".
+2. select PNG to save as an image.
+3. Select the resolution.
+4. Press the "Download" button.
 
+<br><br>
+
+### 6. Re-edit Chart
+Select and save the json file in the "File tab". 2.
+Load the saved json file (.cvv.json) in the "File tab" to reproduce the graph.
 
 <br><br><br>
 
 ## Release Note
+- ver2.0 (2022/ 8/16) 
+  - Can set index notation and significant figures for axes.
+  - Re-editing can be done by reading the exported JSON file.
+  - Display of surroundings around graphs.
+  - Independently selectable display/non-display of maximum and minimum values.
+  - Automatic navigation to the Data tab when a file is read in tool.
 - ver1.1 (2022/ 8/10) Users can change the order of overlaying charts.
 - ver1.0 (2022/ 8/ 9) Basic
 
