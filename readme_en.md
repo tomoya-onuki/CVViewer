@@ -4,6 +4,19 @@
 2022.08.10  
 Tomoya Onuki  
 
+- [CVViewer](#cvviewer)
+  - [Introduction](#introduction)
+  - [Usage](#usage)
+    - [1. Loading Data](#1-loading-data)
+    - [2. Averaging](#2-averaging)
+    - [3. Datasets and Edit Chart](#3-datasets-and-edit-chart)
+    - [4. Chart Design](#4-chart-design)
+    - [5. Donwload Chart](#5-donwload-chart)
+    - [6. Re-edit Chart](#6-re-edit-chart)
+  - [Short cut key](#short-cut-key)
+  - [Release Note](#release-note)
+  - [Reference](#reference)
+
 <a href="https://tomoya-onuki.github.io/CVViewer/en/" target="_blank">https://tomoya-onuki.github.io/CVViewer/en/</a>
 
 
@@ -66,8 +79,26 @@ Load the saved json file (.cvv.json) in the "File tab" to reproduce the graph.
 
 <br><br><br>
 
+## Short cut key
+| Function | windows | mac |
+| :--- | :--- | :--- |
+| Download Image (png) | Alt + Shift + s | Option + Shift + s |
+| Download JSON | Alt + s | Option + s |
+| Move Tab | Alt + 1 ~ 4 | Option + 1 ~ 4 |
+| Optimize chart size | Alt + o | Option + o |
+| Zoom in | Alt + + | Option + + |
+| Zoom out | Alt + - | Option + - |
+| Show / Hide Grid | Alt + g | Option + g |
+| Show / Hide Max value | Alt + m | Option + m |
+| Show / Hide Minimu Value | Alt + n | Option + n |
+| Show / Hide Legend | Alt + l | Option + l |
+| Show / Hide Frame | Alt + f | Option + f |
+
+<br><br><br>
+
 ## Release Note
 - ver2.0 (2022/ 8/16) 
+  - Short cut key.
   - Can set index notation and significant figures for axes.
   - Re-editing can be done by reading the exported JSON file.
   - Display of surroundings around graphs.
