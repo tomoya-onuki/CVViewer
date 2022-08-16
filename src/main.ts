@@ -14,6 +14,14 @@ const parseHTMLcode = (code: string): string => {
 $(function () {
     new myUI().toggle()
     new Main().init()
+
+
+    $('#help-modal > .close').on('click', function(){
+        $('#help-modal').hide()
+    })
+    $('#help-alert').on('click', function() {
+        $('#help-modal').show()
+    })
 });
 
 export class Main {
@@ -384,9 +392,8 @@ export class Main {
         })
 
         // テーブルを閉じる
-        $('#table-close').on('click', function () {
-            $('#table').fadeOut()
-            $('#view').fadeIn()
+        $('#data-modal > .close').on('click', function () {
+            $('#data-modal').fadeOut()
         })
 
 
@@ -599,7 +606,7 @@ export class Main {
             }
         })
         $show.on('click', function () {
-            $('table').remove()
+            $('#data-modal table').remove()
             const list: any[] = me.chart.getData(data.label).values
             const $thead = $('<thead></thead>')
             let $row = $('<tr></tr>')
@@ -618,11 +625,10 @@ export class Main {
             })
             const $tabel = $('<table></table>')
                 .append($thead, $tbody)
-            $('#table').append($tabel)
-            $('#table-title').text(data.label.replace('-', '.'))
+            $('#data-modal').append($tabel)
+            $('#data-modal-label').text(data.label.replace('-', '.'))
 
-            $('#table').fadeIn()
-            $('#view').fadeOut()
+            $('#data-modal').fadeIn()
         })
     }
     private addGroupItems(groupKey: string) {
