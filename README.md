@@ -4,6 +4,19 @@
 2022.08.9  
 小貫智弥  
 
+- [CVViewer](#cvviewer)
+  - [CVViewerとは](#cvviewerとは)
+  - [使い方](#使い方)
+    - [1. データの読み込み](#1-データの読み込み)
+    - [2. データの平均化](#2-データの平均化)
+    - [3. データセットの確認とグラフの編集](#3-データセットの確認とグラフの編集)
+    - [4. グラフのデザイン](#4-グラフのデザイン)
+    - [5. グラフを保存](#5-グラフを保存)
+    - [6. グラフの再現・再編集](#6-グラフの再現再編集)
+  - [ショートカットキー](#ショートカットキー)
+  - [リリースノート](#リリースノート)
+  - [参考文献](#参考文献)
+
 
 <a href="https://tomoya-onuki.github.io/CVViewer/" target="_blank">https://tomoya-onuki.github.io/CVViewer/</a>
 
@@ -61,6 +74,24 @@
 ### 6. グラフの再現・再編集
 1. 「ファイルタブ」でjsonを選択し保存します。
 2. 保存されたjsonファイル(.cvv.json)を「ファイルタブ」で読み込むとグラフが再現されます。
+
+<br><br><br>
+
+
+## ショートカットキー
+| 操作 | windows | mac |
+| :--- | :--- | :--- |
+| 画像保存 | Alt + Shift + s | Option + Shift + s |
+| json保存 | Alt + s | Option + s |
+| タブ移動 | Alt + 1 ~ 4 | Option + 1 ~ 4 |
+| サイズの最適化 | Alt + o | Option + o |
+| 拡大 | Alt + + | Option + + |
+| 縮小 | Alt + - | Option + - |
+| グリッド | Alt + g | Option + g |
+| 最大値 | Alt + m | Option + m |
+| 最小値 | Alt + n | Option + n |
+| 凡例 | Alt + l | Option + l |
+| 枠線 | Alt + f | Option + f |
 
 <br><br><br>
 
