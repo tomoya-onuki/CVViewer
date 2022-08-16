@@ -27,7 +27,12 @@ export class DataSet extends Data {
     public get dash(): string {
         return this._dash
     }
-
+    public set dataList(data: Data[]) {
+        this._dataList = data
+    }
+    public get dataList(): Data[] {
+        return this._dataList
+    }
     public dataLabelList(): string[] {
         return this._dataList.map(data => data.label)
     }
@@ -71,5 +76,10 @@ export class DataSet extends Data {
     }
     public get visible(): boolean {
         return this._visible
+    }
+
+
+    public dumpCSV() {
+
     }
 }

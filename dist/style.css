@@ -5,8 +5,9 @@ body {
 
 #left-box,
 #rihgt-box,
+#data-list,
+#dataset-list,
 #file-list,
-#group-list,
 #view {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -14,8 +15,8 @@ body {
 
 #left-box::-webkit-scrollbar,
 #right-box::-webkit-scrollbar,
-#file-list::-webkit-scrollbar,
-#group-list::-webkit-scrollbar,
+#data-list::-webkit-scrollbar,
+#dataset-list::-webkit-scrollbar,
 #view::-webkit-scrollbar {
     display: none;
 }
@@ -23,6 +24,7 @@ body {
 
 #edit-ui,
 #save-ui,
+#data-ui,
 #vis-ui {
     display: none;
 }
@@ -237,8 +239,24 @@ h3 {
 }
 
 
-#file-list {
-    height: 200px;
+#file-list,
+#group-list {
+    height: 100px;
+    font-size: 100%;
+    overflow: scroll;
+    border-bottom: 1px #eee solid;
+    margin: 10px 0 5px 0;
+}
+.file-item,
+.group-item {
+    width: 100px;
+    display: inline-block;
+    margin: 0 5px 0 0;
+}
+
+#data-list {
+    /* height: 180px; */
+    height: calc(100vh - 420px);
     font-size: 100%;
     overflow: scroll;
     border-bottom: 1px #eee solid;
@@ -289,7 +307,7 @@ select {
     background-color: #fff;
     border: #666 solid 1px;
     border-radius: 5px;
-    height: 24px;
+    height: 22px;
     font-size: 80%;
     padding: 0 0 0 6px;
 }
@@ -311,43 +329,48 @@ input[type='text'] {
     border-radius: 5px;
     height: 20px;
 }
-
+.set-axis-seg .label,
 .set-axis-label .label {
-    width: 40px;
+    width: 30px;
     display: inline-block;
+}
+
+.set-axis-seg select {
+    height: 22px;
 }
 
 .set-axis-label input[type='text'] {
-    width: 150px;
+    width: 160px;
 }
 
 #set-graph-title {
-    width: 180px;
+    width: 135px;
 }
 
-.set-axis-seg .label {
-    width: 40px;
-    display: inline-block;
+#x-axis-unit {
+    width: 60px;
 }
 
 .set-axis-seg input[type='number'],
 .set-axis-seg input[type='text'] {
     width: 65px;
 }
+#x-sig-dig,
+#y-sig-dig {
+    width: 30px;
+}
 
-
-
-.file-item {
+.data-item {
     margin: 0 0 5px 0;
     align-items: center;
     display: flex;
 }
 
-.file-item input[type='checkbox'] {
+.data-item input[type='checkbox'] {
     margin: 0 5px 0 0;
 }
 
-.file-item label {
+.data-item label {
     margin: 0 5px 0 0;
     padding: 0 0 0 0;
     width: 200px;
@@ -356,21 +379,23 @@ input[type='text'] {
     white-space: nowrap;
 }
 
-#fig-type {
+#fig-type,
+#fig-resolution {
     display: inline-block;
     border: #666 solid 1px;
     color: #222;
     border-radius: 5px;
-    width: 80px;
+    width: 60px;
     height: 20px;
-    padding: 0 0 0 10px;
+    padding: 0 0 0 5px;
     font-size: 90%;
 }
 
 #save-fig-name {
-    width: 180px;
+    width: 163px;
     height: 20px;
-    margin: 0 0 6px 0;
+    margin: 0 0 6px 0px;
+    padding: 0 0 0 12px;
 }
 
 #save-fig-ext {
@@ -380,9 +405,10 @@ input[type='text'] {
 }
 
 #save-fig-btn {
-    width: 100px;
-    margin: 0 0 0 5px;
-    height: 20px;
+    width: 95px;
+    margin: 6px 0 6px 0;
+    padding: 2px 2px 0px 2px;
+    height: 22px;
 }
 
 .highlight {
@@ -414,35 +440,35 @@ input[type='text'] {
     width: 168px;
 }
 
-#group-list {
-    height: 160px;
-    /* background: #eee; */
+#dataset-list {
+    /* height: 160px; */
+    height: calc(100vh - 580px);
     overflow: scroll;
     border-bottom: 1px #eee solid;
 }
 
-.group-item {
+.dataset-item {
     margin: 5px 0 5px 0;
 }
 
-.group-item .col0 {
+.dataset-item .col0 {
     margin: 5px 0 5px 0;
     display: flex;
     align-items: center;
 }
 
-.group-item .label {
+.dataset-item .label {
     display: inline-block;
     font-weight: bold;
     margin: 0 20px 0 0;
 }
 
-.group-item label {
+.dataset-item label {
     display: inline-block;
     margin: 0 10px 0 0;
 }
 
-.group-item input[type='color'] {
+.dataset-item input[type='color'] {
     -webkit-user-appearance: none;
     -moz-user-appearance: none;
     -ms-user-appearance: none;
@@ -459,7 +485,7 @@ input[type='text'] {
     cursor: pointer;
 }
 
-.group-item input[type='text'] {
+.dataset-item input[type='text'] {
     -webkit-user-appearance: none;
     -moz-user-appearance: none;
     -ms-user-appearance: none;
@@ -472,7 +498,7 @@ input[type='text'] {
     border-bottom: #222 1px solid;
 }
 
-.group-item .item-btn {
+.dataset-item .item-btn {
     width: 30px;
 }
 
@@ -530,6 +556,8 @@ input[type='text'] {
     margin: 0 0 0 0;
 }
 
+
+
 #svg-width,
 #svg-height {
     width: 50px;
@@ -541,7 +569,18 @@ input[type='text'] {
 }
 
 #line-type-selector {
-    width: 150px;
+    width: 60px;
+}
+
+
+#peak-mode {
+    height: 20px;
+    margin: 10px 0 0 0px;
+    /* transform: translate(0, -2px); */
+    display: inline-block;
+    border: none;
+    border-bottom: #222 1px solid;
+    border-radius: 0;
 }
 
 /* 
@@ -575,4 +614,38 @@ input[type='text'] {
 
 .close:hover {
     opacity: 0.5;
+}
+
+span0 {
+    width: auto;
+    margin: 0 5px 0 0;
+    display: inline-block;
+}
+span1 {
+    display: inline-block;
+    width: 60px;
+}
+span2 {
+    display: inline-block;
+    width: 55px;
+}
+span3 {
+    display: inline-block;
+    width: 50px;
+}
+span4 {
+    display: inline-block;
+    width: 40px;
+}
+span5 {
+    display: inline-block;
+    width: 30px;
+}
+span6 {
+    display: inline-block;
+    width: 20px;
+}
+span7 {
+    display: inline-block;
+    width: 10px;
 }

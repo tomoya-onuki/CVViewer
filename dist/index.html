@@ -29,26 +29,71 @@
 
         <div id="selectors">
             <div id="file-ui-select" class="view-selector">ファイル</div>
+            <div id="data-ui-select" class="view-selector">データ</div>
             <div id="edit-ui-select" class="view-selector">編集</div>
             <div id="vis-ui-select" class="view-selector">表示</div>
-            <div id="save-ui-select" class="view-selector">保存</div>
-            <!-- <div class="view-selector non-selector">　</div> -->
+            <!-- <div id="save-ui-select" class="view-selector">保存</div> -->
         </div>
 
         <div id="file-ui" class="ui-parts">
             <div class="block">
-                <!-- <h2>ファイル読み込み</h2> -->
                 <input id="file-input" type="file" value="" multiple />
                 <label id="file-drop" for="file-input">
                     <div class="bold">ファイルをドロップ or</div>
                     <div class="bold">クリックしてファイルを選択</div>
-                    <div class="info">txtファイルをサポートしています。</div>
-                    <div class="info">複数のファイルをまとめて読み込めます。</div>
-                    <div class="info">ファイルはサーバーにアップロードされません。</div>
-                    <div class="info">同じ名前のファイルは2つ以上読み込めません。</div>
+                    <div class="info">
+                        <ul>
+                            <li>.txtと.jsonをサポートしています</li>
+                            <li>このツールで作成したjsonファイルを読み込むことでグラフを再編集できます</li>
+                            <li>複数のファイルはまとめて読み込めます</li>
+                            <li>ファイルはサーバーにアップロードされません</li>
+                            <li>同じ名前のファイルは2つ以上読み込めません</li>
+                        </ul>
+                    </div>
                 </label>
             </div>
 
+            <!-- <div class="block">
+                <h2>ファイルリスト</h2>
+                <div id="file-list"></div>
+            </div> -->
+            <div class="block">
+                <h2>グラフのダウンロード</h2>
+                <div>
+                    <span5>名前</span5>
+                    <input type="text" value="figure" id="save-fig-name">
+                </div>
+
+                <div>
+                    <span5>形式</span5>
+                    <select id="fig-type">
+                        <option value="png">png</option>
+                        <option value="json">json</option>
+                    </select>
+
+                    <span7></span7>
+
+                    <span4>解像度</span4>
+                    <select id="fig-resolution">
+                        <option value="1">低</option>
+                        <option value="2" selected>中</option>
+                        <option value="5">高</option>
+                        <option value="10">最高</option>
+                    </select>
+                </div>
+
+
+                <button id="save-fig-btn">ダウンロード</button>
+
+                <div class="info">
+                    <div>ファイルはブラウザで指定しているダウンロード先に保存されます。</div>
+                    <div>json形式で保存したファイルはこのツールで読み込むことで再編集することができます。</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="data-ui" class="ui-parts">
             <div class="block">
                 <h2>データの選択と平均化</h2>
                 データ検索
@@ -57,53 +102,69 @@
                 <input id="data-group-label" type="text" value="" placeholder="Group Label">
                 <button id="data-grouping-btn">平均化</button>
 
-                <div class="info">平均化されたデータセットの一覧は編集タブから見ることができます。</div>
+                <div class="info">
+                    平均化したデータセットの一覧は編集タブから確認できます。
+                </div>
 
-                <div id="file-list"></div>
+                <div id="data-list"></div>
+
                 <button id="file-all-select">全選択</button>
                 <button id="file-all-clear">全解除</button>
             </div>
+
+
+            <!-- <div class="block">
+                <h2>平均化されたデータセットリスト</h2>
+                <div id="group-list"></div>
+            </div> -->
         </div>
 
 
 
         <div id="edit-ui" class="ui-parts">
+
             <div class="block">
                 <h2>平均化されたデータセット</h2>
-                <div id="group-list"></div>
+                <div id="dataset-list"></div>
                 <button id="group-all-show">全表示</button>
                 <button id="group-all-hide">全解除</button>
             </div>
 
-
             <div class="block">
-                <h2>タイトル</h2>
+                <span2 style="font-weight:bold">タイトル</span2>
                 <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
                 <input type="checkbox" id="title-vis" class="toggle" checked>
             </div>
 
 
             <div class="block">
-                <h2>横軸</h2>
                 <div class="set-axis-label">
-                    <div class="label">ラベル</div>
-                    <input id="set-graph-label-x" type="text" value="" placeholder="横軸のラベル">
+                    <div class="label" style="font-weight:bold">横軸</div>
+                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="横軸のラベル">
                     <input type="checkbox" id="labelx-vis" class="toggle" checked>
                 </div>
                 <div class="set-axis-seg">
                     <div class="label">範囲</div>
-                    <input type="number" name="" id="x-axis-min" step="0.1">
+                    <input type="text" name="" id="x-axis-min" step="0.1">
                     <span>~</span>
-                    <input type="number" name="" id="x-axis-max" step="0.1">
+                    <input type="text" name="" id="x-axis-max" step="0.1">
+                    <select id="x-axis-range-unit">
+                        <option value="ratio">%</option>
+                        <option value="num">V</option>
+                    </select>
+                </div>
+
+                <div>
+                    <span0>指数表示</span0><input type="text" value="e+0" id="x-axis-unit" placeholder="e+0">
+                    <span0>有効数字</span0><input type="number" value="3" id="x-sig-dig">桁
                 </div>
             </div>
 
 
             <div class="block">
-                <h2>縦軸</h2>
                 <div class="set-axis-label">
-                    <div class="label">ラベル</div>
-                    <input id="set-graph-label-y" type="text" value="" placeholder="縦軸のラベル">
+                    <div class="label" style="font-weight:bold">縦軸</div>
+                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
                     <input type="checkbox" id="labely-vis" class="toggle" checked>
                 </div>
                 <div class="set-axis-seg">
@@ -111,23 +172,49 @@
                     <input type="text" name="" id="y-axis-min">
                     <span>~</span>
                     <input type="text" name="" id="y-axis-max">
+
+                    <select id="y-axis-range-unit">
+                        <option value="ratio">%</option>
+                        <option value="num">A</option>
+                    </select>
                 </div>
-            </div>  
+
+                <div>
+                    <span0>指数表示</span0>
+                    <select id="y-axis-unit">
+                        <option value="0">なし</option>
+                        <option value="-1">d (e-1)</option>
+                        <option value="-2">c (e-2)</option>
+                        <option value="-3">m (e-3)</option>
+                        <option value="-6" selected>μ (e-6)</option>
+                        <option value="-9">n (e-9)</option>
+                        <option value="-12">p (e-12)</option>
+                        <option value="-15">f (e-15)</option>
+                    </select>
+                    <span0></span0>
+                    有効数字<input type="number" value="3" id="y-sig-dig">桁
+                </div>
+
+            </div>
         </div>
 
         <div id="vis-ui" class="ui-parts">
             <div class="block">
-                <div class="label">線のタイプ</div>
-                <select name="line-type" id="line-type-selector">
-                    <option value="mono">単色</option>
-                    <option value="hue">色相</option>
-                    <option value="bri">明度</option>
-                    <option value="sat_blue">彩度(青)</option>
-                    <option value="sat_orange">彩度(オレンジ)</option>
-                    <option value="dash">破線</option>
-                </select>
+                <div class="label">
+                    <span2>線の配色</span2>
+                    <select name="line-type" id="line-type-selector">
+                        <option value="mono">単色</option>
+                        <option value="hue">色相</option>
+                        <option value="bri">明度</option>
+                        <option value="sat_blue">彩度(青)</option>
+                        <option value="sat_orange">彩度(オレンジ)</option>
+                    </select>
+                    <span6></span6>
+                    <input type="checkbox" id="dash-line-mode" class="toggle">
+                    <span5><label for="dash-line-mode">破線</label></span5>
+                </div>
                 <div class="info">
-                    自動で線の種別を設定します。編集タブから細かい調整が可能です。
+                    自動で線の配色をします。編集タブから細かい調整が可能です。
                 </div>
             </div>
 
@@ -148,8 +235,9 @@
 
             <div class="block">
                 <div class="label">文字サイズ: 100%</div>
-                <input type="range" id="legend-slider" min="0" max="200" step="10" value="100" list="legend-segment">
-                <datalist id="legend-segment">
+                <input type="range" id="fontsize-slider" min="0" max="200" step="10" value="100"
+                    list="fontsize-segment">
+                <datalist id="fontsize-segment">
                     <option value="0"></option>
                     <option value="50"></option>
                     <option value="100"></option>
@@ -160,20 +248,24 @@
 
             <div class="block">
                 <div class="label">
-                    <input type="checkbox" id="peak-vis" class="toggle" checked>
-                    ピーク値
+                    <input type="checkbox" id="max-vis" class="toggle">
+                    <span2><label for="max-vis">最大値</label></span2>
+                    <input type="checkbox" id="min-vis" class="toggle">
+                    <span2><label for="min-vis">最小値</label></span2>
                 </div>
                 <div class="label">
                     <input type="checkbox" id="grid-vis" class="toggle">
-                    グリッド
+                    <span2><label for="grid-vis">グリッド</label></span2>
+                    <input type="checkbox" id="frame-vis" class="toggle" checked>
+                    <span2><label for="frame-id">枠線</label></span2>
                 </div>
                 <div class="label">
                     <input type="checkbox" id="legend-vis" class="toggle" checked>
-                    凡例
+                    <span2><label for="legend-vis">凡例</label></span2>
                 </div>
                 <div>
                     <input type="checkbox" id="legend-mouse" class="toggle">
-                    凡例をマウスで位置調整
+                    <label for="legend-mouse">凡例をマウスで位置調整</label>
                     <div class="info">
                         マウスでクリックした位置に凡例を移動します。
                     </div>
@@ -191,21 +283,6 @@
         </div>
 
 
-
-        <div id="save-ui" class="ui-parts">
-            <div class="block">
-                <h2>グラフの保存</h2>
-                <div>
-                    <div class="btn-label0">名前</div> <input type="text" value="figure.png" id="save-fig-name">
-                </div>
-                <button id="save-fig-btn">ダウンロード</button>
-                <div class="info">
-                    <ul>
-                        <li>ファイルはブラウザで指定しているダウンロード先に保存されます。</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
 
         <div class="footer">

@@ -1,3 +1,4 @@
+import { Chart } from './Chart';
 import { Data } from './Data';
 
 export class ReadFiles {
@@ -5,12 +6,32 @@ export class ReadFiles {
 
     }
 
-    public readFiles(files: any[]): Promise<any> {
+    public readTXT(files: any[]): Promise<any> {
         const me: ReadFiles = this;
         let dataList: Data[] = [];
 
         return new Promise(function (resolve, reject) {
             me.read(files, 0, dataList, resolve);
+        });
+    }
+
+    public readJSON(file: any): Promise<string> {
+        return new Promise(function (resolve, reject) {
+            if (file.name.indexOf('.json') != -1) {
+                var fileReader = new FileReader()
+                let chart = new Chart()
+
+                fileReader.readAsText(file)
+                fileReader.onloadend = (e: any) => {
+                    const text: string = e.target.result;
+                    const json = JSON.parse(text)
+                    if (json.id === 'cvviewer') {
+                        resolve(text)
+                    } else {
+                        alert(`${file.name} はサポートされていないファイルです`)
+                    }
+                }
+            }
         });
     }
 
@@ -53,12 +74,16 @@ export class ReadFiles {
                             i++
                         }
                     }
-                    if (start) dataList.push(data);
-                    resolve(true);
+                    if (start) {
+                        dataList.push(data)
+                    } else {
+                        alert(`${file.name} はサポートされていないファイルです`)
+                    }
+                    resolve(true)
                 }
             }
             else {
-                alert(`${file.name} はcsvファイルではありません。\n${file.name} is not csv format.\n`);
+                alert(`${file.name} はtxtファイルではありません。\n${file.name} is not csv format.\n`);
                 resolve(true);
             }
 
