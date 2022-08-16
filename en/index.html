@@ -5,13 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../lib/toggle.css">
-    <script src="../main.js"></script>
-    <!-- <script src="./lib/toggle.js"></script> -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./lib/toggle.css">
+    <script src="main.js"></script>
     <style>
         body {
-            font-family: Arial, san-serif;
+            font-family: '游ゴシック', 'Yu Gothic', Arial, san-serif;
         }
     </style>
     <title>CVViewer</title>
@@ -30,26 +29,71 @@
 
         <div id="selectors">
             <div id="file-ui-select" class="view-selector">File</div>
+            <div id="data-ui-select" class="view-selector">Data</div>
             <div id="edit-ui-select" class="view-selector">Edit</div>
             <div id="vis-ui-select" class="view-selector">View</div>
-            <div id="save-ui-select" class="view-selector">Save</div>
-            <!-- <div class="view-selector non-selector">　</div> -->
+            <!-- <div id="save-ui-select" class="view-selector">保存</div> -->
         </div>
 
         <div id="file-ui" class="ui-parts">
             <div class="block">
-                <!-- <h2>ファイル読み込み</h2> -->
                 <input id="file-input" type="file" value="" multiple />
                 <label id="file-drop" for="file-input">
-                    <div class="bold">Drop files or </div>
+                    <div class="bold">Drop files or</div>
                     <div class="bold">Click to select from a folder</div>
-                    <div class="info">CSV and SVG files are supported.</div>
-                    <div class="info">Multiple files can be loaded at once.</div>
-                    <div class="info">Files are NOT uploaded to a server.</div>
-                    <div class="info">Files with the same name cannot be read.</div>
+                    <div class="info">
+                        <ul>
+                            <li>CSV and SVG files are supported.</li>
+                            <li>You can re-edit the chart by loading the json file created by this tool.</li>
+                            <li>Multiple files can be loaded at once.</li>
+                            <li>Files are NOT uploaded to a server.</li>
+                            <li>Files with the same name cannot be read.</li>
+                        </ul>
+                    </div>
                 </label>
             </div>
 
+            <!-- <div class="block">
+                <h2>ファイルリスト</h2>
+                <div id="file-list"></div>
+            </div> -->
+            <div class="block">
+                <h2>Download</h2>
+                <div>
+                    <span2>name</span2>
+                    <input type="text" value="figure" id="save-fig-name">
+                </div>
+
+                <div style="margin-bottom: 5px;">
+                    <span2>fromat</span2>
+                    <select id="fig-type">
+                        <option value="png">png</option>
+                        <option value="json">json</option>
+                    </select>
+                </div>
+
+                <div>
+                    <span2>resolution</span2>
+                    <select id="fig-resolution">
+                        <option value="1">low</option>
+                        <option value="2" selected>mid</option>
+                        <option value="5">high</option>
+                        <option value="10">highest</option>
+                    </select>
+                </div>
+
+
+                <button id="save-fig-btn">Download</button>
+
+                <div class="info">
+                    <div>The file will be saved to the download destination you specify in your browser.</div>
+                    <div>You can re-edit the chart by loading the json file created by this tool.</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="data-ui" class="ui-parts">
             <div class="block">
                 <h2>Data Selection and Averaging</h2>
                 Search
@@ -58,26 +102,37 @@
                 <input id="data-group-label" type="text" value="" placeholder="Group Label">
                 <button id="data-grouping-btn">Averaging</button>
 
-                <div class="info">A list of averaged data sets can be found on the Edit tab.</div>
+                <div class="info">
+                    A list of averaged data sets can be found on the Edit tab.
+                </div>
 
-                <div id="file-list"></div>
+                <div id="data-list"></div>
+
+                <button id="file-all-select">All select</button>
+                <button id="file-all-clear">Clear</button>
             </div>
+
+
+            <!-- <div class="block">
+                <h2>平均化されたデータセットリスト</h2>
+                <div id="group-list"></div>
+            </div> -->
         </div>
 
 
 
         <div id="edit-ui" class="ui-parts">
+
             <div class="block">
-                <h2>Averaged Data Set</h2>
-                <div id="group-list"></div>
+                <h2>Averaging Dataset</h2>
+                <div id="dataset-list"></div>
                 <button id="group-all-show">All Show</button>
                 <button id="group-all-hide">All Hide</button>
             </div>
 
-
             <div class="block">
-                <h2>Title</h2>
-                <input id="set-graph-title" type="text" value="" placeholder="Title Label">
+                <span5 style="font-weight:bold">Title</span5>
+                <input id="set-graph-title" type="text" value="" placeholder="title">
                 <input type="checkbox" id="title-vis" class="toggle" checked>
             </div>
 
@@ -85,15 +140,25 @@
             <div class="block">
                 <h2>Horizontal Axis</h2>
                 <div class="set-axis-label">
-                    <div class="label">Label</div>
-                    <input id="set-graph-label-x" type="text" value="" placeholder="Horizontal Axis Label">
+                    <span4>Label</span4>
+                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="横軸のラベル">
                     <input type="checkbox" id="labelx-vis" class="toggle" checked>
                 </div>
                 <div class="set-axis-seg">
-                    <div class="label">Range</div>
-                    <input type="number" name="" id="x-axis-min" step="0.1">
+                    <span4>Range</span4>
+                    <input type="text" name="" id="x-axis-min" step="0.1">
                     <span>~</span>
-                    <input type="number" name="" id="x-axis-max" step="0.1">
+                    <input type="text" name="" id="x-axis-max" step="0.1">
+                    <select id="x-axis-range-unit">
+                        <option value="ratio">%</option>
+                        <option value="num">V</option>
+                    </select>
+                </div>
+
+                <div>
+                    <span0>Exponential notation</span0><input type="text" value="e+0" id="x-axis-unit"
+                        placeholder="e+0">
+                    <span0>Significant digits</span0><input type="number" value="3" id="x-sig-dig">
                 </div>
             </div>
 
@@ -101,32 +166,58 @@
             <div class="block">
                 <h2>Vertical Axis</h2>
                 <div class="set-axis-label">
-                    <div class="label">Label</div>
-                    <input id="set-graph-label-y" type="text" value="" placeholder="Vertical Axis Label">
+                    <span4>Label</span4>
+                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
                     <input type="checkbox" id="labely-vis" class="toggle" checked>
                 </div>
                 <div class="set-axis-seg">
-                    <div class="label">Range</div>
+                    <span4>Range</span4>
                     <input type="text" name="" id="y-axis-min">
                     <span>~</span>
                     <input type="text" name="" id="y-axis-max">
+
+                    <select id="y-axis-range-unit">
+                        <option value="ratio">%</option>
+                        <option value="num">A</option>
+                    </select>
                 </div>
+
+                <div>
+                    <span0>Exponential notation</span0>
+                    <select id="y-axis-unit">
+                        <option value="0">none</option>
+                        <option value="-1">d (e-1)</option>
+                        <option value="-2">c (e-2)</option>
+                        <option value="-3">m (e-3)</option>
+                        <option value="-6" selected>μ (e-6)</option>
+                        <option value="-9">n (e-9)</option>
+                        <option value="-12">p (e-12)</option>
+                        <option value="-15">f (e-15)</option>
+                    </select>
+                    <span0>Significant digits</span0>
+                    <input type="number" value="3" id="y-sig-dig">
+                </div>
+
             </div>
         </div>
 
         <div id="vis-ui" class="ui-parts">
             <div class="block">
-                <div class="label">Line Type</div>
-                <select name="line-type" id="line-type-selector">
-                    <option value="mono">Monochrome</option>
-                    <option value="hue">Hue</option>
-                    <option value="bri">Brightness</option>
-                    <option value="sat_blue">Satiration(Blue)</option>
-                    <option value="sat_orange">Satiration(Orange))</option>
-                    <option value="dash">Dashed</option>
-                </select>
+                <div class="label">
+                    <span0>Line Color</span0>
+                    <select name="line-type" id="line-type-selector">
+                        <option value="mono">Monochrome</option>
+                        <option value="hue">Hue</option>
+                        <option value="bri">Brightness</option>
+                        <option value="sat_blue">Saturation(Blue)</option>
+                        <option value="sat_orange">Saturation(Orange)</option>
+                    </select>
+                    <span6></span6>
+                    <input type="checkbox" id="dash-line-mode" class="toggle">
+                    <span5><label for="dash-line-mode">Dashed</label></span5>
+                </div>
                 <div class="info">
-                    The type of line is automatically set. Fine-tuning is possible from the Edit tab.
+                    Automatic color scheme for lines.
                 </div>
             </div>
 
@@ -147,8 +238,9 @@
 
             <div class="block">
                 <div class="label">Font Size: 100%</div>
-                <input type="range" id="legend-slider" min="0" max="200" step="10" value="100" list="legend-segment">
-                <datalist id="legend-segment">
+                <input type="range" id="fontsize-slider" min="0" max="200" step="10" value="100"
+                    list="fontsize-segment">
+                <datalist id="fontsize-segment">
                     <option value="0"></option>
                     <option value="50"></option>
                     <option value="100"></option>
@@ -159,20 +251,24 @@
 
             <div class="block">
                 <div class="label">
-                    <input type="checkbox" id="peak-vis" class="toggle" checked>
-                    Peak value
+                    <input type="checkbox" id="max-vis" class="toggle">
+                    <span2><label for="max-vis">Max</label></span2>
+                    <input type="checkbox" id="min-vis" class="toggle">
+                    <span2><label for="min-vis">Min</label></span2>
                 </div>
                 <div class="label">
                     <input type="checkbox" id="grid-vis" class="toggle">
-                    Grid
+                    <span2><label for="grid-vis">Grid</label></span2>
+                    <input type="checkbox" id="frame-vis" class="toggle" checked>
+                    <span2><label for="frame-id">Frame</label></span2>
                 </div>
                 <div class="label">
                     <input type="checkbox" id="legend-vis" class="toggle" checked>
-                    Legend
+                    <span2><label for="legend-vis">Legend</label></span2>
                 </div>
                 <div>
                     <input type="checkbox" id="legend-mouse" class="toggle">
-                    Mouse Mode : Move legend position.
+                    <label for="legend-mouse">Positioning Legend</label>
                     <div class="info">
                         Move the legend to the position clicked with the mouse.
                     </div>
@@ -181,7 +277,7 @@
 
 
             <div class="block">
-                <div class="label">Fugure Size</div>
+                <div class="label">Chart Size</div>
                 <input type="number" value="600" id="svg-width">px
                 <span>&times;</span>
                 <input type="number" value="450" id="svg-height">px
@@ -191,27 +287,12 @@
 
 
 
-        <div id="save-ui" class="ui-parts">
-            <div class="block">
-                <h2>Download</h2>
-                <div>
-                    <div class="btn-label0">Name</div> <input type="text" value="figure.png" id="save-fig-name">
-                </div>
-                <button id="save-fig-btn">Download</button>
-                <div class="info">
-                    <ul>
-                        <li>The file will be saved to the download destination you specify in your browser.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
 
         <div class="footer">
             <div>
                 <a href="../">Japanese</a> /
                 <a><u>English</u></a> /
-                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md" target="_blank">Manuel</a> /
+                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md" target="_blank">Manual</a> /
                 <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
             </div>
             <div class="info">&copy; 2022, Onuki Tomoya.</div>
