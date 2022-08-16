@@ -340,20 +340,23 @@ input[type='text'] {
 }
 
 .set-axis-label input[type='text'] {
-    width: 160px;
+    width: 126px;
 }
 
 #set-graph-title {
-    width: 135px;
+    width: 160px;
 }
 
 #x-axis-unit {
     width: 60px;
 }
+#y-axis-unit {
+    margin: 0 0 5px 0;
+}
 
 .set-axis-seg input[type='number'],
 .set-axis-seg input[type='text'] {
-    width: 65px;
+    width: 60px;
 }
 #x-sig-dig,
 #y-sig-dig {
@@ -442,7 +445,7 @@ input[type='text'] {
 
 #dataset-list {
     /* height: 160px; */
-    height: calc(100vh - 580px);
+    height: calc(100vh - 620px);
     overflow: scroll;
     border-bottom: 1px #eee solid;
 }

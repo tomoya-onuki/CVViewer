@@ -48,7 +48,7 @@ export class Main {
                     .then((dataList: Data[]) => me.setData(dataList))
 
                 if (jsonFiles.length > 1) {
-                    alert('読み込むことができるjsonファイルは1つです')
+                    alert('Only one JSON file can be read.')
                 }
                 fReader.readJSON(jsonFiles)
                     .then((jsonStr: string) => me.setJson(jsonStr))
@@ -166,154 +166,16 @@ export class Main {
             if (selectedDataLabelList.length > 0 && !hasGroupLabel) {
                 // グルーピング
                 me.chart.groupingData(selectedDataLabelList, groupKey)
-<<<<<<< HEAD
-                const $checkbox = $('<input>')
-                    .attr('type', 'checkbox')
-                    .attr('id', `${groupKey}-check`)
-                    .addClass('group-checkbox')
-                    .prop('checked', true)
-                const $text = $('<input>')
-                    .val(groupKey)
-                    .attr('type', 'text')
-                    .attr('placeholder', 'Group Label')
-                const $color = $('<input>')
-                    .attr('type', 'color')
-                    .attr('id', `${groupKey}-color`)
-                const $delete = $('<button></button>')
-                    .text('del')
-                    .attr('id', `${groupKey}-delete`)
-                    .addClass('item-btn')
-                const $detailBtn = $('<input>')
-                    .attr('type', 'checkbox')
-                    .attr('id', `${groupKey}-detail-btn`)
-                    .addClass('group-detail-show')
-                const $detailBtnLabel = $('<label></label>')
-                    .attr('for', `${groupKey}-detail-btn`)
-                    .text(parseHTMLcode('&#9660;'))
-                    .addClass('group-detail-show-label')
-                const $detail = $('<div></div>')
-                    .addClass('group-detail')
-                const $downBtn = $('<button></button>')
-                    .text(parseHTMLcode('&darr;'))
-                    .addClass('item-btn')
-                const $upBtn = $('<button></button>')
-                    .text(parseHTMLcode('&uarr;'))
-                    .addClass('item-btn')
-
-                const $div0 = $('<div></div>')
-                    .addClass('col0')
-                    .append($color, $text, $checkbox, $delete, $detailBtn, $downBtn, $upBtn, $detailBtnLabel)
-                const $item = $('<div></div>')
-                    .addClass('group-item')
-                    .attr('name', groupKey)
-                    .append($div0, $detail)
-                $('#group-list').append($item)
-
-                // new myUI().toggle()
-
-                $('.file-item > input').each(function () {
-                    $(this).prop('checked', false)
-                })
-                $text.on('change', function () {
-                    const newLabel: string = String($(this).val())
-                    me.chart.changeGroupLabel(groupKey, newLabel)
-                })
-                $checkbox.on('input', function () {
-                    const flag: boolean = Boolean($(this).prop('checked'))
-                    me.chart.changeDataVisible(groupKey, flag)
-                })
-                $color.on('input', function () {
-                    const color: string = String($(this).val())
-                    me.chart.changeDataColor(groupKey, color)
-                })
-                $delete.on('click', function () {
-                    if (confirm('Delete.')) {
-                        $item.remove()
-                        me.chart.removeGroup(groupKey)
-                    }
-                })
-                $downBtn.on('click', function () {
-                    let myIdx: number = 0
-                    $('.group-item').each(function (i) {
-                        if (String($(this).attr('name')) === groupKey) {
-                            myIdx = i
-                        }
-                    })
-                    if (myIdx < $('.group-item').length - 1) {
-                        let nextIdx: number = myIdx + 1
-                        $('.group-item').eq(nextIdx).after($('.group-item').eq(myIdx))
-                    }
-
-                    let keyList: string[] = []
-                    $('.group-item').each(function (i) {
-                        let key: string = String($(this).find('input[type="text"]').val())
-                        keyList.push(key)
-                    })
-                    me.chart.sortGroupKeyList(keyList)
-                })
-                $upBtn.on('click', function () {
-                    let myIdx: number = 0
-                    $('.group-item').each(function (i) {
-                        if (String($(this).attr('name')) === groupKey) {
-                            myIdx = i
-                        }
-                    })
-                    if (myIdx > 0) {
-                        let preIdx: number = myIdx - 1
-                        $('.group-item').eq(preIdx).before($('.group-item').eq(myIdx))
-                    }
-
-                    let keyList: string[] = []
-                    $('.group-item').each(function (i) {
-                        let key: string = String($(this).find('input[type="text"]').val())
-                        keyList.push(key)
-                    })
-                    me.chart.sortGroupKeyList(keyList)
-                })
-                $detailBtn.on('input', function () {
-                    const isShow: boolean = Boolean($detailBtn.prop('checked'))
-                    if (isShow) {
-                        let dataLabelList: string[] = me.chart.getGroup(groupKey).dataLabelList()
-                        $detail.empty()
-                        dataLabelList.forEach(flabel => {
-                            const $gdelete = $('<button></button>')
-                                .text('del')
-                                .addClass('item-btn')
-                            const $gtext = $('<div></div>')
-                                .text(flabel.replace('-', '.'))
-                                .addClass('label')
-                            const $gitem = $('<div></div>')
-                                .addClass('group-detail-item')
-                                .append($gtext, $gdelete)
-
-                            $detail.append($gitem)
-
-                            $gdelete.on('click', function () {
-                                if (confirm(`Delete ${flabel} from ${groupKey}.`)) {
-                                    me.chart.removeDataFromGroup(groupKey, flabel)
-                                    $gitem.remove()
-                                }
-                            })
-                        })
-
-                        $detailBtnLabel.text(parseHTMLcode('&#9650;'))
-                        $detail.show()
-                    } else {
-                        $detailBtnLabel.text(parseHTMLcode('&#9660;'))
-                        $detail.hide()
-                    }
-=======
                 // 配色
                 const type: string = String($('#line-type-selector').find('option:selected').val())
                 const isDash: boolean = $('#dash-line-mode').prop('checked')
                 me.chart.changeLineType(type, isDash)
->>>>>>> 11992789a4092b72c2865234bf6ff5f8d01f2a92
 
                 me.addGroupItems(groupKey)
             } else if (hasGroupLabel) {
                 alert(`${groupKey} is already exist.`)
             } else {
-                alert(' Failed to average. Selected data is none.')
+                alert('Failed to average. Selected data were none.')
             }
         })
 
@@ -550,7 +412,7 @@ export class Main {
         $('#fontsize-slider').on('input', function () {
             const val: number = Number($(this).val())
             const ratio = val / 100
-            $(this).prev().text(`Text Size : ${val}%`)
+            $(this).prev().text(`Font Size : ${val}%`)
             me.chart.chageFontSize(ratio)
         })
         let legendMouseMode: boolean = false
@@ -610,48 +472,12 @@ export class Main {
             if (!this.chart.includesData(data.label)) {
 
                 me.chart.entry(data)
-<<<<<<< HEAD
-
-                $delete.on('click', function () {
-                    if (confirm('Remove File.')) {
-                        me.chart.removeData(data.label)
-                        $item.remove()
-                    }
-                })
-                $show.on('click', function () {
-                    $('table').remove()
-                    const list: any[] = me.chart.getData(data.label).values
-                    const $thead = $('<thead></thead>')
-                    let $row = $('<tr></tr>')
-                    let $col0 = $('<th></th>').text('potential')
-                    let $col1 = $('<th></th>').text('current')
-                    $row.append($col0, $col1)
-                    $thead.append($row)
-
-                    const $tbody = $('<tbody></tbody>')
-                    list.forEach(val => {
-                        let $row = $('<tr></tr>')
-                        let $col0 = $('<th></th>').text(val.potential)
-                        let $col1 = $('<th></th>').text(val.current)
-                        $row.append($col0, $col1)
-                        $tbody.append($row)
-                    })
-                    const $tabel = $('<table></table>')
-                        .append($thead, $tbody)
-                    $('#table').append($tabel)
-                    $('#table-title').text(data.label.replace('-', '.'))
-
-                    $('#table').fadeIn()
-                    $('#view').fadeOut()
-                })
-=======
                 me.changeUiPane($('#data-ui-select'), $('#data-ui'))
                 this.addDataItems(data)
->>>>>>> 11992789a4092b72c2865234bf6ff5f8d01f2a92
             }
             // データラベルが既に存在するとき、
             else {
-                alert(`${data.label}.csv is already load, or file name is duplicated.`)
+                alert(`${data.label}.csv is already read.`)
             }
         });
 
@@ -695,7 +521,7 @@ export class Main {
 
         // イベントリスナーの登録
         $delete.on('click', function () {
-            if (confirm('ファイルを削除します')) {
+            if (confirm('Delete file.')) {
                 me.chart.removeData(data.label)
                 $item.remove()
             }
@@ -855,7 +681,7 @@ export class Main {
                     $detail.append($gitem)
 
                     $gdelete.on('click', function () {
-                        if (confirm(`${groupKey}から${flabel}を削除します`)) {
+                        if (confirm(`Delete ${flabel} from ${groupKey}.`)) {
                             me.chart.removeDataFromGroup(groupKey, flabel)
                             $gitem.remove()
                         }
@@ -877,7 +703,7 @@ export class Main {
 
     private saveFig(type: string): void {
         if ($('#fig').length === 0) {
-            alert('Chart is not exist.')
+            alert('Chart is nothing.')
             return;
         } else {
             if (type === 'png') {
