@@ -156,14 +156,39 @@
                         <input type="checkbox" id="grid-vis" class="toggle-switch">
                     </span0>
                 </div>
+
                 <div class="block2">
-                    <!-- <span4>サイズ</span4> -->
-                    <span0>
-                        <input type="number" value="600" id="svg-width">px
-                        <span>&times;</span>
-                        <input type="number" value="450" id="svg-height">px
-                    </span0>
+                    <span4>サイズ</span4>
+                    <input type="number" value="600" id="svg-width">px
+                    <span>&times;</span>
+                    <input type="number" value="450" id="svg-height">px
+
                     <button id="svg-size-optimize-btn">最適化</button>
+                </div>
+
+                <div class="block2">
+                    <div>
+                        <span4>余白</span4>
+                        <span>上</span>
+                        <input id="margin-top" type="number" value="50" step="5" min="0">
+                        <span>px</span>
+
+                        <span7></span7>
+
+                        <span>下</span>
+                        <input id="margin-bottom" type="number" value="50" step="5" min="0">
+                        <span>px</span>
+                    </div>
+                    <div>
+                        <span4></span4>
+                        <span>左</span>
+                        <input id="margin-left" type="number" value="50" step="5" min="0">
+                        <span>px</span>
+                        <span7></span7>
+                        <span>右</span>
+                        <input id="margin-right" type="number" value="50" step="5" min="0">
+                        <span>px</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -274,6 +299,12 @@
                 <div>
                     <span1>目盛り幅</span1><input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
                         id="x-ticks-unit">e+0</span>
+                    <span7></span7>
+                    <span0>方向</span0>
+                    <select id="x-axis-direction">
+                        <option value="out">外側</option>
+                        <option value="in">内側</option>
+                    </select>
                 </div>
             </div>
 
@@ -300,6 +331,12 @@
                 <div>
                     <span1>目盛り幅</span1><input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
                         id="y-ticks-unit">e-6</span>
+                    <span7></span7>
+                    <span0>方向</span0>
+                    <select id="y-axis-direction">
+                        <option value="out">外側</option>
+                        <option value="in">内側</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -320,82 +357,85 @@
 
     <div id="right-box">
         <div id="view"></div>
+
+
+        <div id="help-modal">
+            <div class="close">&times;</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>操作</th>
+                        <th>windows</th>
+                        <th>mac</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>画像保存</td>
+                        <td>Alt + Shift + s</td>
+                        <td>&#8997 + Shift + s</td>
+                    </tr>
+                    <tr>
+                        <td>json保存</td>
+                        <td>Alt + s</td>
+                        <td>&#8997 + s</td>
+                    </tr>
+                    <tr>
+                        <td>タブ移動</td>
+                        <td>Alt + 1 ~ 4</td>
+                        <td>&#8997 + 1 ~ 4</td>
+                    </tr>
+                    <tr>
+                        <td>サイズの最適化</td>
+                        <td>Alt + o</td>
+                        <td>&#8997 + o</td>
+                    </tr>
+                    <tr>
+                        <td>拡大</td>
+                        <td>Alt + +</td>
+                        <td>&#8997 + +</td>
+                    </tr>
+                    <tr>
+                        <td>縮小</td>
+                        <td>Alt + -</td>
+                        <td>&#8997 + -</td>
+                    </tr>
+                    <tr>
+                        <td>グリッド</td>
+                        <td>Alt + g</td>
+                        <td>&#8997 + g</td>
+                    </tr>
+                    <tr>
+                        <td>最大値</td>
+                        <td>Alt + m</td>
+                        <td>&#8997 + m</td>
+                    </tr>
+                    <tr>
+                        <td>最小値</td>
+                        <td>Alt + n</td>
+                        <td>&#8997 + n</td>
+                    </tr>
+                    <tr>
+                        <td>凡例</td>
+                        <td>Alt + l</td>
+                        <td>&#8997 + l</td>
+                    </tr>
+                    <tr>
+                        <td>枠線</td>
+                        <td>Alt + f</td>
+                        <td>&#8997 + f</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
     </div>
 
     <div id="data-modal">
         <div class="close">&times;</div>
         <div id="data-modal-label"></div>
     </div>
-
-    <div id="help-modal">
-        <div class="close">&times;</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>操作</th>
-                    <th>windows</th>
-                    <th>mac</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>画像保存</td>
-                    <td>Alt + Shift + s</td>
-                    <td>&#8997 + Shift + s</td>
-                </tr>
-                <tr>
-                    <td>json保存</td>
-                    <td>Alt + s</td>
-                    <td>&#8997 + s</td>
-                </tr>
-                <tr>
-                    <td>タブ移動</td>
-                    <td>Alt + 1 ~ 4</td>
-                    <td>&#8997 + 1 ~ 4</td>
-                </tr>
-                <tr>
-                    <td>サイズの最適化</td>
-                    <td>Alt + o</td>
-                    <td>&#8997 + o</td>
-                </tr>
-                <tr>
-                    <td>拡大</td>
-                    <td>Alt + +</td>
-                    <td>&#8997 + +</td>
-                </tr>
-                <tr>
-                    <td>縮小</td>
-                    <td>Alt + -</td>
-                    <td>&#8997 + -</td>
-                </tr>
-                <tr>
-                    <td>グリッド</td>
-                    <td>Alt + g</td>
-                    <td>&#8997 + g</td>
-                </tr>
-                <tr>
-                    <td>最大値</td>
-                    <td>Alt + m</td>
-                    <td>&#8997 + m</td>
-                </tr>
-                <tr>
-                    <td>最小値</td>
-                    <td>Alt + n</td>
-                    <td>&#8997 + n</td>
-                </tr>
-                <tr>
-                    <td>凡例</td>
-                    <td>Alt + l</td>
-                    <td>&#8997 + l</td>
-                </tr>
-                <tr>
-                    <td>枠線</td>
-                    <td>Alt + f</td>
-                    <td>&#8997 + f</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    
 </body>
 
 </html>
