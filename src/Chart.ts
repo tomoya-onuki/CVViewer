@@ -10,7 +10,7 @@ export class Chart {
     private width: number;
     private height: number;
     private margin: { [key: string]: number } = {
-        'top': 30, 'bottom': 50, 'right': 20, 'left': 50
+        'top': 50, 'bottom': 50, 'right': 50, 'left': 50
     };
     private dataList: { [key: string]: Data } = {};
     private groupList: { [key: string]: DataSet } = {};
@@ -25,6 +25,9 @@ export class Chart {
     private xAxisMax: number = 0
     private yAxisMin: number = 0
     private yAxisMax: number = 0
+
+    private xAxisInner: boolean = false
+    private yAxisInner: boolean = false
 
     private titleLabel: string = 'Title';
     private labelX: string = 'Potential / V';
@@ -191,6 +194,7 @@ export class Chart {
                 .attr("id", "fig")
                 .attr("width", this.width)
                 .attr("height", this.height)
+                .style("background-color", "#FFF")
 
             let chartW = this.width - this.margin.left - this.margin.right
             let chartH = this.height - this.margin.top - this.margin.bottom
@@ -238,6 +242,19 @@ export class Chart {
             this.ticksX = Array.from(new Set(this.ticksX))
             this.ticksY = Array.from(new Set(this.ticksY))
 
+            const xAxisOut = d3.axisBottom(xScale)
+                .tickFormat(d3.format('e'))
+                .tickValues(this.ticksX)
+            const xAxisIn = d3.axisTop(xScale)
+                .tickFormat(d3.format('e'))
+                .tickValues(this.ticksX)
+
+            const yAxisOut = d3.axisLeft(yScale)
+                .tickFormat(d3.format('e'))
+                .tickValues(this.ticksY)
+            const yAxisIn = d3.axisRight(yScale)
+                .tickFormat(d3.format('e'))
+                .tickValues(this.ticksY)
 
             // add X axis
             svg.append("g")
@@ -249,7 +266,7 @@ export class Chart {
                 .attr("font-style", this.fontItalic.axisx ? 'italic' : 'nomal')
                 .attr('font-family', this.font.axisx)
                 .attr("cursor", "pointer")
-                .call(d3.axisBottom(xScale).tickFormat(d3.format('e')).tickValues(this.ticksX))
+                .call(this.xAxisInner ? xAxisIn : xAxisOut)
                 .on('click', function (e) {
                     if (me.selectedText != 'axisx') {
                         me.selectedText = 'axisx'
@@ -282,7 +299,7 @@ export class Chart {
                 .attr("font-weight", this.fontBold.axisy ? 'bold' : 'nomal')
                 .attr("font-style", this.fontItalic.axisy ? 'italic' : 'nomal')
                 .attr("cursor", "pointer")
-                .call(d3.axisLeft(yScale).tickFormat(d3.format('e')).tickValues(this.ticksY))
+                .call(this.yAxisInner ? yAxisIn : yAxisOut)
                 .on('click', function (e) {
                     if (me.selectedText != 'axisy') {
                         me.selectedText = 'axisy'
@@ -642,6 +659,12 @@ export class Chart {
         $('#set-graph-label-y').val(this.labelY)
 
 
+        $('#margin-top').val(this.margin.top)
+        $('#margin-bottom').val(this.margin.bottom)
+        $('#margin-left').val(this.margin.left)
+        $('#margin-right').val(this.margin.right)
+
+
         if (String($('#x-axis-range-unit').find('option:selected').val()) === 'ratio') {
             let ratioMin = Math.round((this.potentialMin - this.xAxisMin) / (this.potentialMax - this.potentialMin) * 100)
             $('#x-axis-min').val(ratioMin)
@@ -768,6 +791,18 @@ export class Chart {
         this.frameVis = flag
         this.draw()
     }
+
+    public changeXAxisInner(flag: boolean) {
+        this.xAxisInner = flag
+        console.log(this.xAxisInner)
+        this.draw()
+    }
+    public changeYAxisInner(flag: boolean) {
+        this.yAxisInner = flag
+        console.log(this.yAxisInner)
+        this.draw()
+    }
+
 
     public setFontStyleUI() {
         const me = this
@@ -1013,6 +1048,12 @@ export class Chart {
         this.groupList[groupLabel].removeData(dataLabel)
         // console.log(this.groupList)
         this.sortGroupKeyList(Object.keys(this.groupList))
+        this.draw()
+    }
+
+
+    public changeMargin(key: string, val: number) {
+        this.margin[key] = val
         this.draw()
     }
 

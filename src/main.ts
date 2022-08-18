@@ -341,6 +341,11 @@ export class Main {
             if (val > 0)
                 me.chart.changeTicksStepX(val)
         })
+        $('#x-axis-direction').on('input', function() {
+            const flag: boolean = String($(this).find('option:selected').val()) == 'in'
+            me.chart.changeXAxisInner(flag)
+        })
+
         $('#y-axis-range-unit').on('input', function () {
             let val0 = Number($('#y-axis-min').val())
             let val1 = Number($('#y-axis-max').val())
@@ -406,6 +411,10 @@ export class Main {
             let val: number = Number(String($(this).val()) + String($('#y-axis-unit').val()))
             if (val > 0)
                 me.chart.changeTicksStepY(val)
+        })
+        $('#y-axis-direction').on('input', function() {
+            const flag: boolean = String($(this).find('option:selected').val()) == 'in'
+            me.chart.changeYAxisInner(flag)
         })
 
         $('#svg-width').on('input', function () {
@@ -515,6 +524,26 @@ export class Main {
             me.chart.alignLabelPos('hcenter')
         })
 
+
+        $('#margin-top').on('input', function () {
+            const val: number = Number($(this).val())
+            me.chart.changeMargin('top', val)
+        })
+        $('#margin-bottom').on('input', function () {
+            const val: number = Number($(this).val())
+            me.chart.changeMargin('bottom', val)
+        })
+        $('#margin-left').on('input', function () {
+            const val: number = Number($(this).val())
+            me.chart.changeMargin('left', val)
+        })
+        $('#margin-right').on('input', function () {
+            const val: number = Number($(this).val())
+            me.chart.changeMargin('right', val)
+        })
+
+
+
         let viewMouseDown: boolean = false
         let preMousePos: number[] = []
         $('#view')
@@ -533,7 +562,7 @@ export class Main {
                     let mosueY = e.clientY - rect.top
                     let diffX = mouseX - preMousePos[0]
                     let diffY = mosueY - preMousePos[1]
-                    
+
                     me.chart.addLabelPos(diffX, diffY)
 
                     preMousePos[0] = mouseX
@@ -546,104 +575,114 @@ export class Main {
                 $(this).css('cursor', 'auto')
             })
 
-        $(window).on('keydown', function (e) {
-            // テンキー
-            switch (e.keyCode) {
-                case 37: // ←
-                    me.chart.addLabelPos(-5, 0)
-                    break;
-                case 38: // ↑
-                    me.chart.addLabelPos(0, -5)
-                    break;
-                case 39: // →
-                    me.chart.addLabelPos(5, 0)
-                    break;
-                case 40: // ↓
-                    me.chart.addLabelPos(0, 5)
-                    break;
-            }
-
-            // ショートカット
-            if (e.altKey) {
+        $(window)
+            .resize(function () {
+                let w = Number($('#right-box').width())
+                let h = Number($('#right-box').height())
+                let svgW: number = Number($('#svg-width').val())
+                let svgH: number = Number($('#svg-height').val())
+                if (svgW > w || svgH > h) {
+                    me.optimizeChartSize()
+                }
+            })
+            .on('keydown', function (e) {
+                // テンキー
                 switch (e.keyCode) {
-                    // サイズ調整
-                    case 186: // 拡大 +
-                        var w = Number($('#svg-width').val()) + 10
-                        var h = Number($('#svg-height').val()) + 10
-                        $('#svg-width').val(w)
-                        $('#svg-height').val(h)
-                        me.chart.resize(w, h)
-                        break
-                    case 189: // 縮小
-                        var w = Number($('#svg-width').val()) - 10
-                        var h = Number($('#svg-height').val()) - 10
-                        $('#svg-width').val(w)
-                        $('#svg-height').val(h)
-                        me.chart.resize(w, h)
-                        break
-                    case 79: // サイズの最適化
-                        me.optimizeChartSize()
-                        break
-
-                    // タブ移動
-                    case 49: // 1
-                        me.changeUiPane($('#file-ui-select'), $('#file-ui'))
-                        break
-                    case 50: // 2
-                        me.changeUiPane($('#data-ui-select'), $('#data-ui'))
-                        break
-                    case 51: // 3
-                        me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
-                        break
-                    case 52: // 4
-                        me.changeUiPane($('#edit-ui-select'), $('#edit-ui'))
-                        break
-                    case 53: // 5
-                        // me.changeUiPane($('#save-ui-select'), $('#save-ui'))
-                        break
-
-                    case 71: // g 
-                        var flag = $('#grid-vis').prop('checked') ? false : true
-                        $('#grid-vis').prop('checked', flag)
-                        me.chart.changeGridVis(flag)
+                    case 37: // ←
+                        me.chart.addLabelPos(-5, 0)
                         break;
-                    case 77: // m
-                        var flag = $('#max-vis').prop('checked') ? false : true
-                        $('#max-vis').prop('checked', flag)
-                        me.chart.changeMaxVis(flag)
+                    case 38: // ↑
+                        me.chart.addLabelPos(0, -5)
                         break;
-                    case 78: // n 
-                        var flag = $('#min-vis').prop('checked') ? false : true
-                        $('#min-vis').prop('checked', flag)
-                        me.chart.changeMinVis(flag)
+                    case 39: // →
+                        me.chart.addLabelPos(5, 0)
                         break;
-                    case 70: // f 
-                        var flag = $('#frame-vis').prop('checked') ? false : true
-                        $('#frame-vis').prop('checked', flag)
-                        me.chart.changeFrameVis(flag)
-                        break;
-                    case 76: // l 
-                        var flag = $('#legend-vis').prop('checked') ? false : true
-                        $('#legend-vis').prop('checked', flag)
-                        me.chart.changeLegendVis(flag)
+                    case 40: // ↓
+                        me.chart.addLabelPos(0, 5)
                         break;
                 }
 
-                // PNG保存
-                if (e.keyCode === 83) {
-                    if (e.shiftKey) {
-                        me.saveFigbyPNG()
-                    } else {
-                        me.saveFigByJson()
+                // ショートカット
+                if (e.altKey) {
+                    switch (e.keyCode) {
+                        // サイズ調整
+                        case 186: // 拡大 +
+                            var w = Number($('#svg-width').val()) + 10
+                            var h = Number($('#svg-height').val()) + 10
+                            $('#svg-width').val(w)
+                            $('#svg-height').val(h)
+                            me.chart.resize(w, h)
+                            break
+                        case 189: // 縮小
+                            var w = Number($('#svg-width').val()) - 10
+                            var h = Number($('#svg-height').val()) - 10
+                            $('#svg-width').val(w)
+                            $('#svg-height').val(h)
+                            me.chart.resize(w, h)
+                            break
+                        case 79: // サイズの最適化
+                            me.optimizeChartSize()
+                            break
+
+                        // タブ移動
+                        case 49: // 1
+                            me.changeUiPane($('#file-ui-select'), $('#file-ui'))
+                            break
+                        case 50: // 2
+                            me.changeUiPane($('#data-ui-select'), $('#data-ui'))
+                            break
+                        case 51: // 3
+                            me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
+                            break
+                        case 52: // 4
+                            me.changeUiPane($('#edit-ui-select'), $('#edit-ui'))
+                            break
+                        case 53: // 5
+                            // me.changeUiPane($('#save-ui-select'), $('#save-ui'))
+                            break
+
+                        case 71: // g 
+                            var flag = $('#grid-vis').prop('checked') ? false : true
+                            $('#grid-vis').prop('checked', flag)
+                            me.chart.changeGridVis(flag)
+                            break;
+                        case 77: // m
+                            var flag = $('#max-vis').prop('checked') ? false : true
+                            $('#max-vis').prop('checked', flag)
+                            me.chart.changeMaxVis(flag)
+                            break;
+                        case 78: // n 
+                            var flag = $('#min-vis').prop('checked') ? false : true
+                            $('#min-vis').prop('checked', flag)
+                            me.chart.changeMinVis(flag)
+                            break;
+                        case 70: // f 
+                            var flag = $('#frame-vis').prop('checked') ? false : true
+                            $('#frame-vis').prop('checked', flag)
+                            me.chart.changeFrameVis(flag)
+                            break;
+                        case 76: // l 
+                            var flag = $('#legend-vis').prop('checked') ? false : true
+                            $('#legend-vis').prop('checked', flag)
+                            me.chart.changeLegendVis(flag)
+                            break;
+                    }
+
+                    // PNG保存
+                    if (e.keyCode === 83) {
+                        if (e.shiftKey) {
+                            me.saveFigbyPNG()
+                        } else {
+                            me.saveFigByJson()
+                        }
                     }
                 }
-            }
-        })
+            })
     }
 
     private optimizeChartSize() {
-        let w = Math.round(Number($('#right-box').width()) * 0.9)
-        let h = Math.round(Number($('#right-box').height()) * 0.9)
+        let w = Math.round(Number($('#right-box').width()) * 0.95)
+        let h = Math.round(Number($('#right-box').height()) * 0.95)
         if (w < h) h = w
         $('#svg-width').val(w)
         $('#svg-height').val(h)
