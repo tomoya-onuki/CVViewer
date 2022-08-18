@@ -12,14 +12,17 @@ const parseHTMLcode = (code: string): string => {
 }
 
 $(function () {
-    new myUI().toggle()
+    const ui = new myUI()
+    ui.toggleSwitch()
+    ui.switchBtn()
+    ui.fontSelector()
+
     new Main().init()
 
-
-    $('#help-modal > .close').on('click', function(){
+    $('#help-modal > .close').on('click', function () {
         $('#help-modal').hide()
     })
-    $('#help-alert').on('click', function() {
+    $('#help-alert').on('click', function () {
         $('#help-modal').show()
     })
 });
@@ -122,6 +125,9 @@ export class Main {
         $('#vis-ui-select').on('click', function () {
             me.changeUiPane($(this), $('#vis-ui'));
         });
+        // $('#save-ui-select').on('click', function () {
+        //     me.changeUiPane($(this), $('#save-ui'));
+        // });
 
 
 
@@ -246,11 +252,19 @@ export class Main {
 
         // ピークの表示
         $('#max-vis').on('input', function () {
-            const flag: boolean = Boolean($(this).prop('checked'))
+            let flag: boolean = Boolean($(this).prop('checked'))
+            if (flag) {
+                $('#legend-vis').prop('checked', true)
+                me.chart.changeLegendVis(true)
+            }
             me.chart.changeMaxVis(flag)
         })
         $('#min-vis').on('input', function () {
-            const flag: boolean = Boolean($(this).prop('checked'))
+            let flag: boolean = Boolean($(this).prop('checked'))
+            if (flag) {
+                $('#legend-vis').prop('checked', true)
+                me.chart.changeLegendVis(true)
+            }
             me.chart.changeMinVis(flag)
         })
 
@@ -312,14 +326,20 @@ export class Main {
                 me.chart.setAxisLabelX(`Potential / V`)
                 $('#set-graph-label-x').val(`Potenital / V`)
             }
+            $('#x-ticks-unit').text(unit)
         })
         $('#x-sig-dig').on('input', function () {
             let val: number = Number($(this).val())
             if (val < 1) {
                 val = 1
-                $(this).val(val)
             }
             me.chart.changeSigDigX(val)
+        })
+        $('#x-ticks').on('input', function () {
+            // let val: number = Number($(this).val())
+            let val: number = Number(String($(this).val()) + String($('#x-axis-unit').val()))
+            if (val > 0)
+                me.chart.changeTicksStepX(val)
         })
         $('#y-axis-range-unit').on('input', function () {
             let val0 = Number($('#y-axis-min').val())
@@ -358,22 +378,34 @@ export class Main {
             }
         })
         $('#y-axis-unit').on('input', function () {
-            const unit: number = Number($('#y-axis-unit').find('option:selected').val())
-            me.chart.changeExponentY(unit)
+            const unit: string = String($('#y-axis-unit').val())
+            if (unit.match(/e[+-]\d+/g) != null) {
+                const exp: number = parseInt(unit.replace('e', ''))
+                me.chart.changeExponentY(exp)
 
-            // ラベルの更新
-            const str: string = 'e-' + String(unit * -1)
-            let prefix = SIprefix[str] ? SIprefix[str] : str + ' '
-            $('#set-graph-label-y').val(`Current / ${prefix}A`)
-            me.chart.setAxisLabelY(`Current / ${prefix}A`)
+                // ラベルの更新
+                let prefix = SIprefix[unit] ? SIprefix[unit] : unit + ' '
+                $('#set-graph-label-y').val(`Current / ${prefix}A`)
+                me.chart.setAxisLabelY(`Current / ${prefix}A`)
+            } else {
+                me.chart.changeExponentY(0)
+                $('#set-graph-label-y').val(`Current / A`)
+                me.chart.setAxisLabelY(`Current / A`)
+            }
+
+            $('#y-ticks-unit').text(unit)
         })
         $('#y-sig-dig').on('input', function () {
             let val: number = Number($(this).val())
             if (val < 1) {
                 val = 1
-                $(this).val(val)
             }
             me.chart.changeSigDigY(val)
+        })
+        $('#y-ticks').on('input', function () {
+            let val: number = Number(String($(this).val()) + String($('#y-axis-unit').val()))
+            if (val > 0)
+                me.chart.changeTicksStepY(val)
         })
 
         $('#svg-width').on('input', function () {
@@ -406,20 +438,35 @@ export class Main {
         $('#dash-line-mode').on('input', function () {
             const type: string = String($('#line-type-selector').find('option:selected').val())
             const isDash: boolean = $('#dash-line-mode').prop('checked')
-            console.log(type)
             me.chart.changeLineType(type, isDash)
         })
 
-        $('#line-weight-slider').on('input', function () {
+        // $('#line-weight-slider').on('input', function () {
+        //     const val: number = Number($(this).val())
+        //     $(this).prev().text(`太さ : ${val.toFixed(1)}pt`)
+        //     me.chart.changeLineWeight(val)
+        // })
+        $('#line-weight').on('input', function () {
             const val: number = Number($(this).val())
-            $(this).prev().text(`太さ : ${val.toFixed(1)}pt`)
             me.chart.changeLineWeight(val)
         })
-        $('#fontsize-slider').on('input', function () {
+
+        // フォントスタイル
+        $('#font-selector').on('input', function () {
+            const font: string = String($(this).find('input[type="radio"]:checked').val())
+            me.chart.changeFont(font)
+        })
+        $('#fontsize').on('input', function () {
             const val: number = Number($(this).val())
-            const ratio = val / 100
-            $(this).prev().text(`文字サイズ : ${val}%`)
-            me.chart.chageFontSize(ratio)
+            me.chart.changeFontSize(val)
+        })
+        $('#font-style-bold-btn').on('click', function () {
+            const flag = Boolean($(this).prop('checked'))
+            me.chart.changeFontBold(flag)
+        })
+        $('#font-style-italic-btn').on('click', function () {
+            const flag = Boolean($(this).prop('checked'))
+            me.chart.changeFontItalic(flag)
         })
         let legendMouseMode: boolean = false
         $('#legend-mouse').on('input', function () {
@@ -440,11 +487,83 @@ export class Main {
         $('#legend-vis').on('input', function () {
             let flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeLegendVis(flag)
+            if (!flag) {
+                $('#max-vis').prop('checked', false)
+                me.chart.changeMaxVis(false)
+                $('#min-vis').prop('checked', false)
+                me.chart.changeMinVis(false)
+            }
         })
 
+
+        $('#align-bottom-btn').on('click', function () {
+            me.chart.alignLabelPos('bottom')
+        })
+        $('#align-top-btn').on('click', function () {
+            me.chart.alignLabelPos('top')
+        })
+        $('#align-vertival-center-btn').on('click', function () {
+            me.chart.alignLabelPos('vcenter')
+        })
+        $('#align-left-btn').on('click', function () {
+            me.chart.alignLabelPos('left')
+        })
+        $('#align-right-btn').on('click', function () {
+            me.chart.alignLabelPos('right')
+        })
+        $('#align-horizon-center-btn').on('click', function () {
+            me.chart.alignLabelPos('hcenter')
+        })
+
+        let viewMouseDown: boolean = false
+        let preMousePos: number[] = []
+        $('#view')
+            .on('mousedown', function (e) {
+                viewMouseDown = true
+                var rect = $(this)[0].getBoundingClientRect();
+                preMousePos[0] = e.clientX - rect.left
+                preMousePos[1] = e.clientY - rect.top
+
+                // $(this).css('cursor', 'grab')
+            })
+            .on('mousemove', function (e) {
+                if (viewMouseDown) {
+                    var rect = $(this)[0].getBoundingClientRect();
+                    let mouseX = e.clientX - rect.left
+                    let mosueY = e.clientY - rect.top
+                    let diffX = mouseX - preMousePos[0]
+                    let diffY = mosueY - preMousePos[1]
+                    
+                    me.chart.addLabelPos(diffX, diffY)
+
+                    preMousePos[0] = mouseX
+                    preMousePos[1] = mosueY
+                }
+            })
+            .on('mouseup', function () {
+                viewMouseDown = false
+
+                $(this).css('cursor', 'auto')
+            })
+
         $(window).on('keydown', function (e) {
+            // テンキー
+            switch (e.keyCode) {
+                case 37: // ←
+                    me.chart.addLabelPos(-5, 0)
+                    break;
+                case 38: // ↑
+                    me.chart.addLabelPos(0, -5)
+                    break;
+                case 39: // →
+                    me.chart.addLabelPos(5, 0)
+                    break;
+                case 40: // ↓
+                    me.chart.addLabelPos(0, 5)
+                    break;
+            }
+
             // ショートカット
-            console.log(e.key, e.keyCode)
             if (e.altKey) {
                 switch (e.keyCode) {
                     // サイズ調整
@@ -474,10 +593,13 @@ export class Main {
                         me.changeUiPane($('#data-ui-select'), $('#data-ui'))
                         break
                     case 51: // 3
-                        me.changeUiPane($('#edit-ui-select'), $('#edit-ui'))
+                        me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
                         break
                     case 52: // 4
-                        me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
+                        me.changeUiPane($('#edit-ui-select'), $('#edit-ui'))
+                        break
+                    case 53: // 5
+                        // me.changeUiPane($('#save-ui-select'), $('#save-ui'))
                         break
 
                     case 71: // g 
@@ -520,8 +642,8 @@ export class Main {
     }
 
     private optimizeChartSize() {
-        let w = Number($('#right-box').width()) * 0.9
-        let h = Number($('#right-box').height()) * 0.9
+        let w = Math.round(Number($('#right-box').width()) * 0.9)
+        let h = Math.round(Number($('#right-box').height()) * 0.9)
         if (w < h) h = w
         $('#svg-width').val(w)
         $('#svg-height').val(h)
@@ -562,18 +684,19 @@ export class Main {
     }
 
     private setJson(jsonStr: string) {
-        console.log('set Json')
+        $('#data-list').empty()
+        $('#dataset-list').empty()
+
         this.chart.setJSON(jsonStr)
         let dataList: { [key: string]: Data } = this.chart.getDataList()
         for (let key in dataList) {
-            console.log(key)
             this.addDataItems(dataList[key])
         }
         this.chart.getGroupKeyList().forEach(key => {
             this.addGroupItems(key)
         })
         this.chart.setUI()
-        this.changeUiPane($('#edit-ui-select'), $('#edit-ui'))
+        this.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
     }
 
     private addDataItems(data: Data) {
@@ -784,6 +907,8 @@ export class Main {
             alert('グラフがありません')
             return;
         } else {
+            $('.select-box').hide()
+
             if (type === 'png') {
                 this.saveFigbyPNG()
             } else if (type === 'json') {

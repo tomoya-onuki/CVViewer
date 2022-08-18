@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="./lib/toggle.css">
     <link rel="stylesheet" href="./lib/switchBtn.css">
     <link rel="stylesheet" href="./lib/fontSelecort.css">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <script src="main.js"></script>
     <style>
         body {
@@ -173,7 +172,7 @@
 
             <div class="block">
                 <div class="block2">
-                    <h2>テキスト</h2>
+                    <h2>テキストラベル</h2>
                     <div id="font-selector" class="font-selector">
                         <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
                         <input type="radio" name="font" value="serif" text="Serif">
@@ -194,28 +193,6 @@
 
                     <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
                     <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
-
-                    <div>
-                        <span0>レイアウト</span0>
-                        <button id="align-bottom-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe258;</span>
-                        </button>
-                        <button id="align-vertival-center-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe259;</span>
-                        </button>
-                        <button id="align-top-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe25a;</span>
-                        </button>
-                        <button id="align-left-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe258;</span>
-                        </button>
-                        <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe259;</span>
-                        </button>
-                        <button id="align-right-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe25a;</span>
-                        </button>
-                    </div>
                 </div>
 
 
@@ -272,8 +249,7 @@
                 </div>
 
                 <div>
-                    <span1>目盛り幅</span1><input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
-                        id="x-ticks-unit">e+0</span>
+                    <span1>目盛り数</span1><input type="number" value="10" step="1" min="0" id="x-ticks">
                 </div>
             </div>
 
@@ -298,8 +274,7 @@
                 </div>
 
                 <div>
-                    <span1>目盛り幅</span1><input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
-                        id="y-ticks-unit">e-6</span>
+                    <span1>目盛り数</span1><input type="number" value="10" step="1" min="0" id="y-ticks">
                 </div>
             </div>
         </div>

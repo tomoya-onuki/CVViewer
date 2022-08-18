@@ -1,5 +1,5 @@
 $(function () {
-    $('.toggle').each(function () {
+    $('.toggle-switch').each(function () {
         let toggleBox = $('<div></div>').addClass('toggle-box')
         // let toggleBox = $('<span></span>').addClass('toggle-box')
         $(this).after(toggleBox)

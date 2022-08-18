@@ -56,22 +56,25 @@ export class ReadFiles {
                     let data: Data = new Data(label)
                     let start: boolean = false
                     for (let i = 0; i < lines.length; i++) {
-                        if (lines[i] != '' && start) {
+
+                        if (start) {
                             let token: string[] = lines[i]
                                 .replace('\s', '')
                                 .replace('\r', '')
                                 .split(',')
-                            let potential: number = parseFloat(token[0])
-                            let current: string = String(token[1])
-                            // let current: number = parseFloat(token[1])
-                            // console.log(potential, current)
-                            data.entry(potential, current)
+                            if(token.length === 2) {
+                                let potential: number = parseFloat(token[0])
+                                let current: string = String(token[1])
+                                if (potential && current) {
+                                    data.entry(potential, current)
+                                }
+                            }
+
                         }
 
                         if (lines[i].indexOf('Potential/V') != -1 &&
                             lines[i].indexOf('Current/A') != -1) {
                             start = true
-                            i++
                         }
                     }
                     if (start) {
