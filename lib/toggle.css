@@ -1,7 +1,7 @@
 .toggle-box {
     display: inline-block;
-    transform: translate(0, 5px);
-    margin: 0 5px 0 2px;
+    transform: translate(0, 4px);
+    margin: 0 2px 0 2px;
     width: 30px;
 }
 .toggle-box input[type="checkbox"] {

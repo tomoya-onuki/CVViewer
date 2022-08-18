@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./lib/toggle.css">
+    <link rel="stylesheet" href="./lib/switchBtn.css">
+    <link rel="stylesheet" href="./lib/fontSelecort.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <script src="main.js"></script>
     <style>
         body {
@@ -30,9 +33,8 @@
         <div id="selectors">
             <div id="file-ui-select" class="view-selector">ファイル</div>
             <div id="data-ui-select" class="view-selector">データ</div>
-            <div id="edit-ui-select" class="view-selector">編集</div>
             <div id="vis-ui-select" class="view-selector">表示</div>
-            <!-- <div id="save-ui-select" class="view-selector">保存</div> -->
+            <div id="edit-ui-select" class="view-selector">編集</div>
         </div>
 
         <div id="file-ui" class="ui-parts">
@@ -53,10 +55,6 @@
                 </label>
             </div>
 
-            <!-- <div class="block">
-                <h2>ファイルリスト</h2>
-                <div id="file-list"></div>
-            </div> -->
             <div class="block">
                 <h2>グラフのダウンロード</h2>
                 <div>
@@ -92,7 +90,6 @@
             </div>
         </div>
 
-
         <div id="data-ui" class="ui-parts">
             <div class="block">
                 <h2>データの選択と平均化</h2>
@@ -103,7 +100,7 @@
                 <button id="data-grouping-btn">平均化</button>
 
                 <div class="info">
-                    平均化したデータセットの一覧は編集タブから確認できます。
+                    平均化したデータセットの一覧は表示タブから確認できます。
                 </div>
 
                 <div id="data-list"></div>
@@ -111,17 +108,11 @@
                 <button id="file-all-select">全選択</button>
                 <button id="file-all-clear">全解除</button>
             </div>
-
-
-            <!-- <div class="block">
-                <h2>平均化されたデータセットリスト</h2>
-                <div id="group-list"></div>
-            </div> -->
         </div>
 
 
 
-        <div id="edit-ui" class="ui-parts">
+        <div id="vis-ui" class="ui-parts">
 
             <div class="block">
                 <h2>平均化されたデータセット</h2>
@@ -131,156 +122,189 @@
             </div>
 
             <div class="block">
-                <span2 style="font-weight:bold">タイトル</span2>
-                <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
-                <input type="checkbox" id="title-vis" class="toggle" checked>
+                <h2>線のスタイル</h2>
+
+                <input type="number" id="line-weight" value="1.5" min="0.5" max="3.0" step="0.5">pt
+
+                <span7></span7>
+
+                <span>配色</span>
+                <select name="line-type" id="line-type-selector">
+                    <option value="mono">単色</option>
+                    <option value="hue">色相</option>
+                    <option value="bri">明度</option>
+                    <option value="sat_blue">彩度(青)</option>
+                    <option value="sat_orange">彩度(オレンジ)</option>
+                </select>
+
+                <span7></span7>
+
+                <label for="dash-line-mode">破線</label>
+                <input type="checkbox" id="dash-line-mode" class="toggle-switch">
             </div>
 
 
             <div class="block">
-                <div class="set-axis-label">
-                    <div class="label" style="font-weight:bold">横軸</div>
-                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="横軸のラベル">
-                    <input type="checkbox" id="labelx-vis" class="toggle" checked>
+                <h2>フレーム</h2>
+                <div class="block2">
+                    <span0>
+                        <label for="frame-id">枠線</label>
+                        <input type="checkbox" id="frame-vis" class="toggle-switch" checked>
+                    </span0>
+                    <span0>
+                        <label for="grid-vis">グリッド</label>
+                        <input type="checkbox" id="grid-vis" class="toggle-switch">
+                    </span0>
                 </div>
+                <div class="block2">
+                    <!-- <span4>サイズ</span4> -->
+                    <span0>
+                        <input type="number" value="600" id="svg-width">px
+                        <span>&times;</span>
+                        <input type="number" value="450" id="svg-height">px
+                    </span0>
+                    <button id="svg-size-optimize-btn">最適化</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="edit-ui" class="ui-parts">
+
+            <div class="block">
+                <div class="block2">
+                    <h2>テキスト</h2>
+                    <div id="font-selector" class="font-selector">
+                        <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
+                        <input type="radio" name="font" value="serif" text="Serif">
+                        <input type="radio" name="font" value='"Arial"' text="Arial">
+                        <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
+                        <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
+                        <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
+                        <input type="radio" name="font" value='"Meiryo", "メイリオ"' text="Meiryo">
+                        <input type="radio" name="font"
+                            value='"Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro"'
+                            text="ヒラギノ角ゴ ProN">
+                        <input type="radio" name="font" value='"ヒラギノ明朝 ProN","Hiragino Mincho Pro"' text="ヒラギノ明朝 ProN">
+                        <input type="radio" name="font" value='"游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic"' text="游ゴシック">
+                        <input type="radio" name="font" value='"游明朝", "YuMincho"' text="游明朝">
+                    </div>
+
+                    <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
+
+                    <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
+                    <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+
+                    <div>
+                        <span0>レイアウト</span0>
+                        <button id="align-bottom-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe258;</span>
+                        </button>
+                        <button id="align-vertival-center-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe259;</span>
+                        </button>
+                        <button id="align-top-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe25a;</span>
+                        </button>
+                        <button id="align-left-btn" class="label-alignment-btn horizontal">
+                            <span class="material-icons">&#xe258;</span>
+                        </button>
+                        <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
+                            <span class="material-icons">&#xe259;</span>
+                        </button>
+                        <button id="align-right-btn" class="label-alignment-btn horizontal">
+                            <span class="material-icons">&#xe25a;</span>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="block2">
+                    <span2>タイトル</span2>
+                    <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
+                    <input type="checkbox" id="title-vis" class="toggle-switch" checked>
+
+                    <span2>横軸</span2>
+                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="横軸のラベル">
+                    <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
+
+                    <span2>縦軸</span2>
+                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
+                    <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
+                </div>
+
+                <div class="block2">
+                    <span0>
+                        <label for="legend-vis">凡例</label>
+                        <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
+                    </span0>
+
+                    <span0>
+                        <label for="max-vis">最大値</label>
+                        <input type="checkbox" id="max-vis" class="toggle-switch">
+                    </span0>
+
+                    <span0>
+                        <label for="min-vis">最小値</label>
+                        <input type="checkbox" id="min-vis" class="toggle-switch">
+                    </span0>
+                </div>
+            </div>
+
+
+            <div class="block">
+                <h2>横軸</h2>
                 <div class="set-axis-seg">
-                    <div class="label">範囲</div>
+                    <span5>範囲</span5>
                     <input type="text" name="" id="x-axis-min" step="0.1">
                     <span>~</span>
                     <input type="text" name="" id="x-axis-max" step="0.1">
                     <select id="x-axis-range-unit">
-                        <option value="ratio">%</option>
                         <option value="num">V</option>
+                        <option value="ratio">%</option>
                     </select>
                 </div>
 
                 <div>
-                    <span0>指数表示</span0><input type="text" value="e+0" id="x-axis-unit" placeholder="e+0">
-                    <span0>有効数字</span0><input type="number" value="3" id="x-sig-dig">桁
+                    <span1>指数表示</span1><input type="text" value="e+0" id="x-axis-unit" placeholder="e+0">
+                    <span7></span7>
+                    <span1>有効数字</span1><input type="number" value="3" id="x-sig-dig" min="1">桁
+                </div>
+
+                <div>
+                    <span1>目盛り幅</span1><input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
+                        id="x-ticks-unit">e+0</span>
                 </div>
             </div>
 
-
             <div class="block">
-                <div class="set-axis-label">
-                    <div class="label" style="font-weight:bold">縦軸</div>
-                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
-                    <input type="checkbox" id="labely-vis" class="toggle" checked>
-                </div>
+                <h2>縦軸</h2>
                 <div class="set-axis-seg">
-                    <div class="label">範囲</div>
+                    <span5>範囲</span5>
                     <input type="text" name="" id="y-axis-min">
                     <span>~</span>
                     <input type="text" name="" id="y-axis-max">
 
                     <select id="y-axis-range-unit">
-                        <option value="ratio">%</option>
                         <option value="num">A</option>
+                        <option value="ratio">%</option>
                     </select>
                 </div>
 
                 <div>
-                    <span0>指数表示</span0>
-                    <select id="y-axis-unit">
-                        <option value="0">なし</option>
-                        <option value="-1">d (e-1)</option>
-                        <option value="-2">c (e-2)</option>
-                        <option value="-3">m (e-3)</option>
-                        <option value="-6" selected>μ (e-6)</option>
-                        <option value="-9">n (e-9)</option>
-                        <option value="-12">p (e-12)</option>
-                        <option value="-15">f (e-15)</option>
-                    </select>
-                    <span0></span0>
-                    有効数字<input type="number" value="3" id="y-sig-dig">桁
+                    <span1>指数表示</span1><input type="text" value="e-6" id="y-axis-unit" placeholder="e+0">
+                    <span7></span7>
+                    <span1>有効数字</span1><input type="number" value="3" id="y-sig-dig" min="1">桁
                 </div>
 
-            </div>
-        </div>
-
-        <div id="vis-ui" class="ui-parts">
-            <div class="block">
-                <div class="label">
-                    <span2>線の配色</span2>
-                    <select name="line-type" id="line-type-selector">
-                        <option value="mono">単色</option>
-                        <option value="hue">色相</option>
-                        <option value="bri">明度</option>
-                        <option value="sat_blue">彩度(青)</option>
-                        <option value="sat_orange">彩度(オレンジ)</option>
-                    </select>
-                    <span6></span6>
-                    <input type="checkbox" id="dash-line-mode" class="toggle">
-                    <span5><label for="dash-line-mode">破線</label></span5>
-                </div>
-                <div class="info">
-                    自動で線の配色をします。編集タブから細かい調整が可能です。
-                </div>
-            </div>
-
-            <div class="block">
-                <div class="label">線の太さ : 1.5pt</div>
-                <input type="range" id="line-weight-slider" min="0.5" max="3.0" step="0.5" value="1.5"
-                    list="line-weight-segment">
-                <datalist id="line-weight-segment">
-                    <option value="0.5"></option>
-                    <option value="1.0"></option>
-                    <option value="1.5"></option>
-                    <option value="2.0"></option>
-                    <option value="2.5"></option>
-                    <option value="3.0"></option>
-                </datalist>
-            </div>
-
-
-            <div class="block">
-                <div class="label">文字サイズ: 100%</div>
-                <input type="range" id="fontsize-slider" min="0" max="200" step="10" value="100"
-                    list="fontsize-segment">
-                <datalist id="fontsize-segment">
-                    <option value="0"></option>
-                    <option value="50"></option>
-                    <option value="100"></option>
-                    <option value="150"></option>
-                    <option value="200"></option>
-                </datalist>
-            </div>
-
-            <div class="block">
-                <div class="label">
-                    <input type="checkbox" id="max-vis" class="toggle">
-                    <span2><label for="max-vis">最大値</label></span2>
-                    <input type="checkbox" id="min-vis" class="toggle">
-                    <span2><label for="min-vis">最小値</label></span2>
-                </div>
-                <div class="label">
-                    <input type="checkbox" id="grid-vis" class="toggle">
-                    <span2><label for="grid-vis">グリッド</label></span2>
-                    <input type="checkbox" id="frame-vis" class="toggle" checked>
-                    <span2><label for="frame-id">枠線</label></span2>
-                </div>
-                <div class="label">
-                    <input type="checkbox" id="legend-vis" class="toggle" checked>
-                    <span2><label for="legend-vis">凡例</label></span2>
-                </div>
                 <div>
-                    <input type="checkbox" id="legend-mouse" class="toggle">
-                    <label for="legend-mouse">凡例をマウスで位置調整</label>
-                    <div class="info">
-                        マウスでクリックした位置に凡例を移動します。
-                    </div>
+                    <span1>目盛り幅</span1><input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
+                        id="y-ticks-unit">e-6</span>
                 </div>
             </div>
-
-
-            <div class="block">
-                <div class="label">図のサイズ</div>
-                <input type="number" value="600" id="svg-width">px
-                <span>&times;</span>
-                <input type="number" value="450" id="svg-height">px
-                <button id="svg-size-optimize-btn">最適化</button>
-            </div>
         </div>
+
+
 
         <div class="footer">
             <div>
@@ -317,57 +341,57 @@
                 <tr>
                     <td>画像保存</td>
                     <td>Alt + Shift + s</td>
-                    <td>Option + Shift + s</td>
+                    <td>&#8997 + Shift + s</td>
                 </tr>
                 <tr>
                     <td>json保存</td>
                     <td>Alt + s</td>
-                    <td>Option + s</td>
+                    <td>&#8997 + s</td>
                 </tr>
                 <tr>
                     <td>タブ移動</td>
                     <td>Alt + 1 ~ 4</td>
-                    <td>Option + 1 ~ 4</td>
+                    <td>&#8997 + 1 ~ 4</td>
                 </tr>
                 <tr>
                     <td>サイズの最適化</td>
                     <td>Alt + o</td>
-                    <td>Option + o</td>
+                    <td>&#8997 + o</td>
                 </tr>
                 <tr>
                     <td>拡大</td>
                     <td>Alt + +</td>
-                    <td>Option + +</td>
+                    <td>&#8997 + +</td>
                 </tr>
                 <tr>
                     <td>縮小</td>
                     <td>Alt + -</td>
-                    <td>Option + -</td>
+                    <td>&#8997 + -</td>
                 </tr>
                 <tr>
                     <td>グリッド</td>
                     <td>Alt + g</td>
-                    <td>Option + g</td>
+                    <td>&#8997 + g</td>
                 </tr>
                 <tr>
                     <td>最大値</td>
                     <td>Alt + m</td>
-                    <td>Option + m</td>
+                    <td>&#8997 + m</td>
                 </tr>
                 <tr>
                     <td>最小値</td>
                     <td>Alt + n</td>
-                    <td>Option + n</td>
+                    <td>&#8997 + n</td>
                 </tr>
                 <tr>
                     <td>凡例</td>
                     <td>Alt + l</td>
-                    <td>Option + l</td>
+                    <td>&#8997 + l</td>
                 </tr>
                 <tr>
                     <td>枠線</td>
                     <td>Alt + f</td>
-                    <td>Option + f</td>
+                    <td>&#8997 + f</td>
                 </tr>
             </tbody>
         </table>
