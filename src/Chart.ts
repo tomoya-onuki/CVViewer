@@ -201,8 +201,8 @@ export class Chart {
 
             if (this.firstDraw) {
                 // 縦軸の目盛りの文字の長さに応じてmarginを調整
-                const text = this.expFormat(this.currentMax.toString(), this.expY, this.sigDigY)
-                this.margin.left = 30 + text.length * this.fontSize.axisy * 0.75
+                // const text = this.expFormat(this.currentMax.toString(), this.expY, this.sigDigY)
+                // this.margin.left = 30 + text.length * this.fontSize.axisy * 0.75
 
                 this.labelPos.title = [this.width / 2, 20]
                 this.labelPos.labelx = [this.width / 2, this.height - 5]
@@ -720,6 +720,26 @@ export class Chart {
         $('#x-axis-unit').val(expx)
         $('#y-axis-unit').val(expy)
 
+
+        if (this.xAxisInner) {
+            $('#x-axis-direction').find('option').each(function () {
+                if (String($(this).val()) === 'in') {
+                    $(this).prop('selected', true)
+                } else {
+                    $(this).prop('selected', false)
+                }
+            })
+        }
+        if (this.yAxisInner) {
+            $('#y-axis-direction').find('option').each(function () {
+                if (String($(this).val()) === 'in') {
+                    $(this).prop('selected', true)
+                } else {
+                    $(this).prop('selected', false)
+                }
+            })
+        }
+
         // $('#x-axis-min').val(this.potentialMin)
         // $('#x-axis-max').val(this.potentialMax)
         // $('#y-axis-min').val(this.expFromat(this.currentMin))
@@ -1235,6 +1255,7 @@ export class Chart {
                     "sigDig": this.sigDigX,
                     "exp": this.expX,
                     "fontSize": this.fontSize.axisx,
+                    "inner": this.xAxisInner
                 },
                 "y": {
                     "label": {
@@ -1247,7 +1268,8 @@ export class Chart {
                     "vis": this.labelyVis,
                     "sigDig": this.sigDigY,
                     "exp": this.expY,
-                    "fontSize": this.fontSize.axisy
+                    "fontSize": this.fontSize.axisy,
+                    "inner": this.yAxisInner
                 }
             },
             "style": {
@@ -1288,6 +1310,7 @@ export class Chart {
         this.expX = json.axis.x.exp
         this.fontSize.axisx = json.axis.x.fontSize
         this.labelPos.axisx = json.axis.x.label.pos
+        this.xAxisInner = json.axis.x.inner
 
         this.labelY = json.axis.y.label.text
         this.fontSize.labely = json.axis.y.label.fontSize
@@ -1298,6 +1321,7 @@ export class Chart {
         this.expY = json.axis.y.exp
         this.fontSize.axisy = json.axis.y.fontSize
         this.labelPos.axisy = json.axis.y.label.pos
+        this.yAxisInner = json.axis.y.inner
 
         this.titleLabel = json.title.text
         this.titleVis = json.title.vis

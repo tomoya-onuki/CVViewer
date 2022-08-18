@@ -94,8 +94,6 @@ export class Main {
                 }
                 fReader.readTXT(txtFiles)
                     .then((dataList: Data[]) => me.setData(dataList))
-
-
             })
             // マウスホバー
             .on('mouseover', function () {
@@ -162,6 +160,7 @@ export class Main {
         })
         let groupNum = 0
         $('#data-grouping-btn').on('click', function () {
+            $('#cover').hide()
             let selectedDataLabelList: string[] = []
             let groupKey = String($('#data-group-label').val())
             if (groupKey == '' || groupKey == undefined) {
@@ -725,6 +724,7 @@ export class Main {
     private setJson(jsonStr: string) {
         $('#data-list').empty()
         $('#dataset-list').empty()
+        $('#cover').hide()
 
         this.chart.setJSON(jsonStr)
         let dataList: { [key: string]: Data } = this.chart.getDataList()
