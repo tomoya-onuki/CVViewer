@@ -797,7 +797,15 @@ span8 {
     margin: 10px 0 10px 0;
     color: #bbb;
 }
-#cover span {
+#cover span0 {
+    display: inline-block;
+    width: 130px;
+}
+#cover span1 {
+    display: inline-block;
+    width: 100px;
+}
+#cover span2 {
     display: inline-block;
     width: 80px;
 }
