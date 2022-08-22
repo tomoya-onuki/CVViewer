@@ -119,6 +119,7 @@
                 <div id="dataset-list"></div>
                 <button id="group-all-show">全表示</button>
                 <button id="group-all-hide">全解除</button>
+                <button id="group-reverse">&#8645;</button>
             </div>
 
             <div class="block">
@@ -137,7 +138,8 @@
                     <option value="sat_orange">彩度(オレンジ)</option>
                 </select>
 
-                <span7></span7>
+                <!-- <input type="checkbox" id="line-type-reverse" class="switch-btn bold" text="&#8645;"> -->
+                <button id="line-type-reverse">&#8645;</button>
 
                 <label for="dash-line-mode">破線</label>
                 <input type="checkbox" id="dash-line-mode" class="toggle-switch">
@@ -222,14 +224,14 @@
 
                     <div>
                         <span0>レイアウト</span0>
-                        <button id="align-bottom-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe258;</span>
+                        <button id="align-top-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe25a;</span>
                         </button>
                         <button id="align-vertival-center-btn" class="label-alignment-btn">
                             <span class="material-icons">&#xe259;</span>
                         </button>
-                        <button id="align-top-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe25a;</span>
+                        <button id="align-bottom-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe258;</span>
                         </button>
                         <button id="align-left-btn" class="label-alignment-btn horizontal">
                             <span class="material-icons">&#xe258;</span>
@@ -304,6 +306,7 @@
                     <select id="x-axis-direction">
                         <option value="out">外側</option>
                         <option value="in">内側</option>
+                        <option value="none">なし</option>
                     </select>
                 </div>
             </div>
@@ -336,6 +339,7 @@
                     <select id="y-axis-direction">
                         <option value="out">外側</option>
                         <option value="in">内側</option>
+                        <option value="none">なし</option>
                     </select>
                 </div>
             </div>
@@ -357,7 +361,19 @@
 
     <div id="right-box">
         <div id="cover">
-            <img class="logo" src="./cvv_logo.png">
+            <img class="logo"src="./cvv_logo.png">
+            <div>
+                <span>対応機器</span>ALS Electrochemical Analyzer Model 800D
+            </div>
+            <div>
+                <span>マニュアル</span><a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md" target="_blank">github.com/tomoya-onuki/CVViewer/blob/master/README.md</a>
+            </div>
+            <div>
+                <a><u>Japanese</u></a> / <a href="./en/">English</a>
+            </div>
+            <div>
+                <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
+            </div>
         </div>
 
         <div id="view"></div>
@@ -365,79 +381,72 @@
 
         <div id="help-modal">
             <div class="close">&times;</div>
-            <div class="block">
-                <h2>対応機材</h2>
-                <div>ALS Electrochemical Analyzer Model 800D</div>
-            </div>
-            <div class="block">
-                <h2>ショートカットキー</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>操作</th>
-                            <th>windows</th>
-                            <th>mac</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>画像保存</td>
-                            <td>Alt + Shift + s</td>
-                            <td>&#8997 + Shift + s</td>
-                        </tr>
-                        <tr>
-                            <td>json保存</td>
-                            <td>Alt + s</td>
-                            <td>&#8997 + s</td>
-                        </tr>
-                        <tr>
-                            <td>タブ移動</td>
-                            <td>Alt + 1 ~ 4</td>
-                            <td>&#8997 + 1 ~ 4</td>
-                        </tr>
-                        <tr>
-                            <td>サイズの最適化</td>
-                            <td>Alt + o</td>
-                            <td>&#8997 + o</td>
-                        </tr>
-                        <tr>
-                            <td>拡大</td>
-                            <td>Alt + +</td>
-                            <td>&#8997 + +</td>
-                        </tr>
-                        <tr>
-                            <td>縮小</td>
-                            <td>Alt + -</td>
-                            <td>&#8997 + -</td>
-                        </tr>
-                        <tr>
-                            <td>グリッド</td>
-                            <td>Alt + g</td>
-                            <td>&#8997 + g</td>
-                        </tr>
-                        <tr>
-                            <td>最大値</td>
-                            <td>Alt + m</td>
-                            <td>&#8997 + m</td>
-                        </tr>
-                        <tr>
-                            <td>最小値</td>
-                            <td>Alt + n</td>
-                            <td>&#8997 + n</td>
-                        </tr>
-                        <tr>
-                            <td>凡例</td>
-                            <td>Alt + l</td>
-                            <td>&#8997 + l</td>
-                        </tr>
-                        <tr>
-                            <td>枠線</td>
-                            <td>Alt + f</td>
-                            <td>&#8997 + f</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>操作</th>
+                        <th>windows</th>
+                        <th>mac</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>画像保存</td>
+                        <td>Alt + Shift + s</td>
+                        <td>&#8997 + Shift + s</td>
+                    </tr>
+                    <tr>
+                        <td>json保存</td>
+                        <td>Alt + s</td>
+                        <td>&#8997 + s</td>
+                    </tr>
+                    <tr>
+                        <td>タブ移動</td>
+                        <td>Alt + 1 ~ 4</td>
+                        <td>&#8997 + 1 ~ 4</td>
+                    </tr>
+                    <tr>
+                        <td>サイズの最適化</td>
+                        <td>Alt + o</td>
+                        <td>&#8997 + o</td>
+                    </tr>
+                    <tr>
+                        <td>拡大</td>
+                        <td>Alt + +</td>
+                        <td>&#8997 + +</td>
+                    </tr>
+                    <tr>
+                        <td>縮小</td>
+                        <td>Alt + -</td>
+                        <td>&#8997 + -</td>
+                    </tr>
+                    <tr>
+                        <td>グリッド</td>
+                        <td>Alt + g</td>
+                        <td>&#8997 + g</td>
+                    </tr>
+                    <tr>
+                        <td>最大値</td>
+                        <td>Alt + m</td>
+                        <td>&#8997 + m</td>
+                    </tr>
+                    <tr>
+                        <td>最小値</td>
+                        <td>Alt + n</td>
+                        <td>&#8997 + n</td>
+                    </tr>
+                    <tr>
+                        <td>凡例</td>
+                        <td>Alt + l</td>
+                        <td>&#8997 + l</td>
+                    </tr>
+                    <tr>
+                        <td>枠線</td>
+                        <td>Alt + f</td>
+                        <td>&#8997 + f</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>
