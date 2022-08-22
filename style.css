@@ -796,16 +796,44 @@ span8 {
 #cover a {
     margin: 10px 0 10px 0;
     color: #bbb;
+    margin: 0 0 0 0;
 }
-#cover span0 {
-    display: inline-block;
-    width: 130px;
+#cover h1 {
+    margin: 24px 0 0px 0;
+    font-weight: bold;
+    font-size: 100%;
+    color: #bbb;
 }
 #cover span1 {
     display: inline-block;
-    width: 100px;
+    width: 130px;
 }
 #cover span2 {
     display: inline-block;
-    width: 80px;
+    width: 100px;
+}
+#cover span0 {
+    display: inline-block;
+    margin: 0 10px 0 0;
+}
+#cover block0 {
+    display: inline-block;
+    width: auto;
+    margin: 0 20px 0 0;
+}
+#cover block0 {
+    display: inline-block;
+    width: 200px;
+}
+#cover block1 {
+    display: inline-block;
+    width: 160px;
+}
+#cover block2 {
+    display: inline-block;
+    width: 120px;
+}
+#cover block3 {
+    display: inline-block;
+    width: 100px;
 }
