@@ -119,6 +119,7 @@
                 <div id="dataset-list"></div>
                 <button id="group-all-show">全表示</button>
                 <button id="group-all-hide">全解除</button>
+                <button id="group-reverse">&#8645;</button>
             </div>
 
             <div class="block">
@@ -137,7 +138,8 @@
                     <option value="sat_orange">彩度(オレンジ)</option>
                 </select>
 
-                <span7></span7>
+                <!-- <input type="checkbox" id="line-type-reverse" class="switch-btn bold" text="&#8645;"> -->
+                <button id="line-type-reverse">&#8645;</button>
 
                 <label for="dash-line-mode">破線</label>
                 <input type="checkbox" id="dash-line-mode" class="toggle-switch">
@@ -222,14 +224,14 @@
 
                     <div>
                         <span0>レイアウト</span0>
-                        <button id="align-bottom-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe258;</span>
+                        <button id="align-top-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe25a;</span>
                         </button>
                         <button id="align-vertival-center-btn" class="label-alignment-btn">
                             <span class="material-icons">&#xe259;</span>
                         </button>
-                        <button id="align-top-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe25a;</span>
+                        <button id="align-bottom-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe258;</span>
                         </button>
                         <button id="align-left-btn" class="label-alignment-btn horizontal">
                             <span class="material-icons">&#xe258;</span>
@@ -304,6 +306,7 @@
                     <select id="x-axis-direction">
                         <option value="out">外側</option>
                         <option value="in">内側</option>
+                        <option value="none">なし</option>
                     </select>
                 </div>
             </div>
@@ -336,6 +339,7 @@
                     <select id="y-axis-direction">
                         <option value="out">外側</option>
                         <option value="in">内側</option>
+                        <option value="none">なし</option>
                     </select>
                 </div>
             </div>

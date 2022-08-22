@@ -181,7 +181,8 @@ export class Main {
                 // 配色
                 const type: string = String($('#line-type-selector').find('option:selected').val())
                 const isDash: boolean = $('#dash-line-mode').prop('checked')
-                me.chart.changeLineType(type, isDash)
+                me.chart.changeLineColorScheme(type)
+                me.chart.changeLineDashed(isDash)
 
                 me.addGroupItems(groupKey)
             } else if (hasGroupLabel) {
@@ -189,6 +190,8 @@ export class Main {
             } else {
                 alert('平均化が出来ませんでした. データが選択されていません.')
             }
+
+            me.chart.draw()
         })
 
 
@@ -200,6 +203,20 @@ export class Main {
             me.chart.changeDataVisibleAll(false)
             $('.group-checkbox').prop('checked', false)
         })
+        $('#group-reverse').on('click', function () {
+            let $tmp: any[] = []
+            $('.dataset-item').each(function () {
+                $tmp.push($(this))
+            })
+            $('#dataset-list').empty()
+            $tmp.forEach(element => {
+                $('#dataset-list').prepend(element)
+            })
+
+            me.chart.reverseGroupKeyList()
+            me.chart.draw()
+        })
+
         $('#group-detail-modal-close').on('click', function () {
             $('#group-detail-modal').fadeOut()
         })
@@ -217,25 +234,31 @@ export class Main {
 
         // 軸ラベルのセット
         $('#set-graph-label-x').on('input', function () {
-            me.chart.setAxisLabelX(String($(this).val()));
+            me.chart.setAxisLabelX(String($(this).val()))
+            me.chart.draw()
         });
         $('#set-graph-label-y').on('input', function () {
-            me.chart.setAxisLabelY(String($(this).val()));
+            me.chart.setAxisLabelY(String($(this).val()))
+            me.chart.draw()
         });
         $('#set-graph-title').on('input', function () {
-            me.chart.setTitleLabel(String($(this).val()));
+            me.chart.setTitleLabel(String($(this).val()))
+            me.chart.draw()
         });
         $('#labelx-vis').on('input', function () {
             const flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeLabelxVis(flag)
+            me.chart.draw()
         })
         $('#labely-vis').on('input', function () {
             const flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeLabelyVis(flag)
+            me.chart.draw()
         })
         $('#title-vis').on('input', function () {
             const flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeTitleVis(flag)
+            me.chart.draw()
         })
 
 
@@ -243,10 +266,12 @@ export class Main {
         $('#grid-vis').on('input', function () {
             const flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeGridVis(flag)
+            me.chart.draw()
         })
         $('#frame-vis').on('input', function () {
             const flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeFrameVis(flag)
+            me.chart.draw()
         })
 
         // ピークの表示
@@ -257,6 +282,7 @@ export class Main {
                 me.chart.changeLegendVis(true)
             }
             me.chart.changeMaxVis(flag)
+            me.chart.draw()
         })
         $('#min-vis').on('input', function () {
             let flag: boolean = Boolean($(this).prop('checked'))
@@ -265,6 +291,7 @@ export class Main {
                 me.chart.changeLegendVis(true)
             }
             me.chart.changeMinVis(flag)
+            me.chart.draw()
         })
 
         // 軸の範囲のセット
@@ -273,9 +300,13 @@ export class Main {
             if (unit === 'ratio') {
                 let val: number = Number($(this).val()) / 100
                 me.chart.setXaxisMinRatio(val)
+                me.chart.draw()
             } else {
                 let val: number = Number($(this).val())
-                if (val !== null) me.chart.setXaxisMin(val)
+                if (val !== null) {
+                    me.chart.setXaxisMin(val)
+                    me.chart.draw()
+                }
             }
         })
         $('#x-axis-max').on('input', function () {
@@ -283,9 +314,13 @@ export class Main {
             if (unit === 'ratio') {
                 let val: number = Number($(this).val()) / 100
                 me.chart.setXaxisMaxRatio(val)
+                me.chart.draw()
             } else {
                 let val: number = Number($(this).val())
-                if (val !== null) me.chart.setXaxisMax(val)
+                if (val !== null) {
+                    me.chart.setXaxisMax(val)
+                    me.chart.draw()
+                }
             }
         })
         $('#x-axis-range-unit').on('input', function () {
@@ -295,9 +330,11 @@ export class Main {
             if (unit === 'ratio') {
                 me.chart.setXaxisMinRatio(val0 / 100)
                 me.chart.setXaxisMaxRatio(val1 / 100)
+                me.chart.draw()
             } else {
                 if (val0 !== null) me.chart.setXaxisMin(val0)
                 if (val1 !== null) me.chart.setXaxisMax(val1)
+                me.chart.draw()
             }
         })
         const SIprefix: { [key: string]: string } = {
@@ -320,10 +357,12 @@ export class Main {
                 let prefix = SIprefix[unit] ? SIprefix[unit] : unit + ' '
                 me.chart.setAxisLabelX(`Potential / ${prefix}V`)
                 $('#set-graph-label-x').val(`Potenital / ${prefix}V`)
+                me.chart.draw()
             } else {
                 me.chart.changeExponentX(0)
                 me.chart.setAxisLabelX(`Potential / V`)
                 $('#set-graph-label-x').val(`Potenital / V`)
+                me.chart.draw()
             }
             $('#x-ticks-unit').text(unit)
         })
@@ -333,16 +372,19 @@ export class Main {
                 val = 1
             }
             me.chart.changeSigDigX(val)
+            me.chart.draw()
         })
         $('#x-ticks').on('input', function () {
             // let val: number = Number($(this).val())
             let val: number = Number(String($(this).val()) + String($('#x-axis-unit').val()))
             if (val > 0)
                 me.chart.changeTicksStepX(val)
+            me.chart.draw()
         })
-        $('#x-axis-direction').on('input', function() {
-            const flag: boolean = String($(this).find('option:selected').val()) == 'in'
-            me.chart.changeXAxisInner(flag)
+        $('#x-axis-direction').on('input', function () {
+            const type: string = String($(this).find('option:selected').val())
+            me.chart.changeXTicksSize(type)
+            me.chart.draw()
         })
 
         $('#y-axis-range-unit').on('input', function () {
@@ -356,16 +398,19 @@ export class Main {
                 if (val0 !== null) me.chart.setYaxisMin(val0)
                 if (val1 !== null) me.chart.setYaxisMax(val1)
             }
+            me.chart.draw()
         })
         $('#y-axis-min').on('input', function () {
             const unit: string = String($('#y-axis-range-unit').find('option:selected').val())
             if (unit === 'ratio') {
                 let val: number = Number($(this).val()) / 100
                 me.chart.setYaxisMinRatio(val)
+                me.chart.draw()
             } else {
                 let val: number = Number($(this).val())
                 if (val !== null) {
                     me.chart.setYaxisMin(val)
+                    me.chart.draw()
                 }
             }
         })
@@ -374,10 +419,12 @@ export class Main {
             if (unit === 'ratio') {
                 let val: number = Number($(this).val()) / 100
                 me.chart.setYaxisMaxRatio(val)
+                me.chart.draw()
             } else {
                 let val: number = Number($(this).val())
                 if (val !== null) {
                     me.chart.setYaxisMax(val)
+                    me.chart.draw()
                 }
             }
         })
@@ -397,6 +444,7 @@ export class Main {
                 me.chart.setAxisLabelY(`Current / A`)
             }
 
+            me.chart.draw()
             $('#y-ticks-unit').text(unit)
         })
         $('#y-sig-dig').on('input', function () {
@@ -405,30 +453,46 @@ export class Main {
                 val = 1
             }
             me.chart.changeSigDigY(val)
+            me.chart.draw()
         })
         $('#y-ticks').on('input', function () {
             let val: number = Number(String($(this).val()) + String($('#y-axis-unit').val()))
             if (val > 0)
                 me.chart.changeTicksStepY(val)
+            me.chart.draw()
         })
-        $('#y-axis-direction').on('input', function() {
-            const flag: boolean = String($(this).find('option:selected').val()) == 'in'
-            me.chart.changeYAxisInner(flag)
+        $('#y-axis-direction').on('input', function () {
+            const type: string = String($(this).find('option:selected').val())
+            me.chart.changeYTicksSize(type)
+            me.chart.draw()
         })
 
-        $('#svg-width').on('input', function () {
-            const width = Number($('#svg-width').val())
-            const height = Number($('#svg-height').val())
+        $('#svg-width').on('change', function () {
+            let width = Number($('#svg-width').val())
+            let height = Number($('#svg-height').val())
+            let w = Number($('#right-box').width())
+            if (w < width) {
+                width = w
+                $('#svg-width').val(w)
+            }
             me.chart.resize(width, height)
+            me.chart.draw()
         })
-        $('#svg-height').on('input', function () {
-            const width = Number($('#svg-width').val())
-            const height = Number($('#svg-height').val())
+        $('#svg-height').on('change', function () {
+            let width = Number($('#svg-width').val())
+            let height = Number($('#svg-height').val())
+            let h = Number($('#right-box').height())
+            if (h < height) {
+                height = h
+                $('#svg-height').val(h)
+            }
             me.chart.resize(width, height)
+            me.chart.draw()
         })
 
         $('#svg-size-optimize-btn').on('click', function () {
             me.optimizeChartSize()
+            me.chart.draw()
         })
 
         // テーブルを閉じる
@@ -441,57 +505,56 @@ export class Main {
         $('#line-type-selector').on('input', function () {
             const type: string = String($('#line-type-selector').find('option:selected').val())
             const isDash: boolean = $('#dash-line-mode').prop('checked')
-            me.chart.changeLineType(type, isDash)
+            me.chart.changeLineColorScheme(type)
+            me.chart.changeLineDashed(isDash)
+            me.chart.draw()
         })
-        $('#dash-line-mode').on('input', function () {
+        let flag: number = 1
+        $('#line-type-reverse').on('click', function () {
             const type: string = String($('#line-type-selector').find('option:selected').val())
             const isDash: boolean = $('#dash-line-mode').prop('checked')
-            me.chart.changeLineType(type, isDash)
+            flag *= -1
+            if (flag === -1) me.chart.reverseGroupKeyList()
+            me.chart.changeLineColorScheme(type)
+            if (flag === -1) me.chart.reverseGroupKeyList()
+            me.chart.changeLineDashed(isDash)
+            me.chart.draw()
+        })
+        $('#dash-line-mode').on('input', function () {
+            const isDash: boolean = $('#dash-line-mode').prop('checked')
+            me.chart.changeLineDashed(isDash)
+            me.chart.draw()
         })
 
-        // $('#line-weight-slider').on('input', function () {
-        //     const val: number = Number($(this).val())
-        //     $(this).prev().text(`太さ : ${val.toFixed(1)}pt`)
-        //     me.chart.changeLineWeight(val)
-        // })
+
         $('#line-weight').on('input', function () {
             const val: number = Number($(this).val())
             me.chart.changeLineWeight(val)
+            me.chart.draw()
         })
 
         // フォントスタイル
         $('#font-selector').on('input', function () {
             const font: string = String($(this).find('input[type="radio"]:checked').val())
             me.chart.changeFont(font)
+            me.chart.draw()
         })
         $('#fontsize').on('input', function () {
             const val: number = Number($(this).val())
             me.chart.changeFontSize(val)
+            me.chart.draw()
         })
         $('#font-style-bold-btn').on('click', function () {
             const flag = Boolean($(this).prop('checked'))
             me.chart.changeFontBold(flag)
+            me.chart.draw()
         })
         $('#font-style-italic-btn').on('click', function () {
             const flag = Boolean($(this).prop('checked'))
             me.chart.changeFontItalic(flag)
+            me.chart.draw()
         })
-        let legendMouseMode: boolean = false
-        $('#legend-mouse').on('input', function () {
-            legendMouseMode = $(this).prop('checked')
-            let cursorMode = legendMouseMode ? 'crosshair' : 'default'
-            $('#view').css('cursor', cursorMode)
-        })
-        $('#view').on('mousedown', function (e) {
-            // console.log('mousedown')
-            if (legendMouseMode) {
-                let rect = e.target.getBoundingClientRect()
-                let mouseX: number = (e.clientX - rect.left)
-                let mouseY: number = (e.clientY - rect.top)
-                // console.log(mouseX, mouseY)
-                me.chart.legendMoveByMouse(mouseX, mouseY)
-            }
-        })
+
         $('#legend-vis').on('input', function () {
             let flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeLegendVis(flag)
@@ -501,44 +564,55 @@ export class Main {
                 $('#min-vis').prop('checked', false)
                 me.chart.changeMinVis(false)
             }
+            me.chart.draw()
         })
 
 
         $('#align-bottom-btn').on('click', function () {
             me.chart.alignLabelPos('bottom')
+            me.chart.draw()
         })
         $('#align-top-btn').on('click', function () {
             me.chart.alignLabelPos('top')
+            me.chart.draw()
         })
         $('#align-vertival-center-btn').on('click', function () {
             me.chart.alignLabelPos('vcenter')
+            me.chart.draw()
         })
         $('#align-left-btn').on('click', function () {
             me.chart.alignLabelPos('left')
+            me.chart.draw()
         })
         $('#align-right-btn').on('click', function () {
             me.chart.alignLabelPos('right')
+            me.chart.draw()
         })
         $('#align-horizon-center-btn').on('click', function () {
             me.chart.alignLabelPos('hcenter')
+            me.chart.draw()
         })
 
 
         $('#margin-top').on('input', function () {
             const val: number = Number($(this).val())
             me.chart.changeMargin('top', val)
+            me.chart.draw()
         })
         $('#margin-bottom').on('input', function () {
             const val: number = Number($(this).val())
             me.chart.changeMargin('bottom', val)
+            me.chart.draw()
         })
         $('#margin-left').on('input', function () {
             const val: number = Number($(this).val())
             me.chart.changeMargin('left', val)
+            me.chart.draw()
         })
         $('#margin-right').on('input', function () {
             const val: number = Number($(this).val())
             me.chart.changeMargin('right', val)
+            me.chart.draw()
         })
 
 
@@ -582,6 +656,7 @@ export class Main {
                 let svgH: number = Number($('#svg-height').val())
                 if (svgW > w || svgH > h) {
                     me.optimizeChartSize()
+                    me.chart.draw()
                 }
             })
             .on('keydown', function (e) {
@@ -676,6 +751,7 @@ export class Main {
                         }
                     }
                 }
+                me.chart.draw()
             })
     }
 
@@ -845,23 +921,28 @@ export class Main {
 
         $('.data-item > input').each(function () {
             $(this).prop('checked', false)
+            me.chart.draw()
         })
         $text.on('change', function () {
             const newLabel: string = String($(this).val())
             me.chart.changeGroupLabel(groupKey, newLabel)
+            me.chart.draw()
         })
         $checkbox.on('input', function () {
             const flag: boolean = Boolean($(this).prop('checked'))
             me.chart.changeDataVisible(groupKey, flag)
+            me.chart.draw()
         })
         $color.on('input', function () {
             const color: string = String($(this).val())
             me.chart.changeDataColor(groupKey, color)
+            me.chart.draw()
         })
         $delete.on('click', function () {
             if (confirm('削除します')) {
                 $item.remove()
                 me.chart.removeGroup(groupKey)
+                me.chart.draw()
             }
         })
         $downBtn.on('click', function () {
@@ -882,6 +963,7 @@ export class Main {
                 keyList.push(key)
             })
             me.chart.sortGroupKeyList(keyList)
+            me.chart.draw()
         })
         $upBtn.on('click', function () {
             let myIdx: number = 0
@@ -901,6 +983,7 @@ export class Main {
                 keyList.push(key)
             })
             me.chart.sortGroupKeyList(keyList)
+            me.chart.draw()
         })
         $detailBtn.on('input', function () {
             const isShow: boolean = Boolean($detailBtn.prop('checked'))
@@ -934,7 +1017,7 @@ export class Main {
                 $detailBtnLabel.text(parseHTMLcode('&#9660;'))
                 $detail.hide()
             }
-
+            me.chart.draw()
             // $detail.fadeIn()
             // $('#group-detail-modal').fadeIn()
         })

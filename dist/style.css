@@ -354,6 +354,7 @@ input[type='text'] {
 #y-axis-unit {
     width: 35px;
 }
+
 #x-ticks,
 #y-ticks {
     width: 40px;
@@ -452,9 +453,19 @@ input[type='text'] {
     width: 168px;
 }
 
+#group-all-show,
+#group-all-hide {
+    width: 100px;
+}
+#group-reverse {
+    width:30px;
+    margin: 0 0 0 10px;
+    font-size: 100%;
+}
+
 #dataset-list {
     /* height: 160px; */
-    height: calc(100vh - 530px);
+    height: calc(100vh - 580px);
     overflow: scroll;
     border-bottom: 1px #eee solid;
 }
@@ -583,6 +594,15 @@ input[type='text'] {
 #line-type-selector {
     width: 50px;
 }
+#line-type-reverse {
+    width: 20px;
+    text-align: center;
+    padding: 0;
+    height: 22px;
+    margin-right: 5px;
+    font-size: 100%;
+}
+
 #line-weight {
     width: 35px;
 }
@@ -671,6 +691,7 @@ span7 {
     display: inline-block;
     width: 10px;
 }
+
 span8 {
     display: inline-block;
     width: 5px;
@@ -729,13 +750,16 @@ span8 {
     height: 22px;
     margin: 0 0 0 8px;
 }
+
 .label-alignment-btn .material-icons {
     scale: 60%;
     transform: translate(0, -2px);
 }
+
 .label-alignment-btn.horizontal .material-icons {
     transform: rotate(90deg) translate(-2px, 0);
 }
+
 .label-alignment-btn {
     width: 26px;
     height: 22px;
@@ -769,6 +793,6 @@ span8 {
 }
 
 #cover div {
-    margin: 10px 0  10px 0;
+    margin: 10px 0 10px 0;
     color: #000;
 }
