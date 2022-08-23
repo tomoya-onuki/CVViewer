@@ -642,7 +642,7 @@ export class Main {
             })
             .on('mouseup', function () {
                 viewMouseDown = false
-                // me.chart.draw()
+
                 $(this).css('cursor', 'auto')
             })
 
