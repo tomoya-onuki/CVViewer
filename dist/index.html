@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./lib/toggle.css">
+    <link rel="stylesheet" href="./lib/switchBtn.css">
+    <link rel="stylesheet" href="./lib/fontSelector.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <script src="main.js"></script>
     <style>
         body {
-            font-family: '游ゴシック', 'Yu Gothic', Arial, san-serif;
+            font-family: Arial, Helvetica, sans-serif
         }
     </style>
     <title>CVViewer</title>
@@ -30,9 +33,8 @@
         <div id="selectors">
             <div id="file-ui-select" class="view-selector">File</div>
             <div id="data-ui-select" class="view-selector">Data</div>
+            <div id="vis-ui-select" class="view-selector">Display</div>
             <div id="edit-ui-select" class="view-selector">Edit</div>
-            <div id="vis-ui-select" class="view-selector">View</div>
-            <!-- <div id="save-ui-select" class="view-selector">保存</div> -->
         </div>
 
         <div id="file-ui" class="ui-parts">
@@ -53,19 +55,15 @@
                 </label>
             </div>
 
-            <!-- <div class="block">
-                <h2>ファイルリスト</h2>
-                <div id="file-list"></div>
-            </div> -->
             <div class="block">
                 <h2>Download</h2>
                 <div>
-                    <span2>name</span2>
+                    <span2>Name</span2>
                     <input type="text" value="figure" id="save-fig-name">
                 </div>
 
                 <div style="margin-bottom: 5px;">
-                    <span2>fromat</span2>
+                    <span2>Format</span2>
                     <select id="fig-type">
                         <option value="png">png</option>
                         <option value="json">json</option>
@@ -73,7 +71,7 @@
                 </div>
 
                 <div>
-                    <span2>resolution</span2>
+                    <span2>Resolution</span2>
                     <select id="fig-resolution">
                         <option value="1">low</option>
                         <option value="2" selected>mid</option>
@@ -91,7 +89,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="data-ui" class="ui-parts">
             <div class="block">
@@ -111,100 +108,33 @@
                 <button id="file-all-select">All select</button>
                 <button id="file-all-clear">Clear</button>
             </div>
-
-
-            <!-- <div class="block">
-                <h2>平均化されたデータセットリスト</h2>
-                <div id="group-list"></div>
-            </div> -->
         </div>
 
 
 
-        <div id="edit-ui" class="ui-parts">
+        <div id="vis-ui" class="ui-parts">
 
             <div class="block">
                 <h2>Averaging Dataset</h2>
                 <div id="dataset-list"></div>
                 <button id="group-all-show">All Show</button>
                 <button id="group-all-hide">All Hide</button>
+                <button id="group-reverse">&#8645;</button>
             </div>
 
             <div class="block">
-                <span5 style="font-weight:bold">Title</span5>
-                <input id="set-graph-title" type="text" value="" placeholder="title">
-                <input type="checkbox" id="title-vis" class="toggle" checked>
-            </div>
+                <h2>Line</h2>
 
-
-            <div class="block">
-                <h2>Horizontal Axis</h2>
-                <div class="set-axis-label">
-                    <span4>Label</span4>
-                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="横軸のラベル">
-                    <input type="checkbox" id="labelx-vis" class="toggle" checked>
-                </div>
-                <div class="set-axis-seg">
-                    <span4>Range</span4>
-                    <input type="text" name="" id="x-axis-min" step="0.1">
-                    <span>~</span>
-                    <input type="text" name="" id="x-axis-max" step="0.1">
-                    <select id="x-axis-range-unit">
-                        <option value="ratio">%</option>
-                        <option value="num">V</option>
-                    </select>
+                <div>
+                    <span4>Weight</span4>
+                    <input type="number" id="line-weight" value="1.5" min="0.5" max="3.0" step="0.5">pt
+                    <span8></span8>
+                    <label for="dash-line-mode">Dashed</label>
+                    <input type="checkbox" id="dash-line-mode" class="toggle-switch">
                 </div>
 
                 <div>
-                    <span0>Exponential notation</span0><input type="text" value="e+0" id="x-axis-unit"
-                        placeholder="e+0">
-                    <span0>Significant digits</span0><input type="number" value="3" id="x-sig-dig">
-                </div>
-            </div>
-
-
-            <div class="block">
-                <h2>Vertical Axis</h2>
-                <div class="set-axis-label">
-                    <span4>Label</span4>
-                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
-                    <input type="checkbox" id="labely-vis" class="toggle" checked>
-                </div>
-                <div class="set-axis-seg">
-                    <span4>Range</span4>
-                    <input type="text" name="" id="y-axis-min">
-                    <span>~</span>
-                    <input type="text" name="" id="y-axis-max">
-
-                    <select id="y-axis-range-unit">
-                        <option value="ratio">%</option>
-                        <option value="num">A</option>
-                    </select>
-                </div>
-
-                <div>
-                    <span0>Exponential notation</span0>
-                    <select id="y-axis-unit">
-                        <option value="0">none</option>
-                        <option value="-1">d (e-1)</option>
-                        <option value="-2">c (e-2)</option>
-                        <option value="-3">m (e-3)</option>
-                        <option value="-6" selected>μ (e-6)</option>
-                        <option value="-9">n (e-9)</option>
-                        <option value="-12">p (e-12)</option>
-                        <option value="-15">f (e-15)</option>
-                    </select>
-                    <span0>Significant digits</span0>
-                    <input type="number" value="3" id="y-sig-dig">
-                </div>
-
-            </div>
-        </div>
-
-        <div id="vis-ui" class="ui-parts">
-            <div class="block">
-                <div class="label">
-                    <span0>Line Color</span0>
+                    <span4>Color</span4>
                     <select name="line-type" id="line-type-selector">
                         <option value="mono">Monochrome</option>
                         <option value="hue">Hue</option>
@@ -212,79 +142,208 @@
                         <option value="sat_blue">Saturation(Blue)</option>
                         <option value="sat_orange">Saturation(Orange)</option>
                     </select>
-                    <span6></span6>
-                    <input type="checkbox" id="dash-line-mode" class="toggle">
-                    <span5><label for="dash-line-mode">Dashed</label></span5>
-                </div>
-                <div class="info">
-                    Automatic color scheme for lines.
-                </div>
-            </div>
 
-            <div class="block">
-                <div class="label">Line Weight : 1.5pt</div>
-                <input type="range" id="line-weight-slider" min="0.5" max="3.0" step="0.5" value="1.5"
-                    list="line-weight-segment">
-                <datalist id="line-weight-segment">
-                    <option value="0.5"></option>
-                    <option value="1.0"></option>
-                    <option value="1.5"></option>
-                    <option value="2.0"></option>
-                    <option value="2.5"></option>
-                    <option value="3.0"></option>
-                </datalist>
+                    <button id="line-type-reverse">&#8645;</button>
+                </div>
             </div>
 
 
             <div class="block">
-                <div class="label">Font Size: 100%</div>
-                <input type="range" id="fontsize-slider" min="0" max="200" step="10" value="100"
-                    list="fontsize-segment">
-                <datalist id="fontsize-segment">
-                    <option value="0"></option>
-                    <option value="50"></option>
-                    <option value="100"></option>
-                    <option value="150"></option>
-                    <option value="200"></option>
-                </datalist>
-            </div>
+                <h2>Frame</h2>
+                <div class="block2">
+                    <label for="frame-id">Border</label>
+                    <input type="checkbox" id="frame-vis" class="toggle-switch" checked>
+                    <span8></span8>
+                    <label for="grid-vis">Grid line</label>
+                    <input type="checkbox" id="grid-vis" class="toggle-switch">
+                </div>
 
-            <div class="block">
-                <div class="label">
-                    <input type="checkbox" id="max-vis" class="toggle">
-                    <span2><label for="max-vis">Max</label></span2>
-                    <input type="checkbox" id="min-vis" class="toggle">
-                    <span2><label for="min-vis">Min</label></span2>
+                <div class="block2">
+                    <span5>Size</span5>
+                    <input type="number" value="600" id="svg-width">px
+                    <span>&times;</span>
+                    <input type="number" value="450" id="svg-height">px
+
+                    <button id="svg-size-optimize-btn">Optimize</button>
                 </div>
-                <div class="label">
-                    <input type="checkbox" id="grid-vis" class="toggle">
-                    <span2><label for="grid-vis">Grid</label></span2>
-                    <input type="checkbox" id="frame-vis" class="toggle" checked>
-                    <span2><label for="frame-id">Frame</label></span2>
-                </div>
-                <div class="label">
-                    <input type="checkbox" id="legend-vis" class="toggle" checked>
-                    <span2><label for="legend-vis">Legend</label></span2>
-                </div>
-                <div>
-                    <input type="checkbox" id="legend-mouse" class="toggle">
-                    <label for="legend-mouse">Positioning Legend</label>
-                    <div class="info">
-                        Move the legend to the position clicked with the mouse.
+
+                <div class="block2">
+                    <div>
+                        <div>Margin</div>
+                        <span5>Top</span5>
+                        <input id="margin-top" type="number" value="50" step="5" min="0">
+                        <span>px</span>
+
+                        <span8></span8>
+
+                        <span5>Bottom</span5>
+                        <input id="margin-bottom" type="number" value="50" step="5" min="0">
+                        <span>px</span>
+                    </div>
+                    <div>
+                        <span5>Left</span5>
+                        <input id="margin-left" type="number" value="50" step="5" min="0">
+                        <span>px</span>
+                        <span8></span8>
+                        <span5>Right</span5>
+                        <input id="margin-right" type="number" value="50" step="5" min="0">
+                        <span>px</span>
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div id="edit-ui" class="ui-parts">
+
+            <div class="block">
+                <div class="block2">
+                    <h2>Text</h2>
+                    <div id="font-selector" class="font-selector">
+                        <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
+                        <input type="radio" name="font" value="serif" text="Serif">
+                        <input type="radio" name="font" value='"Arial"' text="Arial">
+                        <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
+                        <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
+                        <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
+                        <input type="radio" name="font" value='"Georgia"' text="Georgia">
+                        <input type="radio" name="font" value='"Meiryo"' text="Meiryo">
+                    </div>
+
+                    <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
+
+                    <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
+                    <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+
+                    <div>
+                        <span3>Layout</span3>
+                        <button id="align-top-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe25a;</span>
+                        </button>
+                        <button id="align-vertival-center-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe259;</span>
+                        </button>
+                        <button id="align-bottom-btn" class="label-alignment-btn">
+                            <span class="material-icons">&#xe258;</span>
+                        </button>
+                        <button id="align-left-btn" class="label-alignment-btn horizontal">
+                            <span class="material-icons">&#xe258;</span>
+                        </button>
+                        <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
+                            <span class="material-icons">&#xe259;</span>
+                        </button>
+                        <button id="align-right-btn" class="label-alignment-btn horizontal">
+                            <span class="material-icons">&#xe25a;</span>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="block2">
+                    <span2>Title</span2>
+                    <input id="set-graph-title" type="text" value="" placeholder="Title Label">
+                    <input type="checkbox" id="title-vis" class="toggle-switch" checked>
+
+                    <span2>Horizontal</span2>
+                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="Horizontal">
+                    <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
+
+                    <span2>Vertival</span2>
+                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="Vertival">
+                    <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
+                </div>
+
+                <div class="block2">
+                    <label for="legend-vis">Legend</label>
+                    <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
+
+                    <span8></span8>
+
+                    <label for="max-vis">Max</label>
+                    <input type="checkbox" id="max-vis" class="toggle-switch">
+
+                    <span8></span8>
+
+                    <label for="min-vis">Min</label>
+                    <input type="checkbox" id="min-vis" class="toggle-switch">
+                </div>
+            </div>
 
 
             <div class="block">
-                <div class="label">Chart Size</div>
-                <input type="number" value="600" id="svg-width">px
-                <span>&times;</span>
-                <input type="number" value="450" id="svg-height">px
-                <button id="svg-size-optimize-btn">Optimize</button>
+                <h2>Horizontal Axis</h2>
+                <div class="set-axis-seg">
+                    <span5>Range</span5>
+                    <input type="text" name="" id="x-axis-min" step="0.1">
+                    <span>~</span>
+                    <input type="text" name="" id="x-axis-max" step="0.1">
+                    <select id="x-axis-range-unit">
+                        <option value="num">V</option>
+                        <option value="ratio">%</option>
+                    </select>
+                </div>
+
+                <div>
+                    <span0>Exponential notation</span0><input type="text" value="e+0" id="x-axis-unit"
+                        placeholder="e+0">
+                </div>
+                <div>
+                    <span0>Significant digits</span0><input type="number" value="3" id="x-sig-dig" min="1">
+                </div>
+
+                <div>
+                    <span1 class="bold">Tick marks</span1>
+                    <span4>Interval</span4>
+                    <input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
+                        id="x-ticks-unit">e+0</span>
+
+                    <span1></span1>
+                    <span4>Direction</span4>
+                    <select id="x-axis-direction">
+                        <option value="out">Outside</option>
+                        <option value="in">Inside</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="block">
+                <h2>Vertical Axis</h2>
+                <div class="set-axis-seg">
+                    <span5>Range</span5>
+                    <input type="text" name="" id="y-axis-min">
+                    <span>~</span>
+                    <input type="text" name="" id="y-axis-max">
+
+                    <select id="y-axis-range-unit">
+                        <option value="num">A</option>
+                        <option value="ratio">%</option>
+                    </select>
+                </div>
+
+                <div>
+                    <span0>Exponential notation</span0><input type="text" value="e-6" id="y-axis-unit"
+                        placeholder="e+0">
+                </div>
+                <div>
+                    <span0>Significant digits</span0><input type="number" value="3" id="y-sig-dig" min="1">
+                </div>
+
+                <div>
+                    <span1 class="bold">Tick marks</span1>
+                    <span4>Interval</span4>
+                    <input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span id="y-ticks-unit">e-6</span>
+
+                    <span1></span1>
+                    <span4>Direction</span4>
+                    <select id="y-axis-direction">
+                        <option value="out">Outside</option>
+                        <option value="in">Inside</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
             </div>
         </div>
-
 
 
 
@@ -293,7 +352,7 @@
                 <a href="../">Ja</a> /
                 <a><u>En</u></a> /
                 <a id="help-alert">Help</a> /
-                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md" target="_blank">Manual</a> /
+                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/readme_en.md" target="_blank">Manual</a> /
                 <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
             </div>
             <div class="info">&copy; 2022, Onuki Tomoya.</div>
@@ -301,84 +360,164 @@
     </div>
 
     <div id="right-box">
-        <div id="view"></div>
-    </div>
+        <div id="cover">
+            <img class="logo" src="./cvv_logo.png">
+            <div>
+                <h1>Support</h1>
+                <div>- ALS Electrochemical Analyzer Model 800D</div>
+            </div>
 
+            <div>
+                <block1>
+                    <h1>Language</h1>
+                    <span0><a href="../">Japanese</a></span0>
+                    <span0>/</span0>
+                    <span0><a><u>English</u></a></span0>
+                </block1>
+
+                <block0>
+                    <h1>Links</h1>
+                    <span0>
+                        <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md"
+                            target="_blank">Manual</a>,
+                    </span0>
+                    <span0>
+                        <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
+                    </span0>
+                </block0>
+            </div>
+
+            <div>
+                <h1>ShortCut</h1>
+                <div>
+                    <span2>- Open Files</span2>
+                    <span3>Alt + o</span3>
+                    <span3>&#8997; o</span3>
+                </div>
+
+                <div>
+                    <span2>- Download(PNG)</span2>
+                    <span3>Alt + Shift + s</span3>
+                    <span3>&#8997; &#8679; s</span3>
+                </div>
+
+                <div>
+                    <span2>- Download(JSON)</span2>
+                    <span3>Alt + s</span3>
+                    <span3>&#8997; s</span3>
+                </div>
+
+                <div>
+                    <span2>- Move Tabs</span2>
+                    <span3>Alt + ← , →</span3>
+                    <span3>&#8997; ← , →</span3>
+                </div>
+
+                <div>
+                    <span2>- Zoom In</span2>
+                    <span3>Alt + +</span3>
+                    <span3>&#8997; +</span3>
+                </div>
+
+                <div>
+                    <span2>- Zoom Out</span2>
+                    <span3>Alt + -</span3>
+                    <span3>&#8997; -</span3>
+                </div>
+            </div>
+        </div>
+
+        <div id="view"></div>
+
+
+        <div id="help-modal">
+            <div class="close">&times;</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Function</th>
+                        <th>windows</th>
+                        <th>mac</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Open Files</td>
+                        <td>Alt + o</td>
+                        <td>&#8997; o</td>
+                    </tr>
+                    <tr>
+                        <td>Download Image (png)</td>
+                        <td>Alt + Shift + s</td>
+                        <td>&#8997; &#8679; s</td>
+                    </tr>
+                    <tr>
+                        <td>Download JSON</td>
+                        <td>Alt + s</td>
+                        <td>&#8997; s</td>
+                    </tr>
+                    <tr>
+                        <td>Move tabs</td>
+                        <td>Alt + ←, →</td>
+                        <td>&#8997; ←, →</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Alt + 1 ~ 4</td>
+                        <td>&#8997; 1 ~ 4</td>
+                    </tr>
+
+                    <tr>
+                        <td>Optimize Chart size</td>
+                        <td>Alt + 0</td>
+                        <td>&#8997; 0</td>
+                    </tr>
+                    <tr>
+                        <td>Zoom In</td>
+                        <td>Alt + +</td>
+                        <td>&#8997; +</td>
+                    </tr>
+                    <tr>
+                        <td>Zoom Out</td>
+                        <td>Alt + -</td>
+                        <td>&#8997; -</td>
+                    </tr>
+                    <tr>
+                        <td>Grid line</td>
+                        <td>Alt + g</td>
+                        <td>&#8997; g</td>
+                    </tr>
+                    <tr>
+                        <td>Max</td>
+                        <td>Alt + m</td>
+                        <td>&#8997; m</td>
+                    </tr>
+                    <tr>
+                        <td>Min</td>
+                        <td>Alt + n</td>
+                        <td>&#8997; n</td>
+                    </tr>
+                    <tr>
+                        <td>Legend</td>
+                        <td>Alt + l</td>
+                        <td>&#8997; l</td>
+                    </tr>
+                    <tr>
+                        <td>Frame</td>
+                        <td>Alt + f</td>
+                        <td>&#8997; f</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 
     <div id="data-modal">
         <div class="close">&times;</div>
         <div id="data-modal-label"></div>
     </div>
 
-    <div id="help-modal">
-        <div class="close">&times;</div>
-        <table>
-            <thead>
-            <tr>
-            <th>Function</th>
-            <th>windows</th>
-            <th>mac</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>Download Image (png)</td>
-            <td>Alt + Shift + s</td>
-            <td>Option + Shift + s</td>
-            </tr>
-            <tr>
-            <td>Download JSON</td>
-            <td>Alt + s</td>
-            <td>Option + s</td>
-            </tr>
-            <tr>
-            <td>Move Tab</td>
-            <td>Alt + 1 ~ 4</td>
-            <td>Option + 1 ~ 4</td>
-            </tr>
-            <tr>
-            <td>Optimize chart size</td>
-            <td>Alt + o</td>
-            <td>Option + o</td>
-            </tr>
-            <tr>
-            <td>Zoom in</td>
-            <td>Alt + +</td>
-            <td>Option + +</td>
-            </tr>
-            <tr>
-            <td>Zoom out</td>
-            <td>Alt + -</td>
-            <td>Option + -</td>
-            </tr>
-            <tr>
-            <td>Show / Hide Grid</td>
-            <td>Alt + g</td>
-            <td>Option + g</td>
-            </tr>
-            <tr>
-            <td>Show / Hide Max value</td>
-            <td>Alt + m</td>
-            <td>Option + m</td>
-            </tr>
-            <tr>
-            <td>Show / Hide Minimu Value</td>
-            <td>Alt + n</td>
-            <td>Option + n</td>
-            </tr>
-            <tr>
-            <td>Show / Hide Legend</td>
-            <td>Alt + l</td>
-            <td>Option + l</td>
-            </tr>
-            <tr>
-            <td>Show / Hide Frame</td>
-            <td>Alt + f</td>
-            <td>Option + f</td>
-            </tr>
-            </tbody>
-            </table>
-    </div>
 </body>
 
 </html>
