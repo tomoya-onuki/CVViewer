@@ -3,7 +3,8 @@
 ツール : <a href="https://tomoya-onuki.github.io/CVViewer/" target="_blank">https://tomoya-onuki.github.io/CVViewer/</a>
 
 # CVViewer
-2022.08.9  
+作成 : 2022.08.09  
+更新 : 2022.08.23  
 小貫智弥  
 
 - [CVViewer](#cvviewer)
@@ -270,11 +271,12 @@ Group Labelと書かれた枠内にラベル名を入力することで、平均
 ## ショートカットキー
 | 操作 | windows | mac |
 | :--- | :--- | :--- |
+| ファイルの読み込み | Alt + o | Option + o |
 | 画像保存 | Alt + Shift + s | Option + Shift + s |
 | json保存 | Alt + s | Option + s |
 | タブ移動 | Alt + ←,→ | Option + ←,→ |
 |  | Alt + 1 ~ 4 | Option + 1 ~ 4 |
-| サイズの最適化 | Alt + o | Option + o |
+| サイズの最適化 | Alt + 0 | Option + 0 |
 | 拡大 | Alt + + | Option + + |
 | 縮小 | Alt + - | Option + - |
 | グリッド | Alt + g | Option + g |
