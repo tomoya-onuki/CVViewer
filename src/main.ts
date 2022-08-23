@@ -182,8 +182,10 @@ export class Main {
                 me.addGroupItems(groupKey)
             } else if (hasGroupLabel) {
                 alert(`${groupKey}はすでに存在しています`)
+                // alert(`${groupKey} is already exist.`)
             } else {
                 alert('平均化が出来ませんでした. データが選択されていません.')
+                // alert('Failed to average. Selected data were none.')
             }
 
             me.chart.draw()
@@ -632,6 +634,7 @@ export class Main {
                     let diffY = mosueY - preMousePos[1]
 
                     me.chart.addLabelPos(diffX, diffY)
+                    me.chart.draw()
 
                     preMousePos[0] = mouseX
                     preMousePos[1] = mosueY
@@ -811,6 +814,7 @@ export class Main {
             // データラベルが既に存在するとき、
             else {
                 alert(`${data.label}.csv は既に読み込んだファイルと、ファイル名が重複しています。ファイル名を変更して再度読み込んでください。`)
+                // alert(`${data.label}.csv is already read.`)
             }
         });
 
@@ -1046,6 +1050,7 @@ export class Main {
     private saveFig(type: string): void {
         if ($('#fig').length === 0) {
             alert('グラフがありません')
+            // alert('Chart is nothing.')
             return;
         } else {
             $('.select-box').hide()
