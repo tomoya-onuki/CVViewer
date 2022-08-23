@@ -1,5 +1,6 @@
 import chroma from 'chroma-js';
 import * as d3 from 'd3';
+import { randomIrwinHall, select, style, svg } from 'd3';
 import $ = require('jquery');
 import { Data } from './Data';
 import { DataSet } from './DataSet';
@@ -9,7 +10,7 @@ export class Chart {
     private width: number;
     private height: number;
     private margin: { [key: string]: number } = {
-        'top': 30, 'bottom': 50, 'right': 20, 'left': 50
+        'top': 50, 'bottom': 50, 'right': 20, 'left': 80
     };
     private dataList: { [key: string]: Data } = {};
     private groupList: { [key: string]: DataSet } = {};
@@ -24,6 +25,9 @@ export class Chart {
     private xAxisMax: number = 0
     private yAxisMin: number = 0
     private yAxisMax: number = 0
+
+    private xTicksSize: number = 5
+    private yTicksSize: number = 5
 
     private titleLabel: string = 'Title';
     private labelX: string = 'Potential / V';
@@ -43,9 +47,16 @@ export class Chart {
     private expX: number = 0;
     private expY: number = -6;
 
-    private legendPos: { x: number, y: number } = { x: 10, y: 10 }
+    private ticksStepX: number = 0.05
+    private ticksX: number[] = []
+    private ticksStepY: number = 0.5e-6
+    private ticksY: number[] = []
 
-    private fontSize: number = 10
+    private firstDraw: boolean = true
+
+    private selectedText: string = 'none'
+    private labelStyle: { [key: string]: LabelStyle } = {}
+
     private lineWeight: number = 1.5;
     private lineIsDash: boolean = false
     private lineType: string = 'mono'
@@ -53,6 +64,21 @@ export class Chart {
     constructor() {
         this.width = Number($('#svg-width').val())
         this.height = Number($('#svg-height').val())
+
+        this.labelStyle = {
+            labelx: new LabelStyle(),
+            labely: new LabelStyle(),
+            title: new LabelStyle(),
+            legend: new LabelStyle(),
+            axisx: new LabelStyle(),
+            axisy: new LabelStyle()
+            // labelx: new LabelStyle(this.width, this.height),
+            // labely: new LabelStyle(this.width, this.height),
+            // title: new LabelStyle(this.width, this.height),
+            // legend: new LabelStyle(this.width, this.height),
+            // axisx: new LabelStyle(this.width, this.height),
+            // axisy: new LabelStyle(this.width, this.height)
+        }
     }
 
     public entry(data: Data): void {
@@ -69,52 +95,66 @@ export class Chart {
         return false;
     }
 
-    // private expFromat(val: number) {
-    //     let token0 = d3.format('e')(val)
-    //     let token1: string[] = token0.split('.')
-    //     let integer = token1[0]
-    //     let token2 = token1[1].split('e')
-    //     let exp = 'e' + token2[1]
-    //     let decimal = token2[0].slice(0, 3)
-    //     return integer + '.' + decimal + exp
-    // }
 
-    private expFormat(val: number, exponent: number, sigDig: number): string {
-        // 計算誤差を抑える
-        if (val > 0) {
-            if (exponent > 0) {
-                val /= Math.pow(10, exponent)
-            } else if (exponent < 0) {
-                val *= Math.pow(10, Math.abs(exponent))
-            } else {
-                val = val
-            }
-        } else {
-            val /= Math.pow(10, exponent)
-        }
 
-        let txt: string = val.toString()
+    private expFormat(str: string, exponent: number, sigDig: number): string {
+        // console.log(`Input: ${str}, ${exponent}`)
 
-        // toString()で指数表示になったばあい
-        if (txt.indexOf('e-') != -1) {
-            let token1: string[] = txt.split('e-')
+        let txt: string = str
+        // 指数表記の時
+        if (str.indexOf('e') != -1) {
+            let token1: string[] = txt.split('e')
             let exp: number = parseFloat(token1[1])
-            txt = ''
-            for (let i = 0; i < exp; i++) {
-                if (i === 1) txt += '.'
-                txt += '0'
-            }
-            txt += token1[0]
-        }
-        if (txt.indexOf('e+') != -1) {
-            let token1: string[] = txt.split('e+')
-            let exp: number = parseFloat(token1[1])
+            exponent = exponent - exp
             txt = token1[0]
-            for (let i = 0; i < exp; i++) {
-                txt += '0'
+        }
+
+        // console.log(`E check: ${str}, ${exponent}`)
+        if (txt.indexOf('e') == -1) {
+            // マイナスをとる
+            txt = txt.replace(/[^\d.]/g, '')
+
+            // 小数点がないときはつける
+            if (str.indexOf('.') == -1) txt = txt + '.0'
+
+            if (exponent != 0) {
+                // 十分な長さにする
+                txt = Array(Math.abs(exponent) + 1).join('0') + txt + Array(Math.abs(exponent) + 1).join('0')
+                // console.log(`join 0: ${txt}`)
+
+                // 小数点の位置を探す
+                let p = txt.indexOf('.')
+                // 小数点を削除
+                txt = txt.replace('.', '')
+
+                // 整数部と小数部に分割
+                let i = txt.slice(0, p - exponent) // 整数部
+                let d = txt.slice(p - exponent) // 小数部
+
+                // console.log(`divide: ${i} . ${d}`)
+
+                // 整数部の頭が0の連続の時
+                if (i.search(/0+/g) === 0) {
+                    // 0でなくなる位置をさがす
+                    let e = i.search(/[^0]/g)
+                    // あればスライスし、なければ0にする
+                    if (e != -1) {
+                        i = i.slice(e)
+                    } else {
+                        i = '0'
+                    }
+                }
+                txt = i + '.' + d
+            }
+
+            // マイナスをつける
+            if (str.search(/[^\d.]/g) === 0) {
+                txt = '-' + txt
             }
         }
 
+
+        // 有効桁数を指定
         let int: string = txt
         let dec: string = ''
         if (txt.indexOf('.') != -1) {
@@ -134,23 +174,20 @@ export class Chart {
             }
         }
         txt = int + dec
-        console.log(val, txt, int, dec)
+        // console.log(val, txt, int, dec)
         return txt
     }
 
     public resize(w: number, h: number): void {
-        this.width = w;
-        this.height = h;
-        this.draw();
+        this.width = w
+        this.height = h
+        // this.firstDraw = true
     }
 
     public draw(): void {
         const me = this
         d3.select("svg").remove()
         if (this.groupKeyList.length > 0) {
-            this.margin.left = 50 + (this.sigDigY - 3) * 6
-            let chartW = this.width - this.margin.left - this.margin.right
-            let chartH = this.height - this.margin.top - this.margin.bottom
 
             // SVG要素の作成
             const svg = d3.select("#view")
@@ -158,7 +195,22 @@ export class Chart {
                 .attr("id", "fig")
                 .attr("width", this.width)
                 .attr("height", this.height)
-                .style('background-color', '#FFF')
+                .style("background-color", "#FFF")
+
+            let chartW = this.width - this.margin.left - this.margin.right
+            let chartH = this.height - this.margin.top - this.margin.bottom
+
+
+            Object.keys(this.labelStyle).forEach(key => {
+                this.labelStyle[key].width = chartW
+                this.labelStyle[key].height = chartH
+
+                // console.log(`${key} : (point ) ${this.labelStyle[key].posX.toFixed(3)}, ${this.labelStyle[key].posY.toFixed(3)}`)
+                // console.log(`${key} : (ratio ) ${this.labelStyle[key].posRatio.x.toFixed(3)}, ${this.labelStyle[key].posRatio.y.toFixed(3)}`)
+                // console.log(`${key} : (offset) ${this.labelStyle[key].offsetX.toFixed(3)}, ${this.labelStyle[key].offsetY.toFixed(3)}`)
+
+            })
+
 
             // スケール
             const xScale = d3.scaleLinear()
@@ -168,53 +220,127 @@ export class Chart {
                 .domain([this.yAxisMin, this.yAxisMax])
                 .range([chartH, 0]);
 
+            // 目盛りの数値を設定する
+            this.ticksX = []
+            this.ticksY = []
+            // 0基準でつくる
+            for (let x = 0; x > this.xAxisMin; x -= this.ticksStepX) {
+                this.ticksX.push(x)
+            }
+            for (let x = 0; x <= this.xAxisMax; x += this.ticksStepX) {
+                this.ticksX.push(x)
+            }
+            for (let y = 0; y > this.yAxisMin; y -= this.ticksStepY) {
+                this.ticksY.push(y)
+            }
+            for (let y = 0; y <= this.yAxisMax; y += this.ticksStepY) {
+                this.ticksY.push(y)
+            }
+            // 範囲外を削除
+            this.ticksX = this.ticksX.filter(x => this.xAxisMin <= x && x <= this.xAxisMax)
+            this.ticksY = this.ticksY.filter(y => this.yAxisMin <= y && y <= this.yAxisMax)
+            // 重複の削除
+            this.ticksX = Array.from(new Set(this.ticksX))
+            this.ticksY = Array.from(new Set(this.ticksY))
+
+            // const xAxisOut = d3.axisBottom(xScale)
+            //     .tickFormat(d3.format('e'))
+            //     .tickValues(this.ticksX)
+            // const xAxisIn = d3.axisTop(xScale)
+            //     .tickFormat(d3.format('e'))
+            //     .tickValues(this.ticksX)
+
+            // const yAxisOut = d3.axisLeft(yScale)
+            //     .tickFormat(d3.format('e'))
+            //     .tickValues(this.ticksY)
+            // const yAxisIn = d3.axisRight(yScale)
+            //     .tickFormat(d3.format('e'))
+            //     .tickValues(this.ticksY)
 
             // add X axis
             svg.append("g")
                 .attr('class', 'axis')
                 .attr('id', 'x-axis')
                 .attr("transform", `translate(${this.margin.left}, ${chartH + this.margin.top})`)
-                .attr("font-size", `${this.fontSize}px`)
-                .call(d3.axisBottom(xScale));
+                .attr("font-size", `${this.labelStyle.axisx.size}px`)
+                .attr("font-weight", this.labelStyle.axisx.bold ? 'bold' : 'nomal')
+                .attr("font-style", this.labelStyle.axisx.italic ? 'italic' : 'nomal')
+                .attr('font-family', this.labelStyle.axisx.font)
+                .attr("cursor", "pointer")
+                .call(d3.axisBottom(xScale)
+                    .tickFormat(d3.format('e'))
+                    .tickValues(this.ticksX)
+                    .tickSize(this.xTicksSize))
+                .on('click', function () {
+                    if (me.selectedText != 'axisx') {
+                        me.selectedText = 'axisx'
+                    } else {
+                        me.selectedText = 'none'
+                    }
+                    $('.select-box').hide()
+                    $(`#select-box-${me.selectedText}`).show()
+                    me.setFontStyleUI()
+                })
+            $('#x-axis > .tick > text')
+                .attr("font-size", `${this.labelStyle.axisx.size}px`)
+                .attr('font-family', this.labelStyle.axisx.font)
+            // 選択範囲
+            svg.append('rect')
+                .attr('id', 'select-box-axisx')
+                .attr('class', 'select-box')
+                .attr('width', chartW)
+                .attr('height', 30)
+                .attr('fill', 'none')
+                .attr('stroke', '#4287f5')
+                .attr('display', 'none')
+                .attr("transform", `translate(${me.margin.left}, ${chartH + me.margin.top})`)
 
             // Add Y axis
             svg.append("g")
                 .attr('class', 'axis')
                 .attr('id', 'y-axis')
                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                .attr("font-size", `${this.fontSize}px`)
-                .call(d3.axisLeft(yScale));
-            // 軸の文字サイズ
-            svg.selectAll('.axis > .domain').attr('stroke-width', '1.0')
-            svg.selectAll('.axis > .tick > text').attr("font-size", `${this.fontSize}px`)
+                .attr("font-weight", this.labelStyle.axisy.bold ? 'bold' : 'nomal')
+                .attr("font-style", this.labelStyle.axisy.italic ? 'italic' : 'nomal')
+                .attr("cursor", "pointer")
+                .call(d3.axisLeft(yScale)
+                    .tickFormat(d3.format('e'))
+                    .tickValues(this.ticksY)
+                    .tickSize(this.yTicksSize))
+                .on('click', function (e) {
+                    if (me.selectedText != 'axisy') {
+                        me.selectedText = 'axisy'
+                    } else {
+                        me.selectedText = 'none'
+                    }
+                    $('.select-box').hide()
+                    $(`#select-box-${me.selectedText}`).show()
+                    me.setFontStyleUI()
+                })
+            $('#y-axis > .tick > text')
+                .attr("font-size", `${this.labelStyle.axisy.size}px`)
+                .attr('font-family', this.labelStyle.axisy.font)
+            svg.append('rect')
+                .attr('id', 'select-box-axisy')
+                .attr('class', 'select-box')
+                .attr('width', 30)
+                .attr('height', chartH)
+                .attr('fill', 'none')
+                .attr('stroke', '#4287f5')
+                .attr('display', 'none')
+                .attr("transform", `translate(${me.margin.left - 30}, ${me.margin.top})`)
+
+
             // y軸の表記 有効数字と単位が可変
             $('#y-axis > .tick > text').each(function () {
-                let buf: string = String($(this).text())
-                // 負のとき、NaNになる問題の解決
-                if (buf.search(/[^\d.]/g) === 0) {
-                    buf = buf.replace(/[^\d.]/g, '')
-                    let val: number = Number(buf) * -1
-                    let txt: string = me.expFormat(val, me.expY, me.sigDigY)
-                    $(this).text(txt)
-                } else {
-                    let val: number = Number(buf)
-                    let txt: string = me.expFormat(val, me.expY, me.sigDigY)
-                    $(this).text(txt)
-                }
+                let val: string = String($(this).text())
+                let txt: string = me.expFormat(val, me.expY, me.sigDigY)
+                $(this).text(txt)
             })
             $('#x-axis > .tick > text').each(function () {
-                let buf: string = String($(this).text())
-                // 負のとき、NaNになる問題の解決
-                if (buf.search(/[^\d.]/g) === 0) {
-                    buf = buf.replace(/[^\d.]/g, '')
-                    let val: number = Number(buf) * -1
-                    let txt: string = me.expFormat(val, me.expX, me.sigDigX)
-                    $(this).text(txt)
-                } else {
-                    let val: number = Number(buf)
-                    let txt: string = me.expFormat(val, me.expX, me.sigDigX)
-                    $(this).text(txt)
-                }
+                let val: string = String($(this).text())
+                let txt: string = me.expFormat(val, me.expX, me.sigDigX)
+                $(this).text(txt)
             })
 
             // 枠で囲う
@@ -229,42 +355,24 @@ export class Chart {
                     .call(d3.axisRight(yScale).tickSize(0))
                 svg.selectAll('.frame > .tick').remove()
                 svg.selectAll('.axis > .domain').attr('stroke-width', '1.0')
-                // svg.append('line')
-                //     .attr('x1', 0)
-                //     .attr('y1', 0)
-                //     .attr('x2', chartW)
-                //     .attr('y2', 0)
-                //     .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                //     .attr("stroke-width", 1.0)
-                //     .attr("stroke", '#000')
-                // svg.append('line')
-                //     .attr('x1', chartW)
-                //     .attr('y1', 0)
-                //     .attr('x2', chartW)
-                //     .attr('y2', chartH)
-                //     .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                //     .attr("stroke-width", 1.0)
-                //     .attr("stroke", '#000')
             }
+
 
             // グリッド
             if (this.gridVis) {
                 // 軸のticksを大きくしてグリッドにする
                 svg.append("g")
                     .attr("transform", `translate(${this.margin.left}, ${chartH + this.margin.top})`)
-                    .attr("font-size", `${this.fontSize}px`)
                     .attr('class', 'grid')
                     .call(d3.axisBottom(xScale).tickSize(-chartH));
                 svg.append("g")
                     .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                    .attr("font-size", `${this.fontSize}px`)
                     .attr('class', 'grid')
                     .call(d3.axisLeft(yScale).tickFormat(d3.format('e')).tickSize(-chartW));
                 // 罫線のスタイル
                 d3.selectAll('.grid > .tick > line')
                     .attr("stroke-width", 0.5)
                     .attr("stroke", '#ddd')
-                    .attr('transform', 'translate()')
                 // 罫線以外削除
                 d3.selectAll('.grid > .domain').remove()
                 d3.selectAll('.grid > .tick > text').remove()
@@ -295,174 +403,114 @@ export class Chart {
 
 
             // 凡例
-            let leX = this.legendPos.x
-            let leY = this.legendPos.y
-            for (let i = 0; i < this.groupKeyList.length; i++) {
-                const key: string = this.groupKeyList[i]
-                const data: DataSet = this.groupList[key]
-                if (data.visible && this.legendVis) {
-                    svg.append("line")
-                        .attr("x1", leX)
-                        .attr("x2", leX + 30)
-                        .attr("y1", leY - 3)
-                        .attr("y2", leY - 3)
-                        .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                        .attr("stroke-dasharray", data.dash)
-                        .attr("stroke-width", 2)
-                        .attr("stroke", data.color);
-                    svg.append('text')
-                        .attr("x", leX + 35)
-                        .attr("y", leY)
-                        .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                        .attr("font-size", `${this.fontSize}px`)
-                        .text(data.label)
+            let leX = this.labelStyle.legend.posX
+            let leY = this.labelStyle.legend.posY
+            if (this.legendVis) {
+                const legend = svg.append("g")
+                    .attr('id', 'legend')
+                    .attr("cursor", "pointer")
+
+                for (let i = 0; i < this.groupKeyList.length; i++) {
+                    const key: string = this.groupKeyList[i]
+                    const data: DataSet = this.groupList[key]
+                    if (data.visible) {
+
+                        legend.append("line")
+                            .attr("x1", leX)
+                            .attr("x2", leX + 30)
+                            .attr("y1", leY - 3)
+                            .attr("y2", leY - 3)
+                            .attr("stroke-dasharray", data.dash)
+                            .attr("stroke-width", 2)
+                            .attr("stroke", data.color)
+                            .attr("transform", `translate(${me.margin.left + me.labelStyle.legend.offsetX}, ${me.margin.top + me.labelStyle.legend.offsetY})`)
+                        legend.append('text')
+                            .attr("x", leX + 35)
+                            .attr("y", leY)
+                            .attr("font-size", `${this.labelStyle.legend.size}px`)
+                            .attr("font-weight", this.labelStyle.legend.bold ? 'bold' : 'nomal')
+                            .attr("font-style", this.labelStyle.legend.italic ? 'italic' : 'nomal')
+                            .attr('font-family', this.labelStyle.legend.font)
+                            .attr("transform", `translate(${me.margin.left + me.labelStyle.legend.offsetX}, ${me.margin.top + me.labelStyle.legend.offsetY})`)
+                            .text(data.label)
 
 
-                    if (this.maxVis) {
-                        leY += 12
-                        let maxCurrent: number = data.max().current
-                        let maxPotential: number = 0
-                        data.values.forEach(v => {
-                            if (v.current === maxCurrent) {
-                                maxPotential = v.potential
-                            }
-                        })
-                        let x = this.expFormat(maxPotential, me.expX, me.sigDigX)
-                        let y = this.expFormat(maxCurrent, me.expY, me.sigDigY)
-                        svg.append('text')
-                            .attr('x', leX + 30)
-                            .attr('y', leY)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("font-size", `${this.fontSize}px`)
-                            .text(`max(${x}, ${y})`)
+                        if (this.maxVis) {
+                            leY += (this.labelStyle.legend.size * 1.2)
+                            let maxCurrent: number = data.max().current
+                            let maxPotential: number = 0
+                            data.values.forEach(v => {
+                                if (v.current === maxCurrent) {
+                                    maxPotential = v.potential
+                                }
+                            })
+                            let x = this.expFormat(maxPotential.toString(), me.expX, me.sigDigX)
+                            let y = this.expFormat(maxCurrent.toString(), me.expY, me.sigDigY)
+                            legend.append('text')
+                                .attr('x', leX + 35)
+                                .attr('y', leY)
+                                .attr("font-size", `${this.labelStyle.legend.size}px`)
+                                .attr("font-weight", this.labelStyle.legend.bold ? 'bold' : 'nomal')
+                                .attr("font-style", this.labelStyle.legend.italic ? 'italic' : 'nomal')
+                                .attr('font-family', this.labelStyle.legend.font)
+                                .attr("transform", `translate(${me.margin.left + me.labelStyle.legend.offsetX}, ${me.margin.top + me.labelStyle.legend.offsetY})`)
+                                .text(`max(${x}, ${y})`)
 
 
+                        }
+                        if (this.minVis) {
+                            leY += (this.labelStyle.legend.size * 1.2)
+                            let minCurrent: number = data.min().current
+                            let minPotential: number = 0
+                            data.values.forEach(v => {
+                                if (v.current === minCurrent) {
+                                    minPotential = v.potential
+                                }
+                            })
+                            let x = this.expFormat(minPotential.toString(), me.expX, me.sigDigX)
+                            let y = this.expFormat(minCurrent.toString(), me.expY, me.sigDigY)
+                            legend.append('text')
+                                .attr('x', leX + 35)
+                                .attr('y', leY)
+                                .attr("font-size", `${this.labelStyle.legend.size}px`)
+                                .attr("font-weight", this.labelStyle.legend.bold ? 'bold' : 'nomal')
+                                .attr("font-style", this.labelStyle.legend.italic ? 'italic' : 'nomal')
+                                .attr('font-family', this.labelStyle.legend.font)
+                                .attr("transform", `translate(${me.margin.left + me.labelStyle.legend.offsetX}, ${me.margin.top + me.labelStyle.legend.offsetY})`)
+                                .text(`min(${x}, ${y})`)
+                        }
+                        leY += 20
                     }
-                    if (this.minVis) {
-                        leY += 12
-                        let minCurrent: number = data.min().current
-                        let minPotential: number = 0
-                        data.values.forEach(v => {
-                            if (v.current === minCurrent) {
-                                minPotential = v.potential
-                            }
-                        })
-                        let x = this.expFormat(minPotential, me.expX, me.sigDigX)
-                        let y = this.expFormat(minCurrent, me.expY, me.sigDigY)
-                        svg.append('text')
-                            .attr('x', leX + 30)
-                            .attr('y', leY)
-                            .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-                            .attr("font-size", `${this.fontSize}px`)
-                            .text(`min(${x}, ${y})`)
+                }
+
+                legend.on('click', function () {
+                    if (me.selectedText != 'legend') {
+                        me.selectedText = 'legend'
+                    } else {
+                        me.selectedText = 'none'
                     }
-                    leY += 20
+                    $('.select-box').hide()
+                    $(`#select-box-${me.selectedText}`).show()
+                    me.setFontStyleUI()
+                })
+                let labelElem: any = document.querySelector('#legend')
+                if (labelElem) {
+                    var bbox = labelElem.getBBox()
+
+                    svg.append('rect')
+                        .attr('id', 'select-box-legend')
+                        .attr('class', 'select-box')
+                        .attr('width', bbox.width)
+                        .attr('height', leY - me.labelStyle.legend.posY)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#4287f5')
+                        .attr('display', 'none')
+                        .attr("transform", `translate(${me.margin.left + me.labelStyle.legend.offsetX}, ${me.margin.top + me.labelStyle.legend.offsetY})`)
+                        .attr("x", me.labelStyle.legend.posX)
+                        .attr("y", me.labelStyle.legend.posY - 10)
+                    // .attr("transform", `translate(${}, ${})`)
                 }
             }
-
-
-
-
-            // ピーク値
-            // if (this.peakVis) {
-            //     let maxPosList: number[][] = []
-            //     let maxLabelPosList: number[][] = []
-            //     let minPosList: number[][] = []
-            //     let minLabelPosList: number[][] = []
-            //     this.groupKeyList.forEach(key => {
-            //         const data: DataSet = this.groupList[key]
-            //         let maxCurrent: number = data.max().current
-            //         let minCurrent: number = data.min().current
-
-            //         let maxPotential: number = 0
-            //         let minPotential: number = 0
-            //         data.values.forEach(v => {
-            //             if (v.current === maxCurrent) {
-            //                 maxPotential = v.potential
-            //             }
-            //             if (v.current === minCurrent) {
-            //                 minPotential = v.potential
-            //             }
-            //         })
-
-            //         const maxX = xScale(maxPotential)
-            //         const maxY = yScale(maxCurrent)
-            //         maxPosList.push([maxX, maxY])
-            //         maxLabelPosList.push([
-            //             maxX + (Math.random() * 40 - 20),
-            //             maxY - (Math.random() * 20 + 10)
-            //         ])
-
-            //         const minX = xScale(minPotential)
-            //         const minY = yScale(minCurrent)
-            //         minPosList.push([minX, minY])
-            //         minLabelPosList.push([
-            //             minX + (Math.random() * 40 - 20),
-            //             minY - (Math.random() * 20 + 10)
-            //         ])
-            //     })
-            //     // let offsetY = Math.max(...minLabelPosList)
-            //     // let offsetY = Math.max(...minLabelPosList)
-            //     maxLabelPosList = this.layoutLabel(maxLabelPosList, maxPosList)
-            //     minLabelPosList = this.layoutLabel(minLabelPosList, minPosList)
-
-            //     this.groupKeyList.forEach((key, idx) => {
-            //         const data: DataSet = this.groupList[key]
-            //         if (data.visible) {
-            //             let maxPos: number[] = maxPosList[idx]
-            //             let minPos: number[] = minPosList[idx]
-            //             let maxLabelPos: number[] = maxLabelPosList[idx]
-            //             let minLabelPos: number[] = minLabelPosList[idx]
-
-            //             let maxCurrent: number = data.max().current
-            //             let minCurrent: number = data.min().current
-
-            //             let maxPotential: number = 0
-            //             let minPotential: number = 0
-            //             data.values.forEach(v => {
-            //                 if (v.current === maxCurrent) {
-            //                     maxPotential = v.potential
-            //                 }
-            //                 if (v.current === minCurrent) {
-            //                     minPotential = v.potential
-            //                 }
-            //             })
-
-            //             let anchor = maxPos[0] < maxLabelPos[0] ? 'start' : 'end'
-            //             svg.append('text')
-            //                 .attr('x', maxLabelPos[0])
-            //                 .attr('y', maxLabelPos[1])
-            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-            //                 .attr("font-size", `${this.fontSize}px`)
-            //                 .attr('text-anchor', anchor)
-            //                 .text(`(${maxPotential}, ${this.expFromat(maxCurrent)})`)
-            //             svg.append('line')
-            //                 .attr("x1", maxLabelPos[0])
-            //                 .attr("x2", maxPos[0])
-            //                 .attr("y1", maxLabelPos[1])
-            //                 .attr("y2", maxPos[1])
-            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-            //                 .attr("stroke-width", 1)
-            //                 .attr("stroke", '#444');
-
-            //             anchor = minPos[0] < minLabelPos[0] ? 'start' : 'end'
-            //             svg.append('text')
-            //                 .attr('x', minLabelPos[0])
-            //                 .attr('y', minLabelPos[1])
-            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-            //                 .attr("font-size", `${this.fontSize}px`)
-            //                 .text(`(${minPotential}, ${this.expFromat(minCurrent)})`)
-            //             svg.append('line')
-            //                 .attr("x1", minLabelPos[0])
-            //                 .attr("x2", minPos[0])
-            //                 .attr("y1", minLabelPos[1])
-            //                 .attr("y2", minPos[1])
-            //                 .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
-            //                 .attr("stroke-width", 1)
-            //                 .attr("stroke", '#444');
-            //         }
-            //     })
-            // }
 
 
 
@@ -470,122 +518,182 @@ export class Chart {
             // X軸ラベルの描画
             if (this.labelxVis) {
                 svg.append('text')
-                    .attr("id", "svg-x-axis")
-                    // .attr("x", this.margin.left + chartW / 2)
-                    .attr("x", this.width / 2)
-                    .attr("y", this.height - 5)
+                    .attr("id", "labelx")
+                    .attr("x", this.labelStyle.labelx.posX)
+                    .attr("y", this.labelStyle.labelx.posY)
                     .attr("text-anchor", "bottom")
                     .attr("text-align", "center")
-                    .attr("font-size", `${this.fontSize}px`)
-                    .attr("font-family", "Arial")
-                    .text(this.labelX);
+                    .attr("font-size", `${this.labelStyle.labelx.size}px`)
+                    .attr("font-family", this.labelStyle.labelx.font)
+                    .attr("font-weight", this.labelStyle.labelx.bold ? 'bold' : 'nomal')
+                    .attr("font-style", this.labelStyle.labelx.italic ? 'italic' : 'nomal')
+                    .attr("transform", `translate(${me.margin.left + me.labelStyle.labelx.offsetX}, ${me.margin.top + me.labelStyle.labelx.offsetY})`)
+                    .attr("cursor", "pointer")
+                    .text(this.labelX)
+                    .on('click', function () {
+                        if (me.selectedText != 'labelx') {
+                            me.selectedText = 'labelx'
+                        } else {
+                            me.selectedText = 'none'
+                        }
+                        $('.select-box').hide()
+                        $(`#select-box-${me.selectedText}`).show()
+                        // console.log(me.labelStyle[me.selectedText].posRatio)
+                        // console.log(me.labelStyle[me.selectedText].posX, me.labelStyle[me.selectedText].posY)
+                        me.setFontStyleUI()
+                    })
+                let labelElem: any = document.querySelector('#labelx')
+                if (labelElem) {
+                    var bbox = labelElem.getBBox()
+                    svg.append('rect')
+                        .attr('id', 'select-box-labelx')
+                        .attr('class', 'select-box')
+                        .attr('width', bbox.width + 4)
+                        .attr('height', bbox.height + 4)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#4287f5')
+                        .attr('display', 'none')
+                        .attr("transform", `translate(${me.margin.left + me.labelStyle.labelx.offsetX}, ${me.margin.top + me.labelStyle.labelx.offsetY})`)
+                        .attr("x", bbox.x - 2)
+                        .attr("y", bbox.y - 2)
+                    // .attr("transform", `translate(${bbox.x - 2}, ${bbox.x - 2})`)
+                }
             }
 
 
             // Y軸ラベルの描画
             if (this.labelyVis) {
                 svg.append('text')
-                    .attr("id", "svg-y-axis")
-                    .attr("x", -this.margin.bottom - chartH / 2)
-                    .attr("y", 10)
+                    .attr("id", "labely")
+                    .attr("x", this.labelStyle.labely.posX)
+                    .attr("y", this.labelStyle.labely.posY)
                     .attr("text-anchor", "top")
                     .attr("text-align", "center")
-                    .attr("font-size", `${this.fontSize}px`)
-                    .attr("font-family", "Arial")
-                    .attr("transform", "rotate(-90)")
-                    .text(this.labelY);
+                    .attr("font-size", `${this.labelStyle.labely.size}px`)
+                    .attr("font-family", this.labelStyle.labely.font)
+                    .attr("font-weight", this.labelStyle.labely.bold ? 'bold' : 'nomal')
+                    .attr("font-style", this.labelStyle.labely.italic ? 'italic' : 'nomal')
+                    .attr("cursor", "pointer")
+                    .attr("transform", `rotate(-90) translate(${-me.margin.top + me.labelStyle.labely.offsetX}, ${me.margin.left + me.labelStyle.labely.offsetY})`)
+                    .text(this.labelY)
+                    .on('click', function () {
+                        if (me.selectedText != 'labely') {
+                            me.selectedText = 'labely'
+                        } else {
+                            me.selectedText = 'none'
+                        }
+                        $('.select-box').hide()
+                        $(`#select-box-${me.selectedText}`).show()
+
+                        me.setFontStyleUI()
+                    })
+                let labelElem: any = document.querySelector('#labely')
+                if (labelElem) {
+                    var bbox = labelElem.getBBox()
+                    svg.append('rect')
+                        .attr('id', 'select-box-labely')
+                        .attr('class', 'select-box')
+                        .attr('width', bbox.width + 4)
+                        .attr('height', bbox.height + 4)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#4287f5')
+                        .attr('display', 'none')
+                        .attr("x", this.labelStyle.labely.posX)
+                        .attr("y", this.labelStyle.labely.posY - bbox.height)
+                        .attr("transform", `rotate(-90) translate(${-me.margin.top + me.labelStyle.labely.offsetX}, ${me.margin.left + me.labelStyle.labely.offsetY})`)
+                    // .attr("transform", "rotate(-90)")
+                    // .attr("transform", `translate(${bbox.x - 2}, ${bbox.y - 2})`)
+                }
             }
 
             // タイトルラベル
             if (this.titleVis) {
                 svg.append("text")
-                    .attr("id", "svg-title")
-                    .attr("x", this.width / 2)
-                    .attr("y", 10)
-                    .attr("font-size", `${this.fontSize}px`)
+                    .attr("id", "title")
+                    .attr("x", this.labelStyle.title.posX)
+                    .attr("y", this.labelStyle.title.posY)
+                    .attr("font-size", `${this.labelStyle.title.size}px`)
                     .attr("text-anchor", "top")
                     .attr("text-align", "center")
-                    .attr("font-family", "Arial")
-                    .text(this.titleLabel);
-            }
-        }
-    }
-
-    private layoutLabel(labelPosList: number[][], rootPosList: number[][]): number[][] {
-        const k = 20 // ばね定数
-        const c = 10 // 定数
-        const equilibriumLen = 10 // ばねの自然長
-        let speed: number = 0 // ノードの速度
-        let mass: number = 1 // ノードの質量
-        const dt: number = 0.1 // 微小時間
-        const easeing: number = 1 // 減衰定数
-        let kineticEnergy: number = 0 // 運動エネルギーの合計
-        const keThreshold: number = 10000 * labelPosList.length // 運動エネルギーの閾値
-        const labelW = 30
-        const labelH = 10
-
-        const dist = (p0: number[], p1: number[]) => {
-            return Math.sqrt(Math.pow(p1[0] - p0[0], 2) + Math.pow(p1[1] - p0[1], 2))
-        }
-
-        if (labelPosList.length === 1) {
-            return labelPosList
-        } else {
-            let counter = 0
-            do {
-                for (let i = 0; i < labelPosList.length; i++) {
-                    let power: number = 0
-
-                    // クーロン力
-                    labelPosList.forEach(lp => {
-                        let d = dist(labelPosList[i], lp)
-                        if (d != 0) power += c / Math.pow(d, 2)
+                    .attr("font-family", this.labelStyle.title.font)
+                    .attr("font-weight", this.labelStyle.title.bold ? 'bold' : 'nomal')
+                    .attr("font-style", this.labelStyle.title.italic ? 'italic' : 'nomal')
+                    .attr("cursor", "pointer")
+                    .attr("transform", `translate(${me.margin.left + me.labelStyle.title.offsetX}, ${me.margin.top + me.labelStyle.title.offsetY})`)
+                    .text(this.titleLabel)
+                    .on('click', function () {
+                        if (me.selectedText != 'title') {
+                            me.selectedText = 'title'
+                        } else {
+                            me.selectedText = 'none'
+                        }
+                        $('.select-box').hide()
+                        $(`#select-box-${me.selectedText}`).show()
+                        // console.log(me.labelStyle[me.selectedText].posRatio)
+                        // console.log(me.labelStyle[me.selectedText].posX, me.labelStyle[me.selectedText].posY)
+                        me.setFontStyleUI()
                     })
-                    rootPosList.forEach(p => {
-                        let d = dist(labelPosList[i], p)
-                        if (d != 0) power += c / Math.pow(d, 2)
-                    })
-
-                    // フックの法則
-                    power += k * (dist(labelPosList[i], rootPosList[i]) - equilibriumLen)
-
-                    // 更新
-                    speed = (speed + dt * power / mass) * easeing
-                    labelPosList[i][0] += dt * speed
-                    // labelPosList[i][0] = rootPosList[i][0] + 10
-                    labelPosList[i][1] += dt * speed
-                    kineticEnergy += mass * speed * speed
+                let labelElem: any = document.querySelector('#title')
+                if (labelElem) {
+                    var bbox = labelElem.getBBox()
+                    svg.append('rect')
+                        .attr('id', 'select-box-title')
+                        .attr('class', 'select-box')
+                        .attr('width', bbox.width + 4)
+                        .attr('height', bbox.height + 4)
+                        .attr('fill', 'none')
+                        .attr('stroke', '#4287f5')
+                        .attr('display', 'none')
+                        .attr("transform", `translate(${me.margin.left + me.labelStyle.title.offsetX}, ${me.margin.top + me.labelStyle.title.offsetY})`)
+                        .attr("x", bbox.x - 2)
+                        .attr("y", bbox.y - 2)
+                    // .attr("transform", `translate(${bbox.x - 2}, ${bbox.y - 2})`)
                 }
-                counter++
-                console.log(kineticEnergy)
-                // if (counter > 1000) break
-                // } while (counter < 1000)
-            } while (kineticEnergy < keThreshold)
-
-            // ラベルの位置をrootの右上になるように操作
-            for (let i = 0; i < labelPosList.length; i++) {
-                // let diffX = Math.abs(rootPosList[i][0] - labelPosList[i][0])
-                // labelPosList[i][0] = rootPosList[i][0] + diffX
-                // let diffY = Math.abs(rootPosList[i][1] - labelPosList[i][1])
-                // labelPosList[i][1] = rootPosList[i][1] - diffY
             }
-            return labelPosList
+
+
+            $('.select-box').hide()
+            $(`#select-box-${this.selectedText}`).show()
+
+            // ラベル位置の初期化
+            if (this.firstDraw) {
+
+                this.selectedText = 'title'
+                this.alignLabelPos('top')
+                this.alignLabelPos('hcenter')
+                this.selectedText = 'labelx'
+                this.alignLabelPos('bottom')
+                this.alignLabelPos('hcenter')
+                this.selectedText = 'labely'
+                this.alignLabelPos('left')
+                this.alignLabelPos('vcenter')
+
+                this.selectedText = 'legend'
+                this.alignLabelPos('left')
+                this.alignLabelPos('top')
+                // this.changeLabelPos(10 + this.margin.top, 10 + this.margin.left)
+
+                this.selectedText = 'none'
+
+                this.firstDraw = false
+            }
         }
     }
+
 
     public setTitleLabel(label: string): void {
         this.titleLabel = label;
-        this.draw();
+        ;
     }
 
     public setAxisLabelX(label: string): void {
         this.labelX = label;
-        this.draw();
+        ;
     }
 
     public setAxisLabelY(label: string): void {
         this.labelY = label;
-        this.draw();
+        ;
     }
 
 
@@ -594,6 +702,15 @@ export class Chart {
         $('#set-graph-title').val(this.titleLabel)
         $('#set-graph-label-x').val(this.labelX)
         $('#set-graph-label-y').val(this.labelY)
+
+
+        $('#margin-top').val(this.margin.top)
+        $('#margin-bottom').val(this.margin.bottom)
+        $('#margin-left').val(this.margin.left)
+        $('#margin-right').val(this.margin.right)
+
+        $('#svg-width').val(this.width)
+        $('#svg-height').val(this.height)
 
 
         if (String($('#x-axis-range-unit').find('option:selected').val()) === 'ratio') {
@@ -620,7 +737,6 @@ export class Chart {
 
         this.groupKeyList.forEach(key => {
             let color = chroma(this.groupList[key].color).name()
-            console.log(key, color)
             $('#' + key + '-color').val(color)
             $('#' + key + '-check').prop('checked', this.groupList[key].visible)
         })
@@ -631,8 +747,8 @@ export class Chart {
 
         $('#line-weight-slider').val(this.lineWeight)
         $('#line-weight-slider').prev().text(`太さ : ${this.lineWeight.toFixed(1)}pt`)
-        $('#fontsize-slider').val(10 / this.fontSize * 100)
-        $('#fontsize-slider').prev().text(`文字サイズ : ${10 / this.fontSize * 100}%`)
+        // $('#fontsize-slider').val(10 / this.fontSize * 100)
+        // $('#fontsize-slider').prev().text(`サイズ : ${10 / this.fontSize * 100}%`)
 
         $('#max-vis').prop('checked', this.maxVis)
         $('#min-vis').prop('checked', this.minVis)
@@ -641,12 +757,54 @@ export class Chart {
         $('#legend-vis').prop('checked', this.legendVis)
         $('#dash-line-mode').prop('checked', this.lineIsDash)
 
-        $('#line-type-selector').find('option').each(function() {
+        $('#line-type-selector').find('option').each(function () {
             if ($(this).val() == me.lineType) {
                 $(this).prop('selected', true)
             }
         })
-        
+
+        let expx = this.expX >= 0 ? `e+${this.expX}` : `e${this.expX}`
+        let expy = this.expY >= 0 ? `e+${this.expY}` : `e${this.expY}`
+        $('#x-axis-unit').val(expx)
+        $('#y-axis-unit').val(expy)
+
+
+        if (this.xTicksSize < 0) {
+            $('#x-axis-direction').find('option').each(function () {
+                if (String($(this).val()) === 'in') {
+                    $(this).prop('selected', true)
+                } else {
+                    $(this).prop('selected', false)
+                }
+            })
+        }
+        else if (this.xTicksSize > 0) {
+            $('#x-axis-direction').find('option').each(function () {
+                if (String($(this).val()) === 'out') {
+                    $(this).prop('selected', true)
+                } else {
+                    $(this).prop('selected', false)
+                }
+            })
+        }
+        if (this.yTicksSize < 0) {
+            $('#y-axis-direction').find('option').each(function () {
+                if (String($(this).val()) === 'in') {
+                    $(this).prop('selected', true)
+                } else {
+                    $(this).prop('selected', false)
+                }
+            })
+        }
+        else if (this.yTicksSize > 0) {
+            $('#y-axis-direction').find('option').each(function () {
+                if (String($(this).val()) === 'out') {
+                    $(this).prop('selected', true)
+                } else {
+                    $(this).prop('selected', false)
+                }
+            })
+        }
 
         // $('#x-axis-min').val(this.potentialMin)
         // $('#x-axis-max').val(this.potentialMax)
@@ -656,69 +814,104 @@ export class Chart {
 
     public setXaxisMin(val: number) {
         this.xAxisMin = val
-        this.draw()
+
     }
     public setXaxisMax(val: number) {
         this.xAxisMax = val
-        this.draw()
+
     }
     public setXaxisMinRatio(ratio: number) {
         this.xAxisMin = this.potentialMin - (this.potentialMax - this.potentialMin) * ratio
-        this.draw()
+
     }
     public setXaxisMaxRatio(ratio: number) {
         this.xAxisMax = this.potentialMax + (this.potentialMax - this.potentialMin) * ratio
-        this.draw()
+
     }
     public setYaxisMin(val: number) {
         this.yAxisMin = val
-        this.draw()
+
     }
     public setYaxisMax(val: number) {
         this.yAxisMax = val
-        this.draw()
+
     }
     public setYaxisMinRatio(ratio: number) {
         this.yAxisMin = this.currentMin - (this.currentMax - this.currentMin) * ratio
-        this.draw()
+
     }
     public setYaxisMaxRatio(ratio: number) {
         this.yAxisMax = this.currentMax + (this.currentMax - this.currentMin) * ratio
-        this.draw()
+
     }
     public changeTitleVis(flag: boolean) {
         this.titleVis = flag
-        this.draw()
+
     }
     public changeLabelxVis(flag: boolean) {
         this.labelxVis = flag
-        this.draw()
+
     }
     public changeLabelyVis(flag: boolean) {
         this.labelyVis = flag
-        this.draw()
+
     }
     public changeLegendVis(flag: boolean) {
         this.legendVis = flag
-        this.draw()
+
     }
     public changeMaxVis(flag: boolean) {
         this.maxVis = flag
-        this.draw()
+
     }
     public changeMinVis(flag: boolean) {
         this.minVis = flag
-        this.draw()
+
     }
 
     public changeGridVis(flag: boolean) {
         this.gridVis = flag
-        this.draw()
+
     }
     public changeFrameVis(flag: boolean) {
         this.frameVis = flag
-        this.draw()
+
     }
+
+    public changeXTicksSize(type: string) {
+        if (type === 'out')
+            this.xTicksSize = 5
+        else if (type === 'in')
+            this.xTicksSize = -5
+        else if (type === 'none')
+            this.xTicksSize = 0
+
+    }
+    public changeYTicksSize(type: string) {
+        if (type === 'out')
+            this.yTicksSize = 5
+        else if (type === 'in')
+            this.yTicksSize = -5
+        else if (type === 'none')
+            this.yTicksSize = 0
+
+    }
+
+
+    public setFontStyleUI() {
+        const me = this
+        $('#font-style-bold-btn').prop('checked', this.labelStyle[this.selectedText].bold)
+        $('#font-style-italic-btn').prop('checked', this.labelStyle[this.selectedText].italic)
+        $('#fontsize').val(this.labelStyle[this.selectedText].size ? this.labelStyle[this.selectedText].size : 10)
+        $('#font-selector').find('input[type="radio"]').each(function () {
+            if ($(this).val() == me.labelStyle[me.selectedText].font) {
+                $(this).prop('checked', true)
+            } else {
+                $(this).prop('checked', false)
+            }
+        })
+    }
+
 
     public hasGroupLabel(label: string): boolean {
         return this.groupKeyList.includes(label)
@@ -756,7 +949,7 @@ export class Chart {
             this.yAxisMax = this.currentMax
 
             this.sortGroupKeyList(Object.keys(this.groupList))
-            this.draw()
+
             this.setUI()
         }
         // console.log(groupDataList)
@@ -766,8 +959,9 @@ export class Chart {
 
     public sortGroupKeyList(list: string[]) {
         this.groupKeyList = list
-        // this.groupKeyList = list.reverse()
-        this.draw()
+    }
+    public reverseGroupKeyList() {
+        this.groupKeyList.reverse()
     }
 
 
@@ -782,53 +976,79 @@ export class Chart {
         for (let key in this.groupList) {
             this.groupList[key].visible = flag
         }
-        this.draw()
+
     }
     public changeDataVisible(label: string, flag: boolean) {
         this.groupList[label].visible = flag
-        this.draw()
+
     }
     public changeDataColor(label: string, color: string) {
         this.groupList[label].color = color
-        this.draw()
+
     }
     public removeGroup(label: string) {
         delete this.groupList[label]
         this.sortGroupKeyList(Object.keys(this.groupList))
-        this.draw()
+
     }
     public changeGroupLabel(key: string, newLabel: string) {
         this.groupList[key].label = newLabel
         this.sortGroupKeyList(Object.keys(this.groupList))
-        this.draw()
+
     }
 
     public changeSigDigX(val: number) {
         if (val > 0) this.sigDigX = val
-        this.draw()
+
     }
     public changeSigDigY(val: number) {
         if (val > 0) this.sigDigY = val
-        this.draw()
+
     }
     public changeExponentX(val: number) {
         this.expX = val
-        this.draw()
+
     }
     public changeExponentY(val: number) {
         this.expY = val
-        this.draw()
+
     }
 
-    public chageFontSize(ratio: number) {
-        this.fontSize = 10 * ratio
-        this.draw()
+    public changeTicksStepX(val: number) {
+        this.ticksStepX = val
+
     }
+    public changeTicksStepY(val: number) {
+        this.ticksStepY = val
+
+    }
+
+    public changeFontSize(val: number) {
+        this.labelStyle[this.selectedText].size = val
+
+        // 縦軸の目盛りの文字の長さに応じてmarginを調整
+        const text = this.expFormat(this.currentMax.toString(), this.expY, this.sigDigY)
+        this.margin.left = 30 + text.length * this.labelStyle.axisy.size * 0.75
+
+    }
+    public changeFontBold(flag: boolean) {
+        this.labelStyle[this.selectedText].bold = flag
+
+    }
+    public changeFontItalic(flag: boolean) {
+        this.labelStyle[this.selectedText].italic = flag
+
+    }
+    public changeFont(font: string) {
+        this.labelStyle[this.selectedText].font = font
+
+    }
+
     public changeLineWeight(w: number) {
         this.lineWeight = w
-        this.draw()
+
     }
-    public changeLineType(type: string, isDash: boolean) {
+    public changeLineColorScheme(type: string) {
         this.lineType = type
         if (type === 'hue') {
             let hue = 0;
@@ -836,7 +1056,6 @@ export class Chart {
                 let color = chroma.hsv(hue, 0.5, 0.9)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
-                this.groupList[key].dash = '1,0'
                 hue += 360 / this.groupKeyList.length
             })
         }
@@ -846,7 +1065,6 @@ export class Chart {
                 let color = chroma.hsv(210, 1.0 - sat, 1.0)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
-                this.groupList[key].dash = '1,0'
                 sat += 0.8 / this.groupKeyList.length
             })
         }
@@ -856,7 +1074,6 @@ export class Chart {
                 let color = chroma.hsv(20, 1.0 - sat, 1.0)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
-                this.groupList[key].dash = '1,0'
                 sat += 0.8 / this.groupKeyList.length
             })
         }
@@ -866,18 +1083,17 @@ export class Chart {
                 let color = chroma.hsv(210, 0, bri)
                 this.groupList[key].color = color.css()
                 $('#' + key + '-color').val(color.name())
-                this.groupList[key].dash = '1,0'
                 bri += 0.8 / this.groupKeyList.length
             })
         }
         else if (type === 'mono') {
             this.groupKeyList.forEach(key => {
-                this.groupList[key].dash = '1,0'
-                this.groupList[key].color = '#000'
-                $('#' + key + '-color').val('#000')
+                this.groupList[key].color = '#000000'
+                $('#' + key + '-color').val('#000000')
             })
         }
-
+    }
+    public changeLineDashed(isDash: boolean) {
         this.lineIsDash = isDash
         if (isDash) {
             let segment = 1
@@ -901,9 +1117,13 @@ export class Chart {
                     spanNum++
                 }
             })
+        } else {
+            this.groupKeyList.forEach(key => {
+                this.groupList[key].dash = '1,0'
+            })
         }
 
-        this.draw()
+
     }
 
 
@@ -923,14 +1143,151 @@ export class Chart {
         this.groupList[groupLabel].removeData(dataLabel)
         // console.log(this.groupList)
         this.sortGroupKeyList(Object.keys(this.groupList))
-        this.draw()
+
     }
 
 
-    public legendMoveByMouse(mouseX: number, mouseY: number) {
-        this.legendPos.x = mouseX - this.margin.left
-        this.legendPos.y = mouseY - this.margin.top
-        this.draw()
+    public changeMargin(key: string, val: number) {
+        this.margin[key] = val
+
+    }
+
+    public addLabelPos(addX: number, addY: number) {
+        if (this.selectedText != 'none') {
+            if (this.selectedText === 'labely') {
+                let x = this.labelStyle[this.selectedText].posX - addY
+                let y = this.labelStyle[this.selectedText].posY + addX
+                this.changeLabelPos(x, y)
+            } else {
+                let x = this.labelStyle[this.selectedText].posX + addX
+                let y = this.labelStyle[this.selectedText].posY + addY
+                this.changeLabelPos(x, y)
+            }
+        }
+    }
+    public changeLabelPos(x: number, y: number) {
+        if (this.selectedText != 'none') {
+
+            this.labelStyle[this.selectedText].posX = x
+            this.labelStyle[this.selectedText].posY = y
+
+            d3.select(`#${this.selectedText}`)
+                .attr('x', this.labelStyle[this.selectedText].posX)
+                .attr('y', this.labelStyle[this.selectedText].posY)
+
+            if (this.selectedText != 'legend') {
+                let labelElem: any = document.querySelector(`#${this.selectedText}`)
+                if (labelElem) {
+                    var bbox = labelElem.getBBox()
+                    d3.select(`#select-box-${this.selectedText}`)
+                        .attr('width', bbox.width + 4)
+                        .attr('height', bbox.height + 4)
+                        .attr("x", this.labelStyle[this.selectedText].posX - 2)
+                        .attr("y", this.labelStyle[this.selectedText].posY - bbox.height)
+                }
+            } else {
+
+                d3.select(`#select-box-${this.selectedText}`)
+                    .attr("x", this.labelStyle.legend.posX)
+                    .attr("y", this.labelStyle.legend.posY - 10)
+            }
+        }
+    }
+
+    public alignLabelPos(type: string) {
+        let labelElem: any = document.querySelector(`#${this.selectedText}`)
+        let chartW = this.width - this.margin.left - this.margin.right
+        let chartH = this.height - this.margin.top - this.margin.bottom
+        if (labelElem) {
+            let bbox = labelElem.getBBox()
+            let textW = bbox.width
+            let textH = bbox.height
+
+            if (this.selectedText === 'labely') {
+                let pos: { [key: string]: number } = {
+                    'left': 0,
+                    'right': chartW,
+                    'hcenter': chartW / 2,
+
+                    'top': 0,
+                    'bottom': -chartH,
+                    'vcenter': -chartH / 2
+                }
+                let offset: { [key: string]: number } = {
+                    'left': - textH - 30,
+                    'right': textH,
+                    'hcenter': 0,
+
+                    'top': - textW,
+                    'bottom': 0,
+                    'vcenter': - textW / 2
+                }
+                if (type === 'left' || type === 'right' || type == 'hcenter') {
+                    this.changeLabelPos(this.labelStyle[this.selectedText].posX, pos[type])
+                    this.labelStyle[this.selectedText].offsetY = offset[type]
+                } else if (type === 'top' || type === 'bottom' || type == 'vcenter') {
+                    this.changeLabelPos(pos[type], this.labelStyle[this.selectedText].posY)
+                    this.labelStyle[this.selectedText].offsetX = offset[type]
+                }
+
+
+            }
+            else if (this.selectedText === 'legend') {
+                let pos: { [key: string]: number } = {
+                    'left': 0,
+                    'right': chartW,
+                    'hcenter': chartW / 2,
+
+                    'top': 0,
+                    'bottom': chartH,
+                    'vcenter': chartH / 2
+                }
+                let offset: { [key: string]: number } = {
+                    'left': 10,
+                    'right': - textW - 5,
+                    'hcenter': - textW / 2,
+
+                    'top': 20,
+                    'bottom': - textH,
+                    'vcenter': - textH / 2
+                }
+
+                if (type === 'left' || type === 'right' || type == 'hcenter') {
+                    this.changeLabelPos(pos[type], this.labelStyle[this.selectedText].posY)
+                    this.labelStyle[this.selectedText].offsetX = offset[type]
+                } else if (type === 'top' || type === 'bottom' || type == 'vcenter') {
+                    this.changeLabelPos(this.labelStyle[this.selectedText].posX, pos[type])
+                    this.labelStyle[this.selectedText].offsetY = offset[type]
+                }
+            }
+            else {
+                let pos: { [key: string]: number } = {
+                    'left': 0,
+                    'right': chartW,
+                    'hcenter': chartW / 2,
+
+                    'top': 0,
+                    'bottom': chartH,
+                    'vcenter': chartH / 2
+                }
+                let offset: { [key: string]: number } = {
+                    'left': 5,
+                    'right': - textW - 5,
+                    'hcenter': - textW / 2,
+
+                    'top': - textH,
+                    'bottom': textH + 25,
+                    'vcenter': textH / 2
+                }
+                if (type === 'left' || type === 'right' || type == 'hcenter') {
+                    this.changeLabelPos(pos[type], this.labelStyle[this.selectedText].posY)
+                    this.labelStyle[this.selectedText].offsetX = offset[type]
+                } else if (type === 'top' || type === 'bottom' || type == 'vcenter') {
+                    this.changeLabelPos(this.labelStyle[this.selectedText].posX, pos[type])
+                    this.labelStyle[this.selectedText].offsetY = offset[type]
+                }
+            }
+        }
     }
 
 
@@ -973,40 +1330,78 @@ export class Chart {
             },
             "title": {
                 "text": this.titleLabel,
-                "vis": this.titleVis
+                "vis": this.titleVis,
+                "fontSize": this.labelStyle.title.size,
+                "pos": this.labelStyle.title.posRatio,
+                "offset": this.labelStyle.title.offset,
+                "font": this.labelStyle.title.font,
+                "bold": this.labelStyle.title.bold,
+                "italic": this.labelStyle.title.italic
             },
             "axis": {
                 "x": {
-                    "text": this.labelX,
+                    "label": {
+                        "text": this.labelX,
+                        "fontSize": this.labelStyle.labelx.size,
+                        "pos": this.labelStyle.labelx.posRatio,
+                        "offset": this.labelStyle.labelx.offset,
+                        "font": this.labelStyle.labelx.font,
+                        "bold": this.labelStyle.labelx.bold,
+                        "italic": this.labelStyle.labelx.italic
+                    },
                     "min": this.xAxisMin,
                     "max": this.xAxisMax,
                     "vis": this.labelxVis,
                     "sigDig": this.sigDigX,
-                    "exp": this.expX
+                    "exp": this.expX,
+                    "fontSize": this.labelStyle.axisx.size,
+                    "inner": this.xTicksSize,
+                    "font": this.labelStyle.axisx.font,
+                    "bold": this.labelStyle.axisx.bold,
+                    "italic": this.labelStyle.axisx.italic
                 },
                 "y": {
-                    "text": this.labelY,
+                    "label": {
+                        "text": this.labelY,
+                        "fontSize": this.labelStyle.labely.size,
+                        "pos": this.labelStyle.labely.posRatio,
+                        "offset": this.labelStyle.labely.offset,
+                        "font": this.labelStyle.labely.font,
+                        "bold": this.labelStyle.labely.bold,
+                        "italic": this.labelStyle.labely.italic
+                    },
                     "min": this.yAxisMin,
                     "max": this.yAxisMax,
                     "vis": this.labelyVis,
                     "sigDig": this.sigDigY,
-                    "exp": this.expY
+                    "exp": this.expY,
+                    "fontSize": this.labelStyle.axisy.size,
+                    "inner": this.yTicksSize,
+                    "font": this.labelStyle.axisy.font,
+                    "bold": this.labelStyle.axisy.bold,
+                    "italic": this.labelStyle.axisy.italic
                 }
             },
             "style": {
                 "frame": this.frameVis,
-                "fontSize": this.fontSize,
                 "lineWeight": this.lineWeight,
                 "dash": this.lineIsDash,
                 "lineType": this.lineType,
                 "margin": this.margin,
+                "width": this.width,
+                "height": this.height,
                 "grid": this.gridVis,
             },
             "legend": {
                 "vis": this.legendVis,
                 "max": this.maxVis,
                 "min": this.minVis,
-                "pos": this.legendPos
+                "pos": this.labelStyle.legend.posRatio,
+                "offset": this.labelStyle.legend.offset,
+                "fontSize": this.labelStyle.legend.size,
+                "font": this.labelStyle.legend.font,
+                "bold": this.labelStyle.legend.bold,
+                "italic": this.labelStyle.legend.italic
             },
             "dataSet": buf1
         }
@@ -1016,42 +1411,81 @@ export class Chart {
 
     public setJSON(text: string) {
         const json = JSON.parse(text)
-        console.log('set JSON')
-        console.log(json)
+        this.firstDraw = false
+
         this.potentialMax = json.potential.max
         this.potentialMin = json.potential.min
         this.currentMax = json.current.max
         this.currentMin = json.current.min
 
-        this.labelX = json.axis.x.text
+        this.labelX = json.axis.x.label.text
+        this.labelStyle.labelx.size = json.axis.x.label.fontSize
+        this.labelStyle.labelx.posRatio = json.axis.x.label.pos
+        this.labelStyle.labelx.offset = json.axis.x.label.offset
+        this.labelStyle.labelx.font = json.axis.x.label.font
+        this.labelStyle.labelx.bold = json.axis.x.label.bold
+        this.labelStyle.labelx.italic = json.axis.x.label.italic
+
         this.labelxVis = json.axis.x.vis
         this.xAxisMax = json.axis.x.max
         this.xAxisMin = json.axis.x.min
         this.sigDigX = json.axis.x.sigDig
         this.expX = json.axis.x.exp
+        this.labelStyle.axisx.size = json.axis.x.fontSize
+        this.xTicksSize = json.axis.x.inner
+        this.labelStyle.axisx.font = json.axis.x.font
+        this.labelStyle.axisx.bold = json.axis.x.bold
+        this.labelStyle.axisx.italic = json.axis.x.italic
 
-        this.labelY = json.axis.y.text
+
+        this.labelY = json.axis.y.label.text
+        this.labelStyle.labely.size = json.axis.y.label.fontSize
+        this.labelStyle.labely.posRatio = json.axis.y.label.pos
+        this.labelStyle.labely.offset = json.axis.y.label.offset
+        this.labelStyle.labely.font = json.axis.y.label.font
+        this.labelStyle.labely.bold = json.axis.y.label.bold
+        this.labelStyle.labely.italic = json.axis.y.label.italic
+
+
         this.labelyVis = json.axis.y.vis
         this.yAxisMax = json.axis.y.max
         this.yAxisMin = json.axis.y.min
         this.sigDigY = json.axis.y.sigDig
         this.expY = json.axis.y.exp
+        this.labelStyle.axisy.size = json.axis.y.fontSize
+        this.yTicksSize = json.axis.y.inner
+        this.labelStyle.axisy.font = json.axis.y.font
+        this.labelStyle.axisy.bold = json.axis.y.bold
+        this.labelStyle.axisy.italic = json.axis.y.italic
 
         this.titleLabel = json.title.text
         this.titleVis = json.title.vis
+        this.labelStyle.title.size = json.title.fontSize
+        this.labelStyle.title.posRatio = json.title.pos
+        this.labelStyle.title.offset = json.title.offset
+        this.labelStyle.title.font = json.title.font
+        this.labelStyle.title.bold = json.title.bold
+        this.labelStyle.title.italic = json.title.italic
 
         this.frameVis = json.style.frame
-        this.fontSize = json.style.fontSize
         this.lineWeight = json.style.lineWeight
         this.lineIsDash = json.style.dash
         this.lineType = json.style.lineType
         this.margin = json.style.margin
         this.gridVis = json.style.grid
 
+        this.width = json.style.width
+        this.height = json.style.height
+
         this.legendVis = json.legend.vis
         this.maxVis = json.legend.max
         this.minVis = json.legend.min
-        this.legendPos = json.legend.pos
+        this.labelStyle.legend.posRatio = json.legend.pos
+        this.labelStyle.legend.size = json.legend.fontSize
+        this.labelStyle.legend.font = json.legend.font
+        this.labelStyle.legend.bold = json.legend.bold
+        this.labelStyle.legend.italic = json.legend.italic
+        this.labelStyle.legend.offset = json.legend.offset
 
         this.groupList = {}
         json.dataSet.forEach((jds: any) => {
@@ -1075,5 +1509,67 @@ export class Chart {
         this.groupKeyList = Object.keys(this.groupList)
 
         this.draw()
+
+        // console.log(this.labelStyle)
+    }
+}
+
+
+
+export class LabelStyle {
+    public posRatio: { x: number, y: number } = { x: 0.01, y: 0.01 }
+    public font: string = 'sans-serif'
+    public italic: boolean = false
+    public bold: boolean = false
+    public size: number = 10
+
+    private _width: number
+    private _height: number
+
+    public offset: { x: number, y: number } = { x: 0, y: 0 }
+
+    constructor()
+    constructor(w: number, h: number)
+    constructor(w?: number, h?: number) {
+        this._width = w != null ? w : 0
+        this._height = h != null ? h : 0
+    }
+
+    public set height(h: number) {
+        this._height = h
+    }
+
+    public set width(w: number) {
+        this._width = w
+    }
+
+    public get posX() {
+        // console.log(`${this.posRatio.x * this._width}  =${this.posRatio.x} * ${this._width}`)
+        return this.posRatio.x * this._width
+    }
+    public get posY() {
+        // console.log(`${this.posRatio.y * this._height}  =${this.posRatio.y} * ${this._height}`)
+        return this.posRatio.y * this._height
+    }
+
+    public set posX(x: number) {
+        this.posRatio.x = Math.round(x / this._width * 100) / 100
+
+    }
+    public set posY(y: number) {
+        this.posRatio.y = Math.round(y / this._height * 100) / 100
+    }
+
+    public get offsetX() {
+        return this.offset.x
+    }
+    public get offsetY() {
+        return this.offset.y
+    }
+    public set offsetX(v: number) {
+        this.offset.x = v
+    }
+    public set offsetY(v: number) {
+        this.offset.y = v
     }
 }
