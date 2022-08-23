@@ -1,6 +1,10 @@
 body {
     font-size: 80%;
     /* overflow: hidden; */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #left-box,
@@ -25,6 +29,7 @@ body {
 #edit-ui,
 #save-ui,
 #data-ui,
+#edit-ui,
 #vis-ui {
     display: none;
 }
@@ -42,7 +47,7 @@ body {
     margin: 0;
     cursor: pointer;
     color: #222;
-    font-size: 11px;
+    font-size: 10px;
     border-bottom: #888 1px solid;
     width: 20%;
     text-align: center;
@@ -67,7 +72,8 @@ body {
     margin: 20px 0px 20px 40px;
     padding: 0 20px 0 0;
     color: #222;
-    border-right: #aaa solid 1px;
+    z-index: 2;
+    /* border-right: #aaa solid 1px; */
 
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -76,15 +82,14 @@ body {
 }
 
 #right-box {
-    /* position: fixed; */
-    position: absolute;
+    position: fixed;
+    /* position: absolute; */
     top: 0;
-    left: 300px;
-    /* background: #222; */
-    width: calc(100vw - 300px - 60px);
-    height: calc(100vh - 40px);
-    margin: 20px 40px 20px 0px;
-    padding: 0 0 0 20px;
+    right: 0;
+    background: #eee;
+    width: calc(100vw - 330px);
+    height: 100vh;
+    margin: 0px 0px 0px 0px;
 }
 
 #left-box .footer {
@@ -99,27 +104,28 @@ body {
     width: 250px;
     padding: 10px 0 10px 0;
 }
+
 #left-box .footer a {
     margin: 0 2px 0 2px;
 }
 
-#view {
-    position: fixed;
+svg {
+    position: absolute;
     top: 50%;
-    left: 360px;
-    transform: translate(0, -50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     overflow: hidden;
     z-index: 1;
+    cursor: auto;
 }
 
-svg {
-    z-index: 1;
-}
+
 
 #data-modal {
     position: absolute;
     top: 10px;
     left: 360px;
+    transform: translate(-50%, -50%);
     padding: 20px 20px 20px 20px;
     display: none;
     overflow: scroll;
@@ -193,7 +199,11 @@ h3 {
 }
 
 .block {
-    margin: 15px 0px 20px 0px;
+    margin: 0px 0px 30px 0px;
+}
+
+.block2 {
+    margin: 0px 0px 10px 0px;
 }
 
 .info {
@@ -241,24 +251,9 @@ h3 {
 }
 
 
-#file-list,
-#group-list {
-    height: 100px;
-    font-size: 100%;
-    overflow: scroll;
-    border-bottom: 1px #eee solid;
-    margin: 10px 0 5px 0;
-}
-.file-item,
-.group-item {
-    width: 100px;
-    display: inline-block;
-    margin: 0 5px 0 0;
-}
-
 #data-list {
     /* height: 180px; */
-    height: calc(100vh - 420px);
+    height: calc(100vh - 400px);
     font-size: 100%;
     overflow: scroll;
     border-bottom: 1px #eee solid;
@@ -302,6 +297,7 @@ button:hover {
 
 input[type='range'] {
     width: 240px;
+    margin: 0 0 10px 0;
 }
 
 
@@ -318,7 +314,7 @@ select {
 .label {
     color: #222;
     font-size: 100%;
-    margin: 0 0 5px 0;
+    margin: 0 0 0px 0;
 }
 
 input[type='number'],
@@ -331,8 +327,8 @@ input[type='text'] {
     border-radius: 5px;
     height: 20px;
 }
-.set-axis-seg .label,
-.set-axis-label .label {
+
+.set-axis-seg .label {
     width: 30px;
     display: inline-block;
 }
@@ -341,29 +337,33 @@ input[type='text'] {
     height: 22px;
 }
 
-.set-axis-label input[type='text'] {
-    width: 126px;
+
+#set-graph-title,
+#set-graph-label-x,
+#set-graph-label-y {
+    width: 130px;
 }
 
-#set-graph-title {
-    width: 160px;
-}
-
-#x-axis-unit {
-    width: 60px;
-}
-#y-axis-unit {
-    margin: 0 0 5px 0;
-}
-
-.set-axis-seg input[type='number'],
-.set-axis-seg input[type='text'] {
-    width: 60px;
-}
 #x-sig-dig,
-#y-sig-dig {
-    width: 30px;
+#y-sig-dig,
+#x-axis-unit,
+#y-axis-unit {
+    width: 35px;
 }
+
+#x-ticks,
+#y-ticks {
+    width: 40px;
+}
+
+
+#x-axis-min,
+#x-axis-max,
+#y-axis-min,
+#y-axis-max {
+    width: 62px;
+}
+
 
 .data-item {
     margin: 0 0 5px 0;
@@ -445,9 +445,20 @@ input[type='text'] {
     width: 168px;
 }
 
+#group-all-show,
+#group-all-hide {
+    width: 100px;
+}
+
+#group-reverse {
+    width: 30px;
+    margin: 0 0 0 10px;
+    font-size: 100%;
+}
+
 #dataset-list {
     /* height: 160px; */
-    height: calc(100vh - 620px);
+    height: calc(100vh - 580px);
     overflow: scroll;
     border-bottom: 1px #eee solid;
 }
@@ -557,7 +568,6 @@ input[type='text'] {
 
 
 #vis-ui .label {
-    font-weight: bold;
     margin: 0 0 0 0;
 }
 
@@ -565,16 +575,30 @@ input[type='text'] {
 
 #svg-width,
 #svg-height {
-    width: 50px;
+    width: 40px;
 }
 
 #svg-size-optimize-btn {
-    width: 65px;
-    margin: 0 0 0 15px;
+    width: 50px;
+    margin: 0 0 0 5px;
+    display: inline-block;
 }
 
 #line-type-selector {
-    width: 60px;
+    width: 120px;
+}
+
+#line-type-reverse {
+    width: 20px;
+    text-align: center;
+    padding: 0;
+    height: 22px;
+    margin-right: 5px;
+    font-size: 100%;
+}
+
+#line-weight {
+    width: 35px;
 }
 
 
@@ -586,6 +610,11 @@ input[type='text'] {
     border: none;
     border-bottom: #222 1px solid;
     border-radius: 0;
+}
+
+#y-axis-direction,
+#x-axis-direction {
+    margin: 0 0 0 2px;
 }
 
 /* 
@@ -622,45 +651,61 @@ input[type='text'] {
 }
 
 span0 {
-    width: auto;
-    margin: 0 5px 0 0;
+    width: 120px;
     display: inline-block;
 }
+
 span1 {
+    display: inline-block;
+    width: 90px;
+}
+
+span2 {
     display: inline-block;
     width: 60px;
 }
-span2 {
+
+span3 {
     display: inline-block;
     width: 55px;
 }
-span3 {
+
+span4 {
     display: inline-block;
     width: 50px;
 }
-span4 {
+
+span5 {
     display: inline-block;
     width: 40px;
 }
-span5 {
+
+span6 {
     display: inline-block;
     width: 30px;
 }
-span6 {
+
+span7 {
     display: inline-block;
     width: 20px;
 }
-span7 {
+
+span8 {
     display: inline-block;
     width: 10px;
 }
 
+span9 {
+    display: inline-block;
+    width: 5px;
+}
 
 #help-modal {
-    position: fixed;
+    position: absolute;
     top: 50%;
-    left: 340px;
-    transform: translate(0%, -50%);
+    /* left: 340px; */
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: #FFF;
     padding: 20px;
     display: none;
@@ -674,4 +719,147 @@ span7 {
     width: 120px;
     text-align: left;
     height: 30px;
+}
+
+
+.serif {
+    font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+}
+
+.sans-serif {
+    font-family: "Helvetica Neue", "Helvetica", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Arial", "Yu Gothic", "Meiryo", sans-serif;
+}
+
+.switchBtn {
+    width: 20px;
+}
+
+#fontsize {
+    width: 30px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-family: "Times New Roman", "YuMincho", "Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif;
+    font-style: italic;
+    transform: translate(0, -1px);
+}
+
+#font-style-reset {
+    width: 40px;
+    height: 22px;
+    margin: 0 0 0 8px;
+}
+
+.label-alignment-btn .material-icons {
+    scale: 60%;
+    transform: translate(0, -2px);
+}
+
+.label-alignment-btn.horizontal .material-icons {
+    transform: rotate(90deg) translate(-2px, 0);
+}
+
+.label-alignment-btn {
+    width: 26px;
+    height: 22px;
+    /* line-height: 22px; */
+    padding: 0 0 0 0;
+    margin: -5px 0 2px 0;
+    display: inline-block;
+    transform: translate(0, 8px);
+}
+
+
+#margin-top,
+#margin-bottom,
+#margin-left,
+#margin-right {
+    width: 40px;
+}
+
+#cover {
+    /* position: fixed; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 400px;
+    width: calc(100vw - 330px);
+    margin: 0 10px 0 10px;
+}
+
+#cover .logo {
+    width: 100%;
+    max-width: 300px;
+    min-width: 40px;
+    margin: 0 0 20px 0;
+}
+
+#cover div,
+#cover a {
+    margin: 10px 0 10px 0;
+    color: #bbb;
+    margin: 0 0 0 0;
+}
+
+#cover h1 {
+    margin: 24px 0 0px 0;
+    font-weight: bold;
+    font-size: 100%;
+    color: #bbb;
+}
+
+#cover span2 {
+    display: inline-block;
+    width: 130px;
+}
+
+#cover span3 {
+    display: inline-block;
+    width: 100px;
+}
+
+#cover span1 {
+    display: inline-block;
+    width: 150px;
+}
+#cover span0 {
+    display: inline-block;
+    margin: 0 10px 0 0;
+    width: auto;
+}
+
+#cover block0 {
+    display: inline-block;
+    width: auto;
+    margin: 0 20px 0 0;
+}
+
+#cover block0 {
+    display: inline-block;
+    width: 200px;
+}
+
+#cover block1 {
+    display: inline-block;
+    width: 160px;
+}
+
+#cover block2 {
+    display: inline-block;
+    width: 120px;
+}
+
+#cover block3 {
+    display: inline-block;
+    width: 100px;
+}
+
+padding {
+    height: 10px;
+    width: 10px;
 }

@@ -1,0 +1,34 @@
+.switch-btn-box {
+    display: inline-block;
+    transform: translate(0, 1px);
+}
+
+.switch-btn-box input[type="checkbox"] {
+    display: none;
+}
+.switch-btn-box input[type="checkbox"] + label.check {
+    background: #FFF;
+    color: #000;
+    border: solid 1px #666;
+
+    border-radius: 5px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+
+    margin: 0 0 0 0;
+
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.switch-btn-box input[type="checkbox"]:checked + label.check {
+    background: #4287f5;
+    color: #FFF;
+    border: solid 1px #4287f5;
+}
+
+.switch-btn:hover {
+    opacity: 1;
+}
