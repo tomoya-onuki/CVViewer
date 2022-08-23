@@ -46,22 +46,17 @@ export class Main {
             .on('change', function (e: any) {
                 const files = e.target.files; // ファイルのリスト
                 let txtFiles = []
-                let jsonFiles = []
                 for (let i = 0; i < files.length; i++) {
                     if (files[i].name.indexOf('.txt') != -1) {
                         txtFiles.push(files[i])
                     } else if (files[i].name.indexOf('.json') != -1) {
-                        jsonFiles.push(files[i])
+                        let jsonFile = files[i]
+                        fReader.readJSON(jsonFile)
+                            .then((jsonStr: string) => me.setJson(jsonStr))
                     }
                 }
                 fReader.readTXT(txtFiles)
                     .then((dataList: Data[]) => me.setData(dataList))
-
-                if (jsonFiles.length > 1) {
-                    alert('読み込むことができるjsonファイルは1つです')
-                }
-                fReader.readJSON(jsonFiles)
-                    .then((jsonStr: string) => me.setJson(jsonStr))
             });
         // ファイルをドロップ
         $('#file-drop')
@@ -648,6 +643,9 @@ export class Main {
                 $(this).css('cursor', 'auto')
             })
 
+
+        let uiKey: string[] = ['file', 'data', 'vis', 'edit']
+        let uiKeyCount: number = 0
         $(window)
             .resize(function () {
                 let w = Number($('#right-box').width())
@@ -661,20 +659,24 @@ export class Main {
             })
             .on('keydown', function (e) {
                 // テンキー
-                switch (e.keyCode) {
-                    case 37: // ←
-                        me.chart.addLabelPos(-5, 0)
-                        break;
-                    case 38: // ↑
-                        me.chart.addLabelPos(0, -5)
-                        break;
-                    case 39: // →
-                        me.chart.addLabelPos(5, 0)
-                        break;
-                    case 40: // ↓
-                        me.chart.addLabelPos(0, 5)
-                        break;
+                if (!e.altKey && !e.shiftKey) {
+                    switch (e.keyCode) {
+                        case 37: // ←
+                            me.chart.addLabelPos(-5, 0)
+                            break;
+                        case 38: // ↑
+                            me.chart.addLabelPos(0, -5)
+                            break;
+                        case 39: // →
+                            me.chart.addLabelPos(5, 0)
+                            break;
+                        case 40: // ↓
+                            me.chart.addLabelPos(0, 5)
+                            break;
+                    }
                 }
+
+                // console.log(e.keyCode)
 
                 // ショートカット
                 if (e.altKey) {
@@ -683,6 +685,10 @@ export class Main {
                         case 186: // 拡大 +
                             var w = Number($('#svg-width').val()) + 10
                             var h = Number($('#svg-height').val()) + 10
+                            var maxW = Number($('#right-box').width())
+                            var maxH = Number($('#right-box').height())
+                            if (maxW < w) w = maxW
+                            if (maxH < h) h = maxH
                             $('#svg-width').val(w)
                             $('#svg-height').val(h)
                             me.chart.resize(w, h)
@@ -694,8 +700,12 @@ export class Main {
                             $('#svg-height').val(h)
                             me.chart.resize(w, h)
                             break
-                        case 79: // サイズの最適化
+                        case 48: // サイズの最適化
                             me.optimizeChartSize()
+                            break
+
+                        case 79: // ファイルオープン
+                            $('#file-input').click()
                             break
 
                         // タブ移動
@@ -711,9 +721,18 @@ export class Main {
                         case 52: // 4
                             me.changeUiPane($('#edit-ui-select'), $('#edit-ui'))
                             break
-                        case 53: // 5
-                            // me.changeUiPane($('#save-ui-select'), $('#save-ui'))
+
+                        case 39: // →
+                            uiKeyCount++
+                            if (uiKeyCount >= uiKey.length) uiKeyCount = 0
+                            me.changeUiPane($(`#${uiKey[uiKeyCount]}-ui-select`), $(`#${uiKey[uiKeyCount]}-ui`))
                             break
+                        case 37: // ←
+                            uiKeyCount--
+                            if (uiKeyCount < 0) uiKeyCount = uiKey.length - 1
+                            me.changeUiPane($(`#${uiKey[uiKeyCount]}-ui-select`), $(`#${uiKey[uiKeyCount]}-ui`))
+                            break
+
 
                         case 71: // g 
                             var flag = $('#grid-vis').prop('checked') ? false : true
