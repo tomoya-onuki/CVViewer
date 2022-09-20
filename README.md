@@ -59,13 +59,13 @@
 ### 1. データの読み込み
 1. 「ファイルタブ」上で、ファイルをドロップして読み込みます
 
-   <img src="./img/01.png" width="60%">  
+   <img src="https://github.com/tomoya-onuki/cvviewer/blob/masterhttps://github.com/tomoya-onuki/cvviewer/blob/master/img/01.png" width="60%">  
 
 ### 2. データの平均化
 1. 「データタブ」上で平均を出したいデータのチェックボックスをチェックします。
 3. 平均化ボタンを押します。このときラベルを設定することもできます。
 
-   <img src="./img/02.png" width="60%">
+   <img src="https://github.com/tomoya-onuki/cvviewer/blob/masterhttps://github.com/tomoya-onuki/cvviewer/blob/master/img/02.png" width="60%">
 
 1. グラフが表示されます
 
@@ -79,7 +79,7 @@
 4. 線の太さや、自動配色機能による色付けなどを行います。
 5. ピーク値やグリッドを必要に応じて表示/非表示します。
 
-   <img src="./img/03.png" width="60%"> 
+   <img src="https://github.com/tomoya-onuki/cvviewer/blob/masterhttps://github.com/tomoya-onuki/cvviewer/blob/master/img/03.png" width="60%"> 
 
    *グラフにはモザイク処理をしています
    
@@ -94,7 +94,7 @@
 6. 目盛りの指数表示形式や、有効数字を設定します
 7. 目盛りの幅を設定します
   
-    <img src="./img/04.png" width="60%">
+    <img src="https://github.com/tomoya-onuki/cvviewer/blob/masterhttps://github.com/tomoya-onuki/cvviewer/blob/master/img/04.png" width="60%">
 
 <br><br>
 
@@ -129,7 +129,7 @@
 ### 3. ショートカット
 `alt+O`(win), `opt+shift+O`(max)でファイルセレクタが開くので、ファイルを選択する
 
-![](./img/file-load.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/masterhttps://github.com/tomoya-onuki/cvviewer/blob/master/img/file-load.png)
 
 
 <br><br><br>
@@ -154,7 +154,7 @@ Group Labelと書かれた枠内にラベル名を入力することで、平均
 ### 4. 一括選択
 下部の`全選択`, `全解除`を押すと一括での選択・解除が可能です。データ検索機能と合わせて使うことで効率化が図れます。
 
-![](./img/data-select.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/masterhttps://github.com/tomoya-onuki/cvviewer/blob/master/img/data-select.png)
 
 <br><br><br>
 
@@ -190,7 +190,7 @@ Group Labelと書かれた枠内にラベル名を入力することで、平均
 
 <br>
   
-![](img/dataset-list.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/master/img/dataset-list.png)
 <br><br><br>
 
 ## グラフのデザイン
@@ -207,7 +207,7 @@ Group Labelと書かれた枠内にラベル名を入力することで、平均
 - `最適化`ボタンをクリックするとサイズを最適化します。縦長になることはありません。
 - 余白を指定することができます。
 
-![](img/line.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/master/img/line.png)
 <br><br><br>
 
 ## ラベルの編集
@@ -223,14 +223,14 @@ Group Labelと書かれた枠内にラベル名を入力することで、平均
 - グラフ上で編集したいラベルをクリックすると青い枠線が表示されます。この状態で編集タブからラベルのスタイルを編集できます。
 - フォント、サイズ、ボールド、イタリックを設定できます。
 
-![](/img/label.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/master/img/label.png)
 
 ### 4. 位置
 - ラベルを選択した状態で、マウスドラッグをするとラベルを移動できます。
 - ラベルを選択した状態で、矢印キーを押すとラベルを移動できます。
 - レイアウトボタンを押すと位置を合わせることができます。
 
-![](img/text.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/master/img/text.png)
 <br><br><br>
 
 ## 軸の編集
@@ -247,7 +247,7 @@ Group Labelと書かれた枠内にラベル名を入力することで、平均
 - 目盛り幅を指定できます。0を基準に設定されます。
 - 目盛りの方向(内/外) と表示/非表示を指定できます。
 
-![](img/axis.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/master/img/axis.png)
 <br><br><br>
 
 ## グラフのダウンロード
@@ -265,7 +265,7 @@ Group Labelと書かれた枠内にラベル名を入力することで、平均
 - 図表として使うことはできません。
 - 画像に変換するためには、このツールで一度読み込んだのちにpng形式でダウンロードします。
 
-![](img/file-load.png)
+![](https://github.com/tomoya-onuki/cvviewer/blob/master/img/file-load.png)
 <br><br><br>
 
 ## ショートカットキー
