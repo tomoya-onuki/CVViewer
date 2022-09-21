@@ -266,7 +266,7 @@ export class Chart {
                     $(`#select-box-${me.selectedText}`).show()
                     me.setFontStyleUI()
                 })
-                // console.log('add X axis')
+            // console.log('add X axis')
             $('#x-axis > .tick > text')
                 .attr("font-size", `${this.labelStyle.axisx.size}px`)
                 .attr('font-family', this.labelStyle.axisx.font)
@@ -280,8 +280,8 @@ export class Chart {
                 .attr('stroke', '#4287f5')
                 .attr('display', 'none')
                 .attr("transform", `translate(${me.margin.left}, ${chartH + me.margin.top})`)
-        
-                // console.log('add X axis ticks')
+
+            // console.log('add X axis ticks')
 
             // Add Y axis
             svg.append("g")
@@ -305,8 +305,8 @@ export class Chart {
                     $(`#select-box-${me.selectedText}`).show()
                     me.setFontStyleUI()
                 })
-                // console.log('add Y axis')
-                
+            // console.log('add Y axis')
+
             $('#y-axis > .tick > text')
                 .attr("font-size", `${this.labelStyle.axisy.size}px`)
                 .attr('font-family', this.labelStyle.axisy.font)
@@ -320,7 +320,7 @@ export class Chart {
                 .attr('display', 'none')
                 .attr("transform", `translate(${me.margin.left - 30}, ${me.margin.top})`)
 
-                // console.log('add Y axis ticks')
+            // console.log('add Y axis ticks')
 
             // y軸の表記 有効数字と単位が可変
             $('#y-axis > .tick > text').each(function () {
@@ -1297,6 +1297,18 @@ export class Chart {
         }
     }
 
+    public getCsvList(): { csv: string, fname: string }[] {
+        let list: { csv: string, fname: string }[] = []
+        for (let key in this.groupList) {
+            let csv: string = 'Potential,Current\n'
+            const ds: DataSet = this.groupList[key]
+            ds.values.forEach(v => {
+                csv += `${v.potential},${v.current}\n`
+            })
+            list.push({ csv: csv, fname: ds.label })
+        }
+        return list
+    }
 
     public getJSON(): string {
 

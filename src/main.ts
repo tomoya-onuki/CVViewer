@@ -58,7 +58,7 @@ export class Main {
                             })
                     }
                 }
-                
+
                 const header: string = String($('#file-format-header').val())
                 let separator: string = String($('#file-format-separator-selctor > option:selected').val())
                 if (separator === 'other') {
@@ -66,7 +66,7 @@ export class Main {
                 }
                 const pCol: number = Number($('#file-format-first-col > option:selected').val())
                 const match = String($('#file-format-header-match > option:selected').val())
-                if(match === 'exact') separator = '^' + separator + '$'
+                if (match === 'exact') separator = '^' + separator + '$'
 
                 fReader.readTXT(files, header, separator, pCol)
                     .then((dataList: Data[]) => {
@@ -228,7 +228,7 @@ export class Main {
                 const isDash: boolean = $('#dash-line-mode').prop('checked')
                 me.chart.changeLineColorScheme(type)
                 me.chart.changeLineDashed(isDash)
-                
+
                 $('#cover').hide()
                 me.addGroupItems(groupKey)
 
@@ -1114,6 +1114,8 @@ export class Main {
                 this.saveFigbyPNG()
             } else if (type === 'json') {
                 this.saveFigByJson()
+            } else if (type === 'csv') {
+                this.saveFigByCsv()
             } else if (type === 'all') {
                 this.saveFigbyPNG()
                 this.saveFigByJson()
@@ -1159,12 +1161,24 @@ export class Main {
     }
 
     private saveFigByJson() {
-        const json = this.chart.getJSON()
-        let ary = json.split('');
+        const json: string = this.chart.getJSON()
+        let ary = json.split('')
         let blob = new Blob(ary, { type: "text/json" })
         $('<a>', {
             href: URL.createObjectURL(blob),
             download: this.outputName + '.cvv.json'
         })[0].click()
+    }
+
+    private saveFigByCsv() {
+        const list = this.chart.getCsvList()
+        list.forEach(val => {
+            let ary = val.csv.split('')
+            let blob = new Blob(ary, { type: "text/csv" })
+            $('<a>', {
+                href: URL.createObjectURL(blob),
+                download: this.outputName + '_' + val.fname + '.csv'
+            })[0].click()
+        })
     }
 }
