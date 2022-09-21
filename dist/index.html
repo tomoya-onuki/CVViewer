@@ -27,7 +27,7 @@
         </div>
         <div class="info">
             <div class="highlight">注意:タブを閉じたり、リロードをすると編集データが破棄されます。</div>
-            <div>対応ブラウザ : GoogleChrome, FireFox, Safari</div>
+            <div>推奨ブラウザ : GoogleChrome, FireFox, Safari</div>
         </div>
 
         <div id="selectors">
@@ -45,7 +45,7 @@
                     <div class="bold">クリックしてファイルを選択</div>
                     <div class="info">
                         <ul>
-                            <li>.txtと.jsonをサポートしています</li>
+                            <li>サポートしているファイル形式 : .txt, .csv, .tsv</li>
                             <li>このツールで作成したjsonファイルを読み込むことでグラフを再編集できます</li>
                             <li>複数のファイルはまとめて読み込めます</li>
                             <li>ファイルはサーバーにアップロードされません</li>
@@ -56,36 +56,102 @@
             </div>
 
             <div class="block">
-                <h2>グラフのダウンロード</h2>
-                <div>
-                    <span5>名前</span5>
-                    <input type="text" value="figure" id="save-fig-name">
+                <h2 class="hide-contents" checked="true" for="load-opt">読み込みオプション</h2>
+                <div id="load-opt">
+                    <div class="block2">
+                        <label for="ave-batch">一括読み込み時の平均化</label>
+                        <input type="checkbox" id="ave-batch" class="toggle-switch">
+                    </div>
+                    <div class="header-opt">
+                        <h2>ファイル形式の指定</h2>
+                        <!-- <label for="file-format">ファイル形式の指定</label> -->
+                        <!-- <input type="checkbox" id="file-format" class="toggle-switch"> -->
+
+                        <div>
+                            <span40>ヘッダ</span40>
+                            <input type="text" id="file-format-header" value="Potential/V, Current/A">
+                            <select id="file-format-header-match">
+                                <option value="exact">完全一致</option>
+                                <option value="partial">部分一致</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <span40>区切り</span40>
+                            <select id="file-format-separator-selctor">
+                                <option value=",">カンマ (csv)</option>
+                                <option value="\s+">タブ (tsv)</option>
+                                <option value="other">その他 (非推奨)</option>
+                            </select>
+                            <input type="text" id="file-format-separator-text" placeholder="その他">
+                        </div>
+
+                        <div>
+                            <span40>1列目</span40>
+                            <select id="file-format-first-col">
+                                <option value="0">Potential</option>
+                                <option value="1">Current</option>
+                            </select>
+                            <!-- <span15></span15>
+                            <span40>2列目</span40>
+                            <select id="file-format-first-col">
+                                <option value="1">Current</option>
+                                <option value="0">Potential</option>
+                            </select> -->
+                        </div>
+
+                        <!-- <button class="help-btn"
+                            onclick="alert(`ヘッダには、読み込みたい数値の直前の列を指定します。直前が空行である場合はさらにその1つ前列を指定します。\n\n区切りには、列を区切る文字を指定します。カンマやタブスペース以外のフォーマットは推奨しません。\n\n1列目には、読み込む数値の1列目の数値の意味を指定します。`)">ヘルプ</button> -->
+                        <!-- <div class="info">
+                            <ul>
+                                <li>ヘッダには、読み込みたい数値の直前の列を指定します。直前が空行である場合はさらにその1つ前列を指定します。</li>
+                                <li>区切りには、列を区切る文字を指定します。カンマやタブスペース以外のフォーマットは推奨しません。</li>
+                                <li>1列目には、読み込む数値の1列目の数値の意味を指定します。</li>
+                            </ul>
+                        </div> -->
+                    </div>
                 </div>
+            </div>
 
-                <div>
-                    <span5>形式</span5>
-                    <select id="fig-type">
-                        <option value="png">png</option>
-                        <option value="json">json</option>
-                    </select>
+            <div class="block">
+                <h2 class="hide-contents" checked="true" for="dl-graph">グラフのダウンロード</h2>
+                <div id="dl-graph">
+                    <div>
+                        <span30>名前</span30>
+                        <input type="text" value="figure" id="save-fig-name">
+                    </div>
 
-                    <span7></span7>
+                    <div>
+                        <span30>形式</span30>
+                        <select id="fig-type">
+                            <option value="png">png</option>
+                            <option value="json">json</option>
+                            <option value="csv">csv</option>
+                        </select>
 
-                    <span4>解像度</span4>
-                    <select id="fig-resolution">
-                        <option value="1">低</option>
-                        <option value="2" selected>中</option>
-                        <option value="5">高</option>
-                        <option value="10">最高</option>
-                    </select>
-                </div>
+                        <span10></span10>
 
+                        <span40>解像度</span40>
+                        <select id="fig-resolution">
+                            <option value="1">低</option>
+                            <option value="2" selected>中</option>
+                            <option value="5">高</option>
+                            <option value="10">最高</option>
+                        </select>
+                    </div>
 
-                <button id="save-fig-btn">ダウンロード</button>
+                    <button id="save-fig-btn">ダウンロード</button>
 
-                <div class="info">
-                    <div>ファイルはブラウザで指定しているダウンロード先に保存されます。</div>
-                    <div>json形式で保存したファイルはこのツールで読み込むことで再編集することができます。</div>
+                    <!-- <button class="help-btn"
+                        onclick="alert(`ファイルはブラウザで指定しているダウンロード先に保存されます。\n\npng形式：グラフの画像を保存します。\n\njson形式：グラフを再編集可能なファイルとして保存します。このツールで読み込むことで再編集することができます。\n\ncsv形式：平均化したデータを保存します。Microsoft Excelなどで再利用できます。`)">ヘルプ</button> -->
+                    <!-- <div class="info">
+                        <ul>
+                            <li>ファイルはブラウザで指定しているダウンロード先に保存されます。</li>
+                            <li>png形式：グラフの画像を保存します。</li>
+                            <li>json形式：グラフを再編集可能なファイルとして保存します。このツールで読み込むことで再編集することができます。</li>
+                            <li>csv形式：平均化したデータを保存します。Microsoft Excelなどで再利用できます。</li>
+                        </ul>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -127,7 +193,7 @@
 
                 <input type="number" id="line-weight" value="1.5" min="0.5" max="3.0" step="0.5">pt
 
-                <span7></span7>
+                <span10></span10>
 
                 <span>配色</span>
                 <select name="line-type" id="line-type-selector">
@@ -160,7 +226,7 @@
                 </div>
 
                 <div class="block2">
-                    <span4>サイズ</span4>
+                    <span40>サイズ</span40>
                     <input type="number" value="600" id="svg-width">px
                     <span>&times;</span>
                     <input type="number" value="450" id="svg-height">px
@@ -170,23 +236,23 @@
 
                 <div class="block2">
                     <div>
-                        <span4>余白</span4>
+                        <span40>余白</span40>
                         <span>上</span>
                         <input id="margin-top" type="number" value="50" step="5" min="0">
                         <span>px</span>
 
-                        <span7></span7>
+                        <span10></span10>
 
                         <span>下</span>
                         <input id="margin-bottom" type="number" value="50" step="5" min="0">
                         <span>px</span>
                     </div>
                     <div>
-                        <span4></span4>
+                        <span40></span40>
                         <span>左</span>
                         <input id="margin-left" type="number" value="50" step="5" min="0">
                         <span>px</span>
-                        <span7></span7>
+                        <span10></span10>
                         <span>右</span>
                         <input id="margin-right" type="number" value="50" step="5" min="0">
                         <span>px</span>
@@ -199,148 +265,159 @@
         <div id="edit-ui" class="ui-parts">
 
             <div class="block">
-                <div class="block2">
-                    <h2>テキスト</h2>
-                    <div id="font-selector" class="font-selector">
-                        <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
-                        <input type="radio" name="font" value="serif" text="Serif">
-                        <input type="radio" name="font" value='"Arial"' text="Arial">
-                        <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
-                        <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
-                        <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
-                        <input type="radio" name="font" value='"Meiryo", "メイリオ"' text="Meiryo">
-                        <input type="radio" name="font"
-                            value='"Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro"'
-                            text="ヒラギノ角ゴ ProN">
-                        <input type="radio" name="font" value='"ヒラギノ明朝 ProN","Hiragino Mincho Pro"' text="ヒラギノ明朝 ProN">
-                        <input type="radio" name="font" value='"游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic"' text="游ゴシック">
-                        <input type="radio" name="font" value='"游明朝", "YuMincho"' text="游明朝">
+                <h2 class="hide-contents" checked="true" for="hide-text">テキスト</h2>
+
+                <div id="hide-text">
+                    <div class="block2">
+                        <div id="font-selector" class="font-selector">
+                            <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
+                            <input type="radio" name="font" value="serif" text="Serif">
+                            <input type="radio" name="font" value='"Arial"' text="Arial">
+                            <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
+                            <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
+                            <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
+                            <input type="radio" name="font" value='"Meiryo", "メイリオ"' text="Meiryo">
+                            <input type="radio" name="font"
+                                value='"Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro"'
+                                text="ヒラギノ角ゴ ProN">
+                            <input type="radio" name="font" value='"ヒラギノ明朝 ProN","Hiragino Mincho Pro"'
+                                text="ヒラギノ明朝 ProN">
+                            <input type="radio" name="font" value='"游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic"'
+                                text="游ゴシック">
+                            <input type="radio" name="font" value='"游明朝", "YuMincho"' text="游明朝">
+                        </div>
+
+                        <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
+
+                        <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
+                        <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+
+                        <div>
+                            <span0>レイアウト</span0>
+                            <button id="align-top-btn" class="label-alignment-btn">
+                                <span class="material-icons">&#xe25a;</span>
+                            </button>
+                            <button id="align-vertival-center-btn" class="label-alignment-btn">
+                                <span class="material-icons">&#xe259;</span>
+                            </button>
+                            <button id="align-bottom-btn" class="label-alignment-btn">
+                                <span class="material-icons">&#xe258;</span>
+                            </button>
+                            <button id="align-left-btn" class="label-alignment-btn horizontal">
+                                <span class="material-icons">&#xe258;</span>
+                            </button>
+                            <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
+                                <span class="material-icons">&#xe259;</span>
+                            </button>
+                            <button id="align-right-btn" class="label-alignment-btn horizontal">
+                                <span class="material-icons">&#xe25a;</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
 
-                    <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
-                    <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+                    <div class="block2">
+                        <span55>タイトル</span55>
+                        <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
+                        <input type="checkbox" id="title-vis" class="toggle-switch" checked>
+
+                        <span55>横軸</span55>
+                        <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="横軸のラベル">
+                        <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
+
+                        <span55>縦軸</span55>
+                        <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
+                        <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
+                    </div>
+
+                    <div class="block2">
+                        <span0>
+                            <label for="legend-vis">凡例</label>
+                            <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
+                        </span0>
+
+                        <span0>
+                            <label for="max-vis">最大値</label>
+                            <input type="checkbox" id="max-vis" class="toggle-switch">
+                        </span0>
+
+                        <span0>
+                            <label for="min-vis">最小値</label>
+                            <input type="checkbox" id="min-vis" class="toggle-switch">
+                        </span0>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="block">
+                <h2 class="hide-contents" checked="true" for="hide-xaxis">横軸</h2>
+
+                <div id="hide-xaxis">
+                    <div class="set-axis-seg">
+                        <span30>範囲</span30>
+                        <input type="text" name="" id="x-axis-min" step="0.1">
+                        <span>~</span>
+                        <input type="text" name="" id="x-axis-max" step="0.1">
+                        <select id="x-axis-range-unit">
+                            <option value="num">V</option>
+                            <option value="ratio">%</option>
+                        </select>
+                    </div>
 
                     <div>
-                        <span0>レイアウト</span0>
-                        <button id="align-top-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe25a;</span>
-                        </button>
-                        <button id="align-vertival-center-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe259;</span>
-                        </button>
-                        <button id="align-bottom-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe258;</span>
-                        </button>
-                        <button id="align-left-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe258;</span>
-                        </button>
-                        <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe259;</span>
-                        </button>
-                        <button id="align-right-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe25a;</span>
-                        </button>
+                        <span60>指数表示</span60><input type="text" value="e+0" id="x-axis-unit" placeholder="e+0">
+                        <span10></span10>
+                        <span60>有効数字</span60><input type="number" value="3" id="x-sig-dig" min="1">桁
+                    </div>
+
+                    <div>
+                        <span60>目盛り幅</span60><input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
+                            id="x-ticks-unit">e+0</span>
+                        <span10></span10>
+                        <span0>方向</span0>
+                        <select id="x-axis-direction">
+                            <option value="out">外側</option>
+                            <option value="in">内側</option>
+                            <option value="none">なし</option>
+                        </select>
                     </div>
                 </div>
-
-
-                <div class="block2">
-                    <span2>タイトル</span2>
-                    <input id="set-graph-title" type="text" value="" placeholder="タイトルラベル">
-                    <input type="checkbox" id="title-vis" class="toggle-switch" checked>
-
-                    <span2>横軸</span2>
-                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="横軸のラベル">
-                    <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
-
-                    <span2>縦軸</span2>
-                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
-                    <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
-                </div>
-
-                <div class="block2">
-                    <span0>
-                        <label for="legend-vis">凡例</label>
-                        <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
-                    </span0>
-
-                    <span0>
-                        <label for="max-vis">最大値</label>
-                        <input type="checkbox" id="max-vis" class="toggle-switch">
-                    </span0>
-
-                    <span0>
-                        <label for="min-vis">最小値</label>
-                        <input type="checkbox" id="min-vis" class="toggle-switch">
-                    </span0>
-                </div>
-            </div>
-
-
-            <div class="block">
-                <h2>横軸</h2>
-                <div class="set-axis-seg">
-                    <span5>範囲</span5>
-                    <input type="text" name="" id="x-axis-min" step="0.1">
-                    <span>~</span>
-                    <input type="text" name="" id="x-axis-max" step="0.1">
-                    <select id="x-axis-range-unit">
-                        <option value="num">V</option>
-                        <option value="ratio">%</option>
-                    </select>
-                </div>
-
-                <div>
-                    <span1>指数表示</span1><input type="text" value="e+0" id="x-axis-unit" placeholder="e+0">
-                    <span7></span7>
-                    <span1>有効数字</span1><input type="number" value="3" id="x-sig-dig" min="1">桁
-                </div>
-
-                <div>
-                    <span1>目盛り幅</span1><input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
-                        id="x-ticks-unit">e+0</span>
-                    <span7></span7>
-                    <span0>方向</span0>
-                    <select id="x-axis-direction">
-                        <option value="out">外側</option>
-                        <option value="in">内側</option>
-                        <option value="none">なし</option>
-                    </select>
-                </div>
             </div>
 
             <div class="block">
-                <h2>縦軸</h2>
-                <div class="set-axis-seg">
-                    <span5>範囲</span5>
-                    <input type="text" name="" id="y-axis-min">
-                    <span>~</span>
-                    <input type="text" name="" id="y-axis-max">
+                <h2 class="hide-contents" checked="true" for="hide-yaxis">縦軸</h2>
 
-                    <select id="y-axis-range-unit">
-                        <option value="num">A</option>
-                        <option value="ratio">%</option>
-                    </select>
-                </div>
+                <div id="hide-yaxis">
+                    <div class="set-axis-seg">
+                        <span30>範囲</span30>
+                        <input type="text" name="" id="y-axis-min">
+                        <span>~</span>
+                        <input type="text" name="" id="y-axis-max">
 
-                <div>
-                    <span1>指数表示</span1><input type="text" value="e-6" id="y-axis-unit" placeholder="e+0">
-                    <span7></span7>
-                    <span1>有効数字</span1><input type="number" value="3" id="y-sig-dig" min="1">桁
-                </div>
+                        <select id="y-axis-range-unit">
+                            <option value="num">A</option>
+                            <option value="ratio">%</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <span1>目盛り幅</span1><input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
-                        id="y-ticks-unit">e-6</span>
-                    <span7></span7>
-                    <span0>方向</span0>
-                    <select id="y-axis-direction">
-                        <option value="out">外側</option>
-                        <option value="in">内側</option>
-                        <option value="none">なし</option>
-                    </select>
+                    <div>
+                        <span60>指数表示</span60><input type="text" value="e+0" id="y-axis-unit" placeholder="e+0">
+                        <span10></span10>
+                        <span60>有効数字</span60><input type="number" value="3" id="y-sig-dig" min="1">桁
+                    </div>
+
+                    <div>
+                        <span60>目盛り幅</span60><input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
+                            id="y-ticks-unit">e+0</span>
+                        <span10></span10>
+                        <span0>方向</span0>
+                        <select id="y-axis-direction">
+                            <option value="out">外側</option>
+                            <option value="in">内側</option>
+                            <option value="none">なし</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -352,7 +429,7 @@
                 <a><u>Ja</u></a> /
                 <a href="./en/">En</a> /
                 <a id="help-alert">ヘルプ</a> /
-                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md" target="_blank">マニュアル</a> /
+                <a href="https://github.com/tomoya-onuki/CVViewer/wiki" target="_blank">マニュアル</a> /
                 <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
             </div>
             <div class="info">&copy; 2022, Onuki Tomoya.</div>
@@ -361,7 +438,8 @@
 
     <div id="right-box">
         <div id="cover">
-            <img class="logo" src="./cvv_logo.png">
+            <!-- <img class="logo" src="./cvv_logo.png"> -->
+            <div class="logo">CVV</div>
             <div>
                 <h1>対応機器</h1>
                 <div>- ALS Electrochemical Analyzer Model 800D</div>
@@ -378,7 +456,7 @@
                 <block0>
                     <h1>リンク</h1>
                     <span0>
-                        <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md"
+                        <a href="https://github.com/tomoya-onuki/CVViewer/wiki"
                             target="_blank">マニュアル</a>,
                     </span0>
                     <span0>
@@ -389,41 +467,45 @@
 
             <div>
                 <h1>ショートカット</h1>
-                <div>
-                    <span1>- ファイルを開く</span1>
-                    <span2>Alt + o</span2>
-                    <span2>&#8997; o</span2>
-                </div>
-                
-                <div>
-                    <span1>- 保存(PNG)</span1>
-                    <span2>Alt + Shift + s</span2>
-                    <span2>&#8997; &#8679; s</span2>
-                </div>
-                
-                <div>
-                    <span1>- 保存(JSON)</span1>
-                    <span2>Alt + s</span2>
-                    <span2>&#8997;  s</span2>
-                </div>
-                
-                <div>
-                    <span1>- タブ移動</span1>
-                    <span2>Alt + ← , →</span2>
-                    <span2>&#8997; ← , →</span2>
-                </div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>ファイルを開く</td>
+                            <td>Alt + o</td>
+                            <td>&#8997; o</td>
+                        </tr>
 
-                <div>
-                    <span1>- 拡大</span1>
-                    <span2>Alt + +</span2>
-                    <span2>&#8997; +</span2>
-                </div>
+                        <tr>
+                            <td>保存(PNG)</td>
+                            <td>Alt + Shift + s</td>
+                            <td>&#8997; &#8679; s</td>
+                        </tr>
 
-                <div>
-                    <span1>- 縮小</span1>
-                    <span2>Alt + -</span2>
-                    <span2>&#8997; -</span2>
-                </div>
+                        <tr>
+                            <td>保存(JSON)</td>
+                            <td>Alt + s</td>
+                            <td>&#8997; s</td>
+                        </tr>
+
+                        <tr>
+                            <td>タブ移動</td>
+                            <td>Alt + ← , →</td>
+                            <td>&#8997; ← , →</td>
+                        </tr>
+
+                        <tr>
+                            <td>拡大</td>
+                            <td>Alt + +</td>
+                            <td>&#8997; +</td>
+                        </tr>
+
+                        <tr>
+                            <td>縮小</td>
+                            <td>Alt + -</td>
+                            <td>&#8997; -</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -432,86 +514,115 @@
 
         <div id="help-modal">
             <div class="close">&times;</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>操作</th>
-                        <th>windows</th>
-                        <th>mac</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>ファイルを開く</td>
-                        <td>Alt + o</td>
-                        <td>&#8997; o</td>
-                    </tr>
-                    <tr>
-                        <td>画像保存</td>
-                        <td>Alt + Shift + s</td>
-                        <td>&#8997; &#8679; s</td>
-                    </tr>
-                    <tr>
-                        <td>json保存</td>
-                        <td>Alt + s</td>
-                        <td>&#8997; s</td>
-                    </tr>
-                    <tr>
-                        <td>タブ移動</td>
-                        <td>Alt + ←, →</td>
-                        <td>&#8997; ←, →</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Alt + 1 ~ 4</td>
-                        <td>&#8997; 1 ~ 4</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>サイズの最適化</td>
-                        <td>Alt + 0</td>
-                        <td>&#8997; 0</td>
-                    </tr>
-                    <tr>
-                        <td>拡大</td>
-                        <td>Alt + +</td>
-                        <td>&#8997; +</td>
-                    </tr>
-                    <tr>
-                        <td>縮小</td>
-                        <td>Alt + -</td>
-                        <td>&#8997; -</td>
-                    </tr>
-                    <tr>
-                        <td>グリッド</td>
-                        <td>Alt + g</td>
-                        <td>&#8997; g</td>
-                    </tr>
-                    <tr>
-                        <td>最大値</td>
-                        <td>Alt + m</td>
-                        <td>&#8997; m</td>
-                    </tr>
-                    <tr>
-                        <td>最小値</td>
-                        <td>Alt + n</td>
-                        <td>&#8997; n</td>
-                    </tr>
-                    <tr>
-                        <td>凡例</td>
-                        <td>Alt + l</td>
-                        <td>&#8997; l</td>
-                    </tr>
-                    <tr>
-                        <td>枠線</td>
-                        <td>Alt + f</td>
-                        <td>&#8997; f</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="block">
+                <h1>クイックスタート</h1>
+                <ol>
+                    <li>ファイルタブ：ファイルをドロップして読み込みます</li>
+                    <li>データタブ　：必要なファイルを選択し平均化データセットを作成します</li>
+                    <li>表示タブ　　：グラフのレイアウトを調整します</li>
+                    <li>編集タブ　　：ラベルや軸を調整します</li>
+                </ol>
+            </div>
+            <div class="block">
+                <h1>ショートカット</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>操作</th>
+                            <th>windows</th>
+                            <th>mac</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ファイルを開く</td>
+                            <td>Alt + o</td>
+                            <td>&#8997; o</td>
+                        </tr>
+                        <tr>
+                            <td>画像保存</td>
+                            <td>Alt + Shift + s</td>
+                            <td>&#8997; &#8679; s</td>
+                        </tr>
+                        <tr>
+                            <td>json保存</td>
+                            <td>Alt + s</td>
+                            <td>&#8997; s</td>
+                        </tr>
+                        <tr>
+                            <td>タブ移動</td>
+                            <td>Alt + ←, →</td>
+                            <td>&#8997; ←, →</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>Alt + 1 ~ 4</td>
+                            <td>&#8997; 1 ~ 4</td>
+                        </tr>
 
+                        <tr>
+                            <td>サイズの最適化</td>
+                            <td>Alt + 0</td>
+                            <td>&#8997; 0</td>
+                        </tr>
+                        <tr>
+                            <td>拡大</td>
+                            <td>Alt + +</td>
+                            <td>&#8997; +</td>
+                        </tr>
+                        <tr>
+                            <td>縮小</td>
+                            <td>Alt + -</td>
+                            <td>&#8997; -</td>
+                        </tr>
+                        <tr>
+                            <td>グリッド</td>
+                            <td>Alt + g</td>
+                            <td>&#8997; g</td>
+                        </tr>
+                        <tr>
+                            <td>最大値</td>
+                            <td>Alt + m</td>
+                            <td>&#8997; m</td>
+                        </tr>
+                        <tr>
+                            <td>最小値</td>
+                            <td>Alt + n</td>
+                            <td>&#8997; n</td>
+                        </tr>
+                        <tr>
+                            <td>凡例</td>
+                            <td>Alt + l</td>
+                            <td>&#8997; l</td>
+                        </tr>
+                        <tr>
+                            <td>枠線</td>
+                            <td>Alt + f</td>
+                            <td>&#8997; f</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="block">
+                <h1>読み込みオプション</h1>
+                <ul>
+                    <li>ヘッダには、読み込みたい数値の直前の列を指定します。直前が空行である場合はさらにその1つ前列を指定します。</li>
+                    <li>区切りには、列を区切る文字を指定します。カンマやタブスペース以外のフォーマットは推奨しません。</li>
+                    <li>1列目には、読み込む数値の1列目の数値の意味を指定します。</li>
+                </ul>
+            </div>
+            <div class="block">
+                <h1>ファイルの保存</h1>
+                <ul>
+                    <li>ファイルはブラウザで指定しているダウンロード先に保存されます。</li>
+                    <li>png形式：グラフの画像を保存します。</li>
+                    <li>json形式：グラフを再編集可能なファイルとして保存します。このツールで読み込むことで再編集することができます。</li>
+                    <li>csv形式：平均化したデータを保存します。Microsoft Excelなどで再利用できます。</li>
+                </ul>
+            </div>
+        </div>
     </div>
+
 
     <div id="data-modal">
         <div class="close">&times;</div>

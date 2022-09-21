@@ -45,7 +45,7 @@ export class Chart {
     private sigDigX: number = 3;
     private sigDigY: number = 3;
     private expX: number = 0;
-    private expY: number = -6;
+    private expY: number = 0;
 
     private ticksStepX: number = 0.05
     private ticksX: number[] = []
@@ -98,7 +98,7 @@ export class Chart {
 
 
     private expFormat(str: string, exponent: number, sigDig: number): string {
-        // console.log(`Input: ${str}, ${exponent}`)
+        // // console.log(`Input: ${str}, ${exponent}`)
 
         let txt: string = str
         // 指数表記の時
@@ -109,7 +109,7 @@ export class Chart {
             txt = token1[0]
         }
 
-        // console.log(`E check: ${str}, ${exponent}`)
+        // // console.log(`E check: ${str}, ${exponent}`)
         if (txt.indexOf('e') == -1) {
             // マイナスをとる
             txt = txt.replace(/[^\d.]/g, '')
@@ -120,7 +120,7 @@ export class Chart {
             if (exponent != 0) {
                 // 十分な長さにする
                 txt = Array(Math.abs(exponent) + 1).join('0') + txt + Array(Math.abs(exponent) + 1).join('0')
-                // console.log(`join 0: ${txt}`)
+                // // console.log(`join 0: ${txt}`)
 
                 // 小数点の位置を探す
                 let p = txt.indexOf('.')
@@ -131,7 +131,7 @@ export class Chart {
                 let i = txt.slice(0, p - exponent) // 整数部
                 let d = txt.slice(p - exponent) // 小数部
 
-                // console.log(`divide: ${i} . ${d}`)
+                // // console.log(`divide: ${i} . ${d}`)
 
                 // 整数部の頭が0の連続の時
                 if (i.search(/0+/g) === 0) {
@@ -174,7 +174,7 @@ export class Chart {
             }
         }
         txt = int + dec
-        // console.log(val, txt, int, dec)
+        // // console.log(val, txt, int, dec)
         return txt
     }
 
@@ -204,12 +204,9 @@ export class Chart {
             Object.keys(this.labelStyle).forEach(key => {
                 this.labelStyle[key].width = chartW
                 this.labelStyle[key].height = chartH
-
-                // console.log(`${key} : (point ) ${this.labelStyle[key].posX.toFixed(3)}, ${this.labelStyle[key].posY.toFixed(3)}`)
-                // console.log(`${key} : (ratio ) ${this.labelStyle[key].posRatio.x.toFixed(3)}, ${this.labelStyle[key].posRatio.y.toFixed(3)}`)
-                // console.log(`${key} : (offset) ${this.labelStyle[key].offsetX.toFixed(3)}, ${this.labelStyle[key].offsetY.toFixed(3)}`)
-
             })
+
+            // console.log('init')
 
 
             // スケール
@@ -219,6 +216,8 @@ export class Chart {
             const yScale = d3.scaleLinear()
                 .domain([this.yAxisMin, this.yAxisMax])
                 .range([chartH, 0]);
+
+            // console.log('set scale')
 
             // 目盛りの数値を設定する
             this.ticksX = []
@@ -242,20 +241,6 @@ export class Chart {
             // 重複の削除
             this.ticksX = Array.from(new Set(this.ticksX))
             this.ticksY = Array.from(new Set(this.ticksY))
-
-            // const xAxisOut = d3.axisBottom(xScale)
-            //     .tickFormat(d3.format('e'))
-            //     .tickValues(this.ticksX)
-            // const xAxisIn = d3.axisTop(xScale)
-            //     .tickFormat(d3.format('e'))
-            //     .tickValues(this.ticksX)
-
-            // const yAxisOut = d3.axisLeft(yScale)
-            //     .tickFormat(d3.format('e'))
-            //     .tickValues(this.ticksY)
-            // const yAxisIn = d3.axisRight(yScale)
-            //     .tickFormat(d3.format('e'))
-            //     .tickValues(this.ticksY)
 
             // add X axis
             svg.append("g")
@@ -281,6 +266,7 @@ export class Chart {
                     $(`#select-box-${me.selectedText}`).show()
                     me.setFontStyleUI()
                 })
+                // console.log('add X axis')
             $('#x-axis > .tick > text')
                 .attr("font-size", `${this.labelStyle.axisx.size}px`)
                 .attr('font-family', this.labelStyle.axisx.font)
@@ -294,6 +280,8 @@ export class Chart {
                 .attr('stroke', '#4287f5')
                 .attr('display', 'none')
                 .attr("transform", `translate(${me.margin.left}, ${chartH + me.margin.top})`)
+        
+                // console.log('add X axis ticks')
 
             // Add Y axis
             svg.append("g")
@@ -305,7 +293,7 @@ export class Chart {
                 .attr("cursor", "pointer")
                 .call(d3.axisLeft(yScale)
                     .tickFormat(d3.format('e'))
-                    .tickValues(this.ticksY)
+                    // .tickValues(this.ticksY)
                     .tickSize(this.yTicksSize))
                 .on('click', function (e) {
                     if (me.selectedText != 'axisy') {
@@ -317,6 +305,8 @@ export class Chart {
                     $(`#select-box-${me.selectedText}`).show()
                     me.setFontStyleUI()
                 })
+                // console.log('add Y axis')
+                
             $('#y-axis > .tick > text')
                 .attr("font-size", `${this.labelStyle.axisy.size}px`)
                 .attr('font-family', this.labelStyle.axisy.font)
@@ -330,6 +320,7 @@ export class Chart {
                 .attr('display', 'none')
                 .attr("transform", `translate(${me.margin.left - 30}, ${me.margin.top})`)
 
+                // console.log('add Y axis ticks')
 
             // y軸の表記 有効数字と単位が可変
             $('#y-axis > .tick > text').each(function () {
@@ -342,6 +333,8 @@ export class Chart {
                 let txt: string = me.expFormat(val, me.expX, me.sigDigX)
                 $(this).text(txt)
             })
+
+            // console.log('set ticks unit')
 
             // 枠で囲う
             if (this.frameVis) {
@@ -357,6 +350,7 @@ export class Chart {
                 svg.selectAll('.axis > .domain').attr('stroke-width', '1.0')
             }
 
+            // console.log('set frame')
 
             // グリッド
             if (this.gridVis) {
@@ -377,6 +371,8 @@ export class Chart {
                 d3.selectAll('.grid > .domain').remove()
                 d3.selectAll('.grid > .tick > text').remove()
             }
+
+            // console.log('set grid')
 
             // 折線グラフの描画関数
             const line: any = d3.line()
@@ -400,7 +396,7 @@ export class Chart {
                 }
             }
 
-
+            // console.log('set func')
 
             // 凡例
             let leX = this.labelStyle.legend.posX
@@ -513,7 +509,7 @@ export class Chart {
             }
 
 
-
+            // console.log('set legend')
 
             // X軸ラベルの描画
             if (this.labelxVis) {
@@ -538,8 +534,8 @@ export class Chart {
                         }
                         $('.select-box').hide()
                         $(`#select-box-${me.selectedText}`).show()
-                        // console.log(me.labelStyle[me.selectedText].posRatio)
-                        // console.log(me.labelStyle[me.selectedText].posX, me.labelStyle[me.selectedText].posY)
+                        // // console.log(me.labelStyle[me.selectedText].posRatio)
+                        // // console.log(me.labelStyle[me.selectedText].posX, me.labelStyle[me.selectedText].posY)
                         me.setFontStyleUI()
                     })
                 let labelElem: any = document.querySelector('#labelx')
@@ -560,6 +556,7 @@ export class Chart {
                 }
             }
 
+            // console.log('draw X label')
 
             // Y軸ラベルの描画
             if (this.labelyVis) {
@@ -606,6 +603,8 @@ export class Chart {
                 }
             }
 
+            // console.log('draw Y label')
+
             // タイトルラベル
             if (this.titleVis) {
                 svg.append("text")
@@ -629,8 +628,8 @@ export class Chart {
                         }
                         $('.select-box').hide()
                         $(`#select-box-${me.selectedText}`).show()
-                        // console.log(me.labelStyle[me.selectedText].posRatio)
-                        // console.log(me.labelStyle[me.selectedText].posX, me.labelStyle[me.selectedText].posY)
+                        // // console.log(me.labelStyle[me.selectedText].posRatio)
+                        // // console.log(me.labelStyle[me.selectedText].posX, me.labelStyle[me.selectedText].posY)
                         me.setFontStyleUI()
                     })
                 let labelElem: any = document.querySelector('#title')
@@ -651,6 +650,7 @@ export class Chart {
                 }
             }
 
+            // console.log('draw title label')
 
             $('.select-box').hide()
             $(`#select-box-${this.selectedText}`).show()
@@ -917,7 +917,7 @@ export class Chart {
         return this.groupKeyList.includes(label)
     }
     public groupingData(labelList: string[], groupLabel: string) {
-        // console.log(labelList)
+        // // console.log(labelList)
         let groupDataList: Data[] = labelList.map(label => this.dataList[label])
 
         if (groupDataList.length > 0) {
@@ -948,12 +948,13 @@ export class Chart {
             this.yAxisMin = this.currentMin
             this.yAxisMax = this.currentMax
 
+
             this.sortGroupKeyList(Object.keys(this.groupList))
 
             this.setUI()
         }
-        // console.log(groupDataList)
-        // console.log(this.groupList)
+        // // console.log(groupDataList)
+        // // console.log(this.groupList)
 
     }
 
@@ -1141,7 +1142,7 @@ export class Chart {
     }
     public removeDataFromGroup(groupLabel: string, dataLabel: string) {
         this.groupList[groupLabel].removeData(dataLabel)
-        // console.log(this.groupList)
+        // // console.log(this.groupList)
         this.sortGroupKeyList(Object.keys(this.groupList))
 
     }
@@ -1509,14 +1510,14 @@ export class Chart {
             dataSet.color = jds.color
             dataSet.values = jds.values
             this.groupList[jds.label] = dataSet
-            // console.log(this.groupList[jds.label])
+            // // console.log(this.groupList[jds.label])
         })
 
         this.groupKeyList = Object.keys(this.groupList)
 
         this.draw()
 
-        // console.log(this.labelStyle)
+        // // console.log(this.labelStyle)
     }
 }
 
@@ -1550,11 +1551,11 @@ export class LabelStyle {
     }
 
     public get posX() {
-        // console.log(`${this.posRatio.x * this._width}  =${this.posRatio.x} * ${this._width}`)
+        // // console.log(`${this.posRatio.x * this._width}  =${this.posRatio.x} * ${this._width}`)
         return this.posRatio.x * this._width
     }
     public get posY() {
-        // console.log(`${this.posRatio.y * this._height}  =${this.posRatio.y} * ${this._height}`)
+        // // console.log(`${this.posRatio.y * this._height}  =${this.posRatio.y} * ${this._height}`)
         return this.posRatio.y * this._height
     }
 

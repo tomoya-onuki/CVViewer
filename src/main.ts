@@ -16,6 +16,7 @@ $(function () {
     ui.toggleSwitch()
     ui.switchBtn()
     ui.fontSelector()
+    ui.hideBtn()
 
     new Main().init()
 
@@ -45,18 +46,40 @@ export class Main {
         $('#file-input')
             .on('change', function (e: any) {
                 const files = e.target.files; // ファイルのリスト
-                let txtFiles = []
+
                 for (let i = 0; i < files.length; i++) {
-                    if (files[i].name.indexOf('.txt') != -1) {
-                        txtFiles.push(files[i])
-                    } else if (files[i].name.indexOf('.json') != -1) {
+                    // JSONの場合
+                    if (files[i].name.indexOf('.json') != -1) {
                         let jsonFile = files[i]
                         fReader.readJSON(jsonFile)
-                            .then((jsonStr: string) => me.setJson(jsonStr))
+                            .then((jsonStr: string) => {
+                                me.setJson(jsonStr)
+                                return
+                            })
                     }
                 }
-                fReader.readTXT(txtFiles)
-                    .then((dataList: Data[]) => me.setData(dataList))
+                
+                const header: string = String($('#file-format-header').val())
+                let separator: string = String($('#file-format-separator-selctor > option:selected').val())
+                if (separator === 'other') {
+                    separator = String($('#file-format-separator-text').val())
+                }
+                const pCol: number = Number($('#file-format-first-col > option:selected').val())
+                const match = String($('#file-format-header-match > option:selected').val())
+                if(match === 'exact') separator = '^' + separator + '$'
+
+                fReader.readTXT(files, header, separator, pCol)
+                    .then((dataList: Data[]) => {
+                        me.setData(dataList)
+
+                        if ($('#ave-batch').prop('checked')) {
+                            dataList.forEach(data => {
+                                $(`#${data.label}`).prop('checked', true)
+                            })
+                            grouping()
+                            me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
+                        }
+                    })
             });
         // ファイルをドロップ
         $('#file-drop')
@@ -76,19 +99,39 @@ export class Main {
                     'color': '#222',
                     'border-color': '#888'
                 });
-                let txtFiles = []
 
                 for (let i = 0; i < files.length; i++) {
-                    if (files[i].name.indexOf('.txt') != -1) {
-                        txtFiles.push(files[i])
-                    } else if (files[i].name.indexOf('.json') != -1) {
+                    // JSONの場合
+                    if (files[i].name.indexOf('.json') != -1) {
                         let jsonFile = files[i]
                         fReader.readJSON(jsonFile)
-                            .then((jsonStr: string) => me.setJson(jsonStr))
+                            .then((jsonStr: string) => {
+                                me.setJson(jsonStr)
+                                return
+                            })
                     }
                 }
-                fReader.readTXT(txtFiles)
-                    .then((dataList: Data[]) => me.setData(dataList))
+
+                const header: string = String($('#file-format-header').val())
+                let separator: string = String($('#file-format-separator-selctor > option:selected').val())
+                if (separator === 'other') {
+                    separator = String($('#file-format-separator-text').val())
+                }
+                const pCol: number = Number($('#file-format-first-col > option:selected').val())
+
+                fReader.readTXT(files, header, separator, pCol)
+                    .then((dataList: Data[]) => {
+                        me.setData(dataList)
+
+                        if ($('#ave-batch').prop('checked')) {
+                            console.log('batch ave')
+                            dataList.forEach(data => {
+                                $(`#${data.label}`).prop('checked', true)
+                            })
+                            grouping()
+                            me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
+                        }
+                    })
             })
             // マウスホバー
             .on('mouseover', function () {
@@ -104,6 +147,16 @@ export class Main {
                 });
             });
 
+
+        $('#file-format-separator-selctor').on('input', function () {
+            const separator: string = String($(this).find('option:selected').val())
+            if (separator === 'other') {
+                $('#file-format-separator-text').show()
+            } else {
+                1
+                $('#file-format-separator-text').hide()
+            }
+        })
 
         // タブ
         $('#file-ui-select').on('click', function () {
@@ -121,8 +174,6 @@ export class Main {
         // $('#save-ui-select').on('click', function () {
         //     me.changeUiPane($(this), $('#save-ui'));
         // });
-
-
 
         // ファイルのグルーピング 
         $('#file-all-select').on('click', function () {
@@ -154,8 +205,7 @@ export class Main {
             }
         })
         let groupNum = 0
-        $('#data-grouping-btn').on('click', function () {
-            $('#cover').hide()
+        function grouping() {
             let selectedDataLabelList: string[] = []
             let groupKey = String($('#data-group-label').val())
             if (groupKey == '' || groupKey == undefined) {
@@ -178,8 +228,10 @@ export class Main {
                 const isDash: boolean = $('#dash-line-mode').prop('checked')
                 me.chart.changeLineColorScheme(type)
                 me.chart.changeLineDashed(isDash)
-
+                
+                $('#cover').hide()
                 me.addGroupItems(groupKey)
+
             } else if (hasGroupLabel) {
                 alert(`${groupKey}はすでに存在しています`)
                 // alert(`${groupKey} is already exist.`)
@@ -189,6 +241,9 @@ export class Main {
             }
 
             me.chart.draw()
+        }
+        $('#data-grouping-btn').on('click', function () {
+            grouping()
         })
 
 
@@ -944,8 +999,8 @@ export class Main {
 
         $('.data-item > input').each(function () {
             $(this).prop('checked', false)
-            me.chart.draw()
         })
+
         $text.on('change', function () {
             const newLabel: string = String($(this).val())
             me.chart.changeGroupLabel(groupKey, newLabel)

@@ -13,9 +13,10 @@ export class Data {
 
     }
 
-    public entry(p: number, c: string): void {
+    public entry(p: string, c: string): void {
         this._values.push({
-            potential: p,
+            // potential: p,
+            potential: this.formatExp2Normal(p),
             current: this.formatExp2Normal(c)
         })
         // console.log(p,c)
