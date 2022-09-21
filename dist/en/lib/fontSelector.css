@@ -1,0 +1,70 @@
+.font-selector-box {
+    width: 137px;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 5px 0px 5px;
+    text-align: left;
+    margin: 0;
+    display: inline-block;
+    background: #FFF;
+    border-radius: 5px;
+    border: 1px solid #666;
+    position: relative;
+    /* transform: translate(0, 6px); */
+}
+.font-selector-box .list {
+    display: none;
+    background: #f5f5f5;
+    font-size: 90%;
+    padding: 2px 2px 2px 2px;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    z-index: 10;
+    width: 160px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+.font-selector-box .item {
+    text-align: left;
+    display: block;
+    padding: 0 2px 0 10px;
+    border-radius: 3px;
+}
+.font-selector-box .item:hover{
+    background: #4287f5;
+    color: #FFF;
+}
+.font-selector-box .radio {
+    display: none;
+}
+.font-selector-box .label {
+    -webkit-user-appearance: none;
+    -moz-user-appearance: none;
+    -ms-user-appearance: none;
+    appearance: none;
+
+    width: 95%;
+    min-width: 20px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px 5px 0px 5px;
+    text-align: left;
+    margin: 0;
+    display: inline-block;
+    background: #FFF;
+    border: none;
+    font-size: 90%;
+    cursor: pointer;
+}
+.font-selector-box .label:hover {
+    opacity: 0.5;
+}
+.font-selector-box .down-btn {
+    position: absolute;
+    top: 1px;
+    /* left: 113px; */
+    right: 5px;
+    color: #666;
+}

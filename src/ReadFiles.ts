@@ -1,5 +1,8 @@
 import { Data } from './Data';
 
+const lang: string = 'ja'
+// const lang: string = 'en'
+
 export class ReadFiles {
     constructor() {
 
@@ -23,10 +26,13 @@ export class ReadFiles {
                 fileReader.onloadend = (e: any) => {
                     const text: string = e.target.result;
                     const json = JSON.parse(text)
-                    if (json.id === 'cvviewer') {
+                    if (json.id == 'cvviewer') {
                         resolve(text)
                     } else {
-                        alert(`${file.name} はサポートされていないファイルです`)
+                        if (lang === 'ja')
+                            alert(`${file.name} はサポートされていないファイルです`)
+                        else if (lang === 'en')
+                            alert(`${file.name} is NOT supported.`)
                     }
                 }
             }
@@ -77,22 +83,27 @@ export class ReadFiles {
                         if (lines[i].indexOf(header) != -1) {
                             start = true
                         }
-                        // if (lines[i].indexOf('Potential/V') != -1 &&
-                        //     lines[i].indexOf('Current/A') != -1) {
-                        //     start = true
-                        // }
                     }
                     if (start) {
                         dataList.push(data)
                     } else {
-                        alert(`${file.name} の読み込みにエラーが起きました。次の可能性があります。\n- サポートされていないファイルである。\n- ヘッダーの指定が不適切である。`)
+                        if (lang === 'ja')
+                            alert(`${file.name} の読み込みにエラーが起きました。次の可能性があります。\n- サポートされていないファイルである。\n- ヘッダーの指定が不適切である。`)
+                        else if (lang === 'en')
+                            alert(`Loading Error : ${file.name}\n- ${file.name} is NOT supported.\n- OR, The header is improperly specified. `)
                     }
                     resolve(true)
                 }
             }
-            else {
-                alert(`${file.name} はtxtファイルではありません。\n${file.name} is not csv format.\n`);
+            else if (file.name.indexOf('.json') != -1) {
                 resolve(true);
+            } else {
+                if (lang === 'ja')
+                    alert(`${file.name} はサポートしていません。`);
+                else if (lang === 'en')
+                    alert(`${file.name} is NOT supported.`);
+                resolve(true);
+
             }
 
         })

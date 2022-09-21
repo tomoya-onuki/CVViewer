@@ -11,6 +11,9 @@ const parseHTMLcode = (code: string): string => {
     return String(domParser.parseFromString(code, 'text/html').body.innerText)
 }
 
+const lang: string = 'ja'
+// const lang: string = 'en'
+
 $(function () {
     const ui = new myUI()
     ui.toggleSwitch()
@@ -23,7 +26,7 @@ $(function () {
     $('#help-modal > .close').on('click', function () {
         $('#help-modal').hide()
     })
-    $('#help-alert').on('click', function () {
+    $('#help-1').on('click', function () {
         $('#help-modal').show()
     })
 });
@@ -233,11 +236,15 @@ export class Main {
                 me.addGroupItems(groupKey)
 
             } else if (hasGroupLabel) {
-                alert(`${groupKey}はすでに存在しています`)
-                // alert(`${groupKey} is already exist.`)
+                if (lang === 'ja')
+                    alert(`${groupKey}はすでに存在しています`)
+                else if (lang === 'en')
+                    alert(`${groupKey} is already exist.`)
             } else {
-                alert('平均化が出来ませんでした. データが選択されていません.')
-                // alert('Failed to average. Selected data were none.')
+                if (lang === 'ja')
+                    alert('平均化が出来ませんでした. データが選択されていません.')
+                else if (lang === 'en')
+                    alert('Failed to average. Selected data were none.')
             }
 
             me.chart.draw()
@@ -868,8 +875,10 @@ export class Main {
             }
             // データラベルが既に存在するとき、
             else {
-                alert(`${data.label}.csv は既に読み込んだファイルと、ファイル名が重複しています。ファイル名を変更して再度読み込んでください。`)
-                // alert(`${data.label}.csv is already read.`)
+                if (lang === 'ja')
+                    alert(`${data.label}.csv は既に読み込んだファイルと、ファイル名が重複しています。ファイル名を変更して再度読み込んでください。`)
+                else if (lang === 'en')
+                    alert(`${data.label}.csv is already read.`)
             }
         });
 
@@ -916,9 +925,16 @@ export class Main {
 
         // イベントリスナーの登録
         $delete.on('click', function () {
-            if (confirm('ファイルを削除します')) {
-                me.chart.removeData(data.label)
-                $item.remove()
+            if (lang === 'ja') {
+                if (confirm('ファイルを削除します')) {
+                    me.chart.removeData(data.label)
+                    $item.remove()
+                }
+            } else if (lang === 'en') {
+                if (confirm('delete file.')) {
+                    me.chart.removeData(data.label)
+                    $item.remove()
+                }
             }
         })
         $show.on('click', function () {
@@ -1017,10 +1033,18 @@ export class Main {
             me.chart.draw()
         })
         $delete.on('click', function () {
-            if (confirm('削除します')) {
-                $item.remove()
-                me.chart.removeGroup(groupKey)
-                me.chart.draw()
+            if (lang === 'ja') {
+                if (confirm('削除します')) {
+                    $item.remove()
+                    me.chart.removeGroup(groupKey)
+                    me.chart.draw()
+                }
+            } else if (lang === 'en') {
+                if (confirm('Delete')) {
+                    $item.remove()
+                    me.chart.removeGroup(groupKey)
+                    me.chart.draw()
+                }
             }
         })
         $downBtn.on('click', function () {
@@ -1082,9 +1106,16 @@ export class Main {
                     $detail.append($gitem)
 
                     $gdelete.on('click', function () {
-                        if (confirm(`${groupKey}から${flabel}を削除します`)) {
-                            me.chart.removeDataFromGroup(groupKey, flabel)
-                            $gitem.remove()
+                        if (lang === 'ja') {
+                            if (confirm(`${groupKey}から${flabel}を削除します`)) {
+                                me.chart.removeDataFromGroup(groupKey, flabel)
+                                $gitem.remove()
+                            }
+                        } else if (lang === 'en') {
+                            if (confirm(`Delete ${flabel} from ${groupKey}`)) {
+                                me.chart.removeDataFromGroup(groupKey, flabel)
+                                $gitem.remove()
+                            }
                         }
                     })
                 })
@@ -1104,9 +1135,12 @@ export class Main {
 
     private saveFig(type: string): void {
         if ($('#fig').length === 0) {
-            alert('グラフがありません')
-            // alert('Chart is nothing.')
-            return;
+            if (lang === 'ja') {
+                alert('グラフがありません')
+            } else if (lang === 'en') {
+                alert('Chart is nothing.')
+            }
+            return
         } else {
             $('.select-box').hide()
 
