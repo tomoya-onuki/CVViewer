@@ -1,5 +1,10 @@
 import $ = require('jquery');
 
+// HTML特殊文字を使えるようにした
+const domParser: DOMParser = new DOMParser();
+const parseHTMLcode = (code: string): string => {
+    return String(domParser.parseFromString(code, 'text/html').body.innerText)
+}
 
 export class myUI {
     constructor() {
@@ -116,6 +121,44 @@ export class myUI {
             //         // $(this).prop('checked', false)
             //     }
             // })
+        })
+    }
+
+    public hideBtn() {
+        $('.hide-contents').each(function (idx) {
+            const isCheck = $(this).attr('checked')
+
+            const $label = $('<label></label>')
+                .text(parseHTMLcode('&#9650;'))
+                .attr('for', `hide-btn${idx}`)
+                .addClass('hide-btn')
+
+            const $chbox = $('<input>')
+                .attr('id', `hide-btn${idx}`)
+                .attr('type', 'checkbox')
+                .addClass('hide-checkbox')
+                .prop('checked', isCheck)
+
+            $(this).append($label, $chbox)
+
+            let id = $(this).attr('for')
+            let $target = $(`#${id}`)
+
+            if (!isCheck) {
+                $label.text(parseHTMLcode('&#9660;'))
+                $target.hide()
+            }
+
+            $chbox.on('input', function () {
+                const isShow: boolean = $(this).prop('checked')
+                if (isShow) {
+                    $label.text(parseHTMLcode('&#9650;'))
+                    $target.show()
+                } else {
+                    $label.text(parseHTMLcode('&#9660;'))
+                    $target.hide()
+                }
+            })
         })
     }
 }
