@@ -1,11 +1,13 @@
+import $ = require('jquery');
+declare var require: any;
 import { Data } from './Data';
 
-const lang: string = 'ja'
+let lang: string = ''
 // const lang: string = 'en'
 
 export class ReadFiles {
     constructor() {
-
+        lang = String($('html').attr('lang'))
     }
 
     public readTXT(files: any[], header: string, separator: string, pCol: number): Promise<any> {

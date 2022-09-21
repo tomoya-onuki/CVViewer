@@ -11,8 +11,7 @@ const parseHTMLcode = (code: string): string => {
     return String(domParser.parseFromString(code, 'text/html').body.innerText)
 }
 
-const lang: string = 'ja'
-// const lang: string = 'en'
+let lang: string = ''
 
 $(function () {
     const ui = new myUI()
@@ -23,10 +22,12 @@ $(function () {
 
     new Main().init()
 
+    lang = String($('html').attr('lang'))
+
     $('#help-modal > .close').on('click', function () {
         $('#help-modal').hide()
     })
-    $('#help-1').on('click', function () {
+    $('#help-alert').on('click', function () {
         $('#help-modal').show()
     })
 });
