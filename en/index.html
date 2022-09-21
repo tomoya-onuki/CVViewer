@@ -45,7 +45,7 @@
                     <div class="bold">Click to select from a folder</div>
                     <div class="info">
                         <ul>
-                            <li>CSV and SVG files are supported.</li>
+                            <li>Supported files are TXT, CSV, TSV, and JSON.</li>
                             <li>You can re-edit the chart by loading the json file created by this tool.</li>
                             <li>Multiple files can be loaded at once.</li>
                             <li>Files are NOT uploaded to a server.</li>
@@ -56,36 +56,75 @@
             </div>
 
             <div class="block">
-                <h2>Download</h2>
-                <div>
-                    <span2>Name</span2>
-                    <input type="text" value="figure" id="save-fig-name">
+                <h2 class="hide-contents" checked="true" for="load-opt">Read File Option</h2>
+                <div id="load-opt">
+                    <div class="block2">
+                        <label for="ave-batch">Averaging on batch</label>
+                        <input type="checkbox" id="ave-batch" class="toggle-switch">
+                    </div>
+                    <div class="header-opt">
+                        <h2>File Format</h2>
+
+                        <div>
+                            <span60>Header</span60>
+                            <input type="text" id="file-format-header" value="Potential/V, Current/A">
+                            <select id="file-format-header-match">
+                                <option value="exact">Exact match</option>
+                                <option value="partial">Partial match</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <span60>Separator</span60>
+                            <select id="file-format-separator-selctor">
+                                <option value=",">Comma (csv)</option>
+                                <option value="\s+">Tab (tsv)</option>
+                                <option value="other">Other (deprecated)</option>
+                            </select>
+                            <input type="text" id="file-format-separator-text" placeholder="その他">
+                        </div>
+
+                        <div>
+                            <span60>1st Col</span60>
+                            <select id="file-format-first-col">
+                                <option value="0">Potential</option>
+                                <option value="1">Current</option>
+                            </select>
+                        </div>
+
+                    </div>
                 </div>
+            </div>
 
-                <div style="margin-bottom: 5px;">
-                    <span2>Format</span2>
-                    <select id="fig-type">
-                        <option value="png">png</option>
-                        <option value="json">json</option>
-                    </select>
-                </div>
+            <div class="block">
+                <h2 class="hide-contents" checked="true" for="dl-graph">Download</h2>
+                <div id="dl-graph">
+                    <div>
+                        <span60>Name</span60>
+                        <input type="text" value="figure" id="save-fig-name">
+                    </div>
 
-                <div>
-                    <span2>Resolution</span2>
-                    <select id="fig-resolution">
-                        <option value="1">low</option>
-                        <option value="2" selected>mid</option>
-                        <option value="5">high</option>
-                        <option value="10">highest</option>
-                    </select>
-                </div>
+                    <div style="margin-bottom: 5px;">
+                        <span60>Format</span60>
+                        <select id="fig-type">
+                            <option value="png">png</option>
+                            <option value="json">json</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <span60>Resolution</span60>
+                        <select id="fig-resolution">
+                            <option value="1">low</option>
+                            <option value="2" selected>mid</option>
+                            <option value="5">high</option>
+                            <option value="10">highest</option>
+                        </select>
+                    </div>
 
 
-                <button id="save-fig-btn">Download</button>
+                    <button id="save-fig-btn">Download</button>
 
-                <div class="info">
-                    <div>The file will be saved to the download destination you specify in your browser.</div>
-                    <div>You can re-edit the chart by loading the json file created by this tool.</div>
                 </div>
             </div>
         </div>
@@ -126,15 +165,15 @@
                 <h2>Line</h2>
 
                 <div>
-                    <span4>Weight</span4>
+                    <span40>Weight</span40>
                     <input type="number" id="line-weight" value="1.5" min="0.5" max="3.0" step="0.5">pt
-                    <span8></span8>
+                    <span10></span10>
                     <label for="dash-line-mode">Dashed</label>
                     <input type="checkbox" id="dash-line-mode" class="toggle-switch">
                 </div>
 
                 <div>
-                    <span4>Color</span4>
+                    <span40>Color</span40>
                     <select name="line-type" id="line-type-selector">
                         <option value="mono">Monochrome</option>
                         <option value="hue">Hue</option>
@@ -153,13 +192,13 @@
                 <div class="block2">
                     <label for="frame-id">Border</label>
                     <input type="checkbox" id="frame-vis" class="toggle-switch" checked>
-                    <span8></span8>
+                    <span10></span10>
                     <label for="grid-vis">Grid line</label>
                     <input type="checkbox" id="grid-vis" class="toggle-switch">
                 </div>
 
                 <div class="block2">
-                    <span5>Size</span5>
+                    <span30>Size</span30>
                     <input type="number" value="600" id="svg-width">px
                     <span>&times;</span>
                     <input type="number" value="450" id="svg-height">px
@@ -170,22 +209,22 @@
                 <div class="block2">
                     <div>
                         <div>Margin</div>
-                        <span5>Top</span5>
+                        <span30>Top</span30>
                         <input id="margin-top" type="number" value="50" step="5" min="0">
                         <span>px</span>
 
-                        <span8></span8>
+                        <span10></span10>
 
-                        <span5>Bottom</span5>
+                        <span30>Bottom</span30>
                         <input id="margin-bottom" type="number" value="50" step="5" min="0">
                         <span>px</span>
                     </div>
                     <div>
-                        <span5>Left</span5>
+                        <span30>Left</span30>
                         <input id="margin-left" type="number" value="50" step="5" min="0">
                         <span>px</span>
-                        <span8></span8>
-                        <span5>Right</span5>
+                        <span10></span10>
+                        <span30>Right</span30>
                         <input id="margin-right" type="number" value="50" step="5" min="0">
                         <span>px</span>
                     </div>
@@ -197,150 +236,160 @@
         <div id="edit-ui" class="ui-parts">
 
             <div class="block">
-                <div class="block2">
-                    <h2>Text</h2>
-                    <div id="font-selector" class="font-selector">
-                        <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
-                        <input type="radio" name="font" value="serif" text="Serif">
-                        <input type="radio" name="font" value='"Arial"' text="Arial">
-                        <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
-                        <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
-                        <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
-                        <input type="radio" name="font" value='"Georgia"' text="Georgia">
-                        <input type="radio" name="font" value='"Meiryo"' text="Meiryo">
+                <h2 class="hide-contents" checked="true" for="hide-text">Text</h2>
+
+                <div id="hide-text">
+                    <div class="block2">
+                        <div id="font-selector" class="font-selector">
+                            <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
+                            <input type="radio" name="font" value="serif" text="Serif">
+                            <input type="radio" name="font" value='"Arial"' text="Arial">
+                            <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
+                            <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
+                            <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
+                            <input type="radio" name="font" value='"Georgia"' text="Georgia">
+                            <input type="radio" name="font" value='"Meiryo"' text="Meiryo">
+                        </div>
+
+                        <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
+
+                        <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
+                        <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+
+                        <div>
+                            <span50>Layout</span50>
+                            <button id="align-top-btn" class="label-alignment-btn">
+                                <span class="material-icons">&#xe25a;</span>
+                            </button>
+                            <button id="align-vertival-center-btn" class="label-alignment-btn">
+                                <span class="material-icons">&#xe259;</span>
+                            </button>
+                            <button id="align-bottom-btn" class="label-alignment-btn">
+                                <span class="material-icons">&#xe258;</span>
+                            </button>
+                            <button id="align-left-btn" class="label-alignment-btn horizontal">
+                                <span class="material-icons">&#xe258;</span>
+                            </button>
+                            <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
+                                <span class="material-icons">&#xe259;</span>
+                            </button>
+                            <button id="align-right-btn" class="label-alignment-btn horizontal">
+                                <span class="material-icons">&#xe25a;</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
 
-                    <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
-                    <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+                    <div class="block2">
+                        <span55>Title</span55>
+                        <input id="set-graph-title" type="text" value="" placeholder="Title Label">
+                        <input type="checkbox" id="title-vis" class="toggle-switch" checked>
+
+                        <span55>Horizontal</span55>
+                        <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="Horizontal">
+                        <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
+
+                        <span55>Vertival</span55>
+                        <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="Vertival">
+                        <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
+                    </div>
+
+                    <div class="block2">
+                        <label for="legend-vis">Legend</label>
+                        <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
+
+                        <span10></span10>
+
+                        <label for="max-vis">Max</label>
+                        <input type="checkbox" id="max-vis" class="toggle-switch">
+
+                        <span10></span10>
+
+                        <label for="min-vis">Min</label>
+                        <input type="checkbox" id="min-vis" class="toggle-switch">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="block">
+                <h2 class="hide-contents" checked="true" for="hide-xaxis">Horizontal Axis</h2>
+
+                <div id="hide-xaxis">
+                    <div class="set-axis-seg">
+                        <span40>Range</span40>
+                        <input type="text" name="" id="x-axis-min" step="0.1">
+                        <span>~</span>
+                        <input type="text" name="" id="x-axis-max" step="0.1">
+                        <select id="x-axis-range-unit">
+                            <option value="num">V</option>
+                            <option value="ratio">%</option>
+                        </select>
+                    </div>
 
                     <div>
-                        <span3>Layout</span3>
-                        <button id="align-top-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe25a;</span>
-                        </button>
-                        <button id="align-vertival-center-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe259;</span>
-                        </button>
-                        <button id="align-bottom-btn" class="label-alignment-btn">
-                            <span class="material-icons">&#xe258;</span>
-                        </button>
-                        <button id="align-left-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe258;</span>
-                        </button>
-                        <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe259;</span>
-                        </button>
-                        <button id="align-right-btn" class="label-alignment-btn horizontal">
-                            <span class="material-icons">&#xe25a;</span>
-                        </button>
+                        <span0>Exponential notation</span0><input type="text" value="e+0" id="x-axis-unit"
+                            placeholder="e+0">
+                    </div>
+                    <div>
+                        <span0>Significant digits</span0><input type="number" value="3" id="x-sig-dig" min="1">
+                    </div>
+
+                    <div>
+                        <span80 class="bold">Tick marks</span80>
+                        <span50>Interval</span50>
+                        <input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
+                            id="x-ticks-unit">e+0</span>
+
+                        <span80></span80>
+                        <span50>Direction</span50>
+                        <select id="x-axis-direction">
+                            <option value="out">Outside</option>
+                            <option value="in">Inside</option>
+                            <option value="none">None</option>
+                        </select>
                     </div>
                 </div>
-
-
-                <div class="block2">
-                    <span2>Title</span2>
-                    <input id="set-graph-title" type="text" value="" placeholder="Title Label">
-                    <input type="checkbox" id="title-vis" class="toggle-switch" checked>
-
-                    <span2>Horizontal</span2>
-                    <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="Horizontal">
-                    <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
-
-                    <span2>Vertival</span2>
-                    <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="Vertival">
-                    <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
-                </div>
-
-                <div class="block2">
-                    <label for="legend-vis">Legend</label>
-                    <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
-
-                    <span8></span8>
-
-                    <label for="max-vis">Max</label>
-                    <input type="checkbox" id="max-vis" class="toggle-switch">
-
-                    <span8></span8>
-
-                    <label for="min-vis">Min</label>
-                    <input type="checkbox" id="min-vis" class="toggle-switch">
-                </div>
-            </div>
-
-
-            <div class="block">
-                <h2>Horizontal Axis</h2>
-                <div class="set-axis-seg">
-                    <span5>Range</span5>
-                    <input type="text" name="" id="x-axis-min" step="0.1">
-                    <span>~</span>
-                    <input type="text" name="" id="x-axis-max" step="0.1">
-                    <select id="x-axis-range-unit">
-                        <option value="num">V</option>
-                        <option value="ratio">%</option>
-                    </select>
-                </div>
-
-                <div>
-                    <span0>Exponential notation</span0><input type="text" value="e+0" id="x-axis-unit"
-                        placeholder="e+0">
-                </div>
-                <div>
-                    <span0>Significant digits</span0><input type="number" value="3" id="x-sig-dig" min="1">
-                </div>
-
-                <div>
-                    <span1 class="bold">Tick marks</span1>
-                    <span4>Interval</span4>
-                    <input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
-                        id="x-ticks-unit">e+0</span>
-
-                    <span1></span1>
-                    <span4>Direction</span4>
-                    <select id="x-axis-direction">
-                        <option value="out">Outside</option>
-                        <option value="in">Inside</option>
-                        <option value="none">None</option>
-                    </select>
-                </div>
             </div>
 
             <div class="block">
-                <h2>Vertical Axis</h2>
-                <div class="set-axis-seg">
-                    <span5>Range</span5>
-                    <input type="text" name="" id="y-axis-min">
-                    <span>~</span>
-                    <input type="text" name="" id="y-axis-max">
+                <h2 class="hide-contents" checked="true" for="hide-yaxis">Vertical Axis</h2>
 
-                    <select id="y-axis-range-unit">
-                        <option value="num">A</option>
-                        <option value="ratio">%</option>
-                    </select>
-                </div>
+                <div id="hide-yaxis">
+                    <div class="set-axis-seg">
+                        <span40>Range</span40>
+                        <input type="text" name="" id="y-axis-min">
+                        <span>~</span>
+                        <input type="text" name="" id="y-axis-max">
 
-                <div>
-                    <span0>Exponential notation</span0><input type="text" value="e-6" id="y-axis-unit"
-                        placeholder="e+0">
-                </div>
-                <div>
-                    <span0>Significant digits</span0><input type="number" value="3" id="y-sig-dig" min="1">
-                </div>
+                        <select id="y-axis-range-unit">
+                            <option value="num">A</option>
+                            <option value="ratio">%</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <span1 class="bold">Tick marks</span1>
-                    <span4>Interval</span4>
-                    <input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span id="y-ticks-unit">e-6</span>
+                    <div>
+                        <span0>Exponential notation</span0><input type="text" value="e-6" id="y-axis-unit"
+                            placeholder="e+0">
+                    </div>
+                    <div>
+                        <span0>Significant digits</span0><input type="number" value="3" id="y-sig-dig" min="1">
+                    </div>
 
-                    <span1></span1>
-                    <span4>Direction</span4>
-                    <select id="y-axis-direction">
-                        <option value="out">Outside</option>
-                        <option value="in">Inside</option>
-                        <option value="none">None</option>
-                    </select>
+                    <div>
+                        <span80 class="bold">Tick marks</span80>
+                        <span50>Interval</span50>
+                        <input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
+                            id="y-ticks-unit">e-6</span>
+
+                        <span80></span80>
+                        <span50>Direction</span50>
+                        <select id="y-axis-direction">
+                            <option value="out">Outside</option>
+                            <option value="in">Inside</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -352,7 +401,7 @@
                 <a href="../">Ja</a> /
                 <a><u>En</u></a> /
                 <a id="help-alert">Help</a> /
-                <a href="https://github.com/tomoya-onuki/CVViewer/wiki" target="_blank">Manual</a> /
+                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/readme_en.md" target="_blank">Manual</a> /
                 <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
             </div>
             <div class="info">&copy; 2022, Onuki Tomoya.</div>
@@ -378,7 +427,7 @@
                 <block0>
                     <h1>Links</h1>
                     <span0>
-                        <a href="https://github.com/tomoya-onuki/CVViewer/wiki"
+                        <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/README.md"
                             target="_blank">Manual</a>,
                     </span0>
                     <span0>
@@ -389,46 +438,45 @@
 
             <div>
                 <h1>ShortCut</h1>
-                <div>
-                    <span2>- Open Files</span2>
-                    <span3>Alt + o</span3>
-                    <span3>&#8997; o</span3>
-                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>- Open Files</td>
+                            <td>Alt + o</td>
+                            <td>&#8997; o</td>
+                        </tr>
 
-                <div>
-                    <span2>- Download(PNG)</span2>
-                    <span3>Alt + Shift + s</span3>
-                    <span3>&#8997; &#8679; s</span3>
-                </div>
+                        <tr>
+                            <td>- Download(PNG)</td>
+                            <td>Alt + Shift + s</td>
+                            <td>&#8997; &#8679; s</td>
+                        </tr>
 
-                <div>
-                    <span2>- Download(JSON)</span2>
-                    <span3>Alt + s</span3>
-                    <span3>&#8997; s</span3>
-                </div>
+                        <tr>
+                            <td>- Download(JSON)</td>
+                            <td>Alt + s</td>
+                            <td>&#8997; s</td>
+                        </tr>
 
-                <div>
-                    <span2>- Move Tabs</span2>
-                    <span3>Alt + ← , →</span3>
-                    <span3>&#8997; ← , →</span3>
-                </div>
+                        <tr>
+                            <td>- Move Tabs</td>
+                            <td>Alt + ← , →</td>
+                            <td>&#8997; ← , →</td>
+                        </tr>
 
-                <div>
-                    <span2>- Zoom In</span2>
-                    <span3>Alt + +</span3>
-                    <span3>&#8997; +</span3>
-                </div>
+                        <tr>
+                            <td>- Zoom In</td>
+                            <td>Alt + +</td>
+                            <td>&#8997; +</td>
+                        </tr>
 
-                <div>
-                    <span2>- Zoom Out</span2>
-                    <span3>Alt + -</span3>
-                    <span3>&#8997; -</span3>
-                </div>
-            </div>
-
-            <div>
-                <h1>Contact</h1>
-                <div>tomoya.onuki28[at]gmail.com</div>
+                        <tr>
+                            <td>- Zoom Out</td>
+                            <td>Alt + -</td>
+                            <td>&#8997; -</td>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
 
@@ -437,83 +485,104 @@
 
         <div id="help-modal">
             <div class="close">&times;</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Function</th>
-                        <th>windows</th>
-                        <th>mac</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Open Files</td>
-                        <td>Alt + o</td>
-                        <td>&#8997; o</td>
-                    </tr>
-                    <tr>
-                        <td>Download Image (png)</td>
-                        <td>Alt + Shift + s</td>
-                        <td>&#8997; &#8679; s</td>
-                    </tr>
-                    <tr>
-                        <td>Download JSON</td>
-                        <td>Alt + s</td>
-                        <td>&#8997; s</td>
-                    </tr>
-                    <tr>
-                        <td>Move tabs</td>
-                        <td>Alt + ←, →</td>
-                        <td>&#8997; ←, →</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>Alt + 1 ~ 4</td>
-                        <td>&#8997; 1 ~ 4</td>
-                    </tr>
+            <div class="block">
+                <h1>ShortCut</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function</th>
+                            <th>windows</th>
+                            <th>mac</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Open Files</td>
+                            <td>Alt + o</td>
+                            <td>&#8997; o</td>
+                        </tr>
+                        <tr>
+                            <td>Download Image (png)</td>
+                            <td>Alt + Shift + s</td>
+                            <td>&#8997; &#8679; s</td>
+                        </tr>
+                        <tr>
+                            <td>Download JSON</td>
+                            <td>Alt + s</td>
+                            <td>&#8997; s</td>
+                        </tr>
+                        <tr>
+                            <td>Move tabs</td>
+                            <td>Alt + ←, →</td>
+                            <td>&#8997; ←, →</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>Alt + 1 ~ 4</td>
+                            <td>&#8997; 1 ~ 4</td>
+                        </tr>
 
-                    <tr>
-                        <td>Optimize Chart size</td>
-                        <td>Alt + 0</td>
-                        <td>&#8997; 0</td>
-                    </tr>
-                    <tr>
-                        <td>Zoom In</td>
-                        <td>Alt + +</td>
-                        <td>&#8997; +</td>
-                    </tr>
-                    <tr>
-                        <td>Zoom Out</td>
-                        <td>Alt + -</td>
-                        <td>&#8997; -</td>
-                    </tr>
-                    <tr>
-                        <td>Grid line</td>
-                        <td>Alt + g</td>
-                        <td>&#8997; g</td>
-                    </tr>
-                    <tr>
-                        <td>Max</td>
-                        <td>Alt + m</td>
-                        <td>&#8997; m</td>
-                    </tr>
-                    <tr>
-                        <td>Min</td>
-                        <td>Alt + n</td>
-                        <td>&#8997; n</td>
-                    </tr>
-                    <tr>
-                        <td>Legend</td>
-                        <td>Alt + l</td>
-                        <td>&#8997; l</td>
-                    </tr>
-                    <tr>
-                        <td>Frame</td>
-                        <td>Alt + f</td>
-                        <td>&#8997; f</td>
-                    </tr>
-                </tbody>
-            </table>
+                        <tr>
+                            <td>Optimize Chart size</td>
+                            <td>Alt + 0</td>
+                            <td>&#8997; 0</td>
+                        </tr>
+                        <tr>
+                            <td>Zoom In</td>
+                            <td>Alt + +</td>
+                            <td>&#8997; +</td>
+                        </tr>
+                        <tr>
+                            <td>Zoom Out</td>
+                            <td>Alt + -</td>
+                            <td>&#8997; -</td>
+                        </tr>
+                        <tr>
+                            <td>Grid line</td>
+                            <td>Alt + g</td>
+                            <td>&#8997; g</td>
+                        </tr>
+                        <tr>
+                            <td>Max</td>
+                            <td>Alt + m</td>
+                            <td>&#8997; m</td>
+                        </tr>
+                        <tr>
+                            <td>Min</td>
+                            <td>Alt + n</td>
+                            <td>&#8997; n</td>
+                        </tr>
+                        <tr>
+                            <td>Legend</td>
+                            <td>Alt + l</td>
+                            <td>&#8997; l</td>
+                        </tr>
+                        <tr>
+                            <td>Frame</td>
+                            <td>Alt + f</td>
+                            <td>&#8997; f</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="block">
+                <h1>File Read Option</h1>
+                <ul>
+                    <li>The header specifies the column immediately preceding the number to be read. If the preceding is
+                        a blank line, specify one more column.</li>
+                    <li>For the delimiter, specify the character that separates the columns. Formats other than commas
+                        and tab spaces are not recommended.</li>
+                    <li>Column 1 specifies the meaning of the first numerical value in the first column of numbers to be
+                        read.</li>
+                </ul>
+            </div>
+            <div class="block">
+                <h1>Download</h1>
+                <ul>
+                    <div>The file will be saved to the download destination you specify in your browser.</div>
+                    <div>You can re-edit the chart by loading the json file created by this tool.</div>
+                </ul>
+            </div>
         </div>
 
     </div>
