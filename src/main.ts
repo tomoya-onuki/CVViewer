@@ -81,7 +81,7 @@ export class Main {
                                 $(`#${data.label}`).prop('checked', true)
                             })
                             grouping()
-                            me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
+                            me.changeUiPane($('#file-ui-select'), $('#file-ui'))
                         }
                     })
             });
@@ -133,7 +133,7 @@ export class Main {
                                 $(`#${data.label}`).prop('checked', true)
                             })
                             grouping()
-                            me.changeUiPane($('#vis-ui-select'), $('#vis-ui'))
+                            me.changeUiPane($('#file-ui-select'), $('#file-ui'))
                         }
                     })
             })
@@ -871,6 +871,7 @@ export class Main {
             if (!this.chart.includesData(data.label)) {
 
                 me.chart.entry(data)
+                
                 me.changeUiPane($('#data-ui-select'), $('#data-ui'))
                 this.addDataItems(data)
             }
