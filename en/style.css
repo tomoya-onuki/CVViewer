@@ -10,7 +10,8 @@ body {
 table {
     border-collapse: collapse;
 }
-td,th {
+
+td, th {
     padding: 2px 30px 2px 0px;
 }
 
@@ -365,7 +366,9 @@ input[type='text'] {
 }
 
 #x-sig-dig,
-#y-sig-dig {
+#y-sig-dig,
+#legendx-sig-dig,
+#legendy-sig-dig {
     width: 30px;
 }
 
@@ -707,6 +710,7 @@ span10 {
     display: inline-block;
     width: 10px;
 }
+
 span15 {
     display: inline-block;
     width: 15px;
@@ -732,9 +736,11 @@ span5 {
     border: #eee 1px solid;
     z-index: 5;
 }
+
 #help-modal h1 {
     margin: 0 0 5px 0;
 }
+
 #help-modal .block {
     margin: 5px 0 30px 0;
 }
@@ -747,6 +753,7 @@ span5 {
     border: #bbb 1px solid;
     padding: 2px 5px 2px 10px;
 }
+
 #help-modal ul,
 #help-modal ol {
     margin: 0 0 0 -24px;
@@ -911,6 +918,7 @@ span5 {
     margin: 5px 0px 0px 0px;
     width: 125px;
 }
+
 .header-opt select {
     margin: 5px 0px 0px 0px;
     width: 100px;
@@ -920,11 +928,13 @@ span5 {
     width: 46px;
     padding: 2px;
 }
+
 .header-opt #file-format-separator-text {
     width: 50px;
     display: none;
     font-size: 80%;
 }
+
 #file-format-convert-col {
     height: 18px;
     width: 18px;

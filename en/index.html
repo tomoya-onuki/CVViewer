@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./lib/fontSelector.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-    <script src="main.js"></script>
+    <script src="../main.js"></script>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif
@@ -294,21 +294,6 @@
                         <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="Vertival">
                         <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
                     </div>
-
-                    <div class="block2">
-                        <label for="legend-vis">Legend</label>
-                        <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
-
-                        <span10></span10>
-
-                        <label for="max-vis">Max</label>
-                        <input type="checkbox" id="max-vis" class="toggle-switch">
-
-                        <span10></span10>
-
-                        <label for="min-vis">Min</label>
-                        <input type="checkbox" id="min-vis" class="toggle-switch">
-                    </div>
                 </div>
             </div>
 
@@ -393,6 +378,39 @@
                     </div>
                 </div>
             </div>
+
+            <div class="block">
+                <h2 class="hide-contents" checked="true" for="hide-legend">Legend</h2>
+
+                <div id="hide-legend">
+                    <div class="block2">
+                        <span0>
+                            <label for="legend-vis">Legend</label>
+                            <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
+                        </span0>
+
+                        <span0>
+                            <label for="max-vis">Max</label>
+                            <input type="checkbox" id="max-vis" class="toggle-switch">
+                        </span0>
+
+                        <span0>
+                            <label for="min-vis">Min</label>
+                            <input type="checkbox" id="min-vis" class="toggle-switch">
+                        </span0>
+                    </div>
+
+                    <div class="block2">
+                        <h2>Significant digits</h2>
+                        <span0>Potential</span0>
+                        <input type="number" value="3" id="legendx-sig-dig" min="1">
+                        <span20></span20>
+                        <span0>Current</span0>
+                        <input type="number" value="3" id="legendy-sig-dig" min="1">
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 
@@ -421,7 +439,7 @@
             <div>
                 <block1>
                     <h1>Language</h1>
-                    <span0><a href="../ja/">Japanese</a></span0>
+                    <span0><a href="../">Japanese</a></span0>
                     <span0>/</span0>
                     <span0><a><u>English</u></a></span0>
                 </block1>

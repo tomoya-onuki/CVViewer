@@ -302,23 +302,6 @@
                         <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="縦軸のラベル">
                         <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
                     </div>
-
-                    <div class="block2">
-                        <span0>
-                            <label for="legend-vis">凡例</label>
-                            <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
-                        </span0>
-
-                        <span0>
-                            <label for="max-vis">最大値</label>
-                            <input type="checkbox" id="max-vis" class="toggle-switch">
-                        </span0>
-
-                        <span0>
-                            <label for="min-vis">最小値</label>
-                            <input type="checkbox" id="min-vis" class="toggle-switch">
-                        </span0>
-                    </div>
                 </div>
             </div>
 
@@ -393,6 +376,40 @@
                     </div>
                 </div>
             </div>
+
+            <div class="block">
+                <h2 class="hide-contents" checked="true" for="hide-legend">凡例</h2>
+
+                <div id="hide-legend">
+                    <div class="block2">
+                        <span0>
+                            <label for="legend-vis">凡例</label>
+                            <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
+                        </span0>
+
+                        <span0>
+                            <label for="max-vis">最大値</label>
+                            <input type="checkbox" id="max-vis" class="toggle-switch">
+                        </span0>
+
+                        <span0>
+                            <label for="min-vis">最小値</label>
+                            <input type="checkbox" id="min-vis" class="toggle-switch">
+                        </span0>
+                    </div>
+
+                    <div class="block2">
+                        <!-- <span55>有効数字</span55> -->
+                        <div>有効数字</div>
+                        <span0>Potential</span0>
+                        <input type="number" value="3" id="legendx-sig-dig" min="1">桁
+                        <span20></span20>
+                        <span0>Current</span0>
+                        <input type="number" value="3" id="legendy-sig-dig" min="1">桁
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 
@@ -400,7 +417,7 @@
         <div class="footer">
             <div>
                 <a><u>Ja</u></a> /
-                <a href="../en/">En</a> /
+                <a href="./en/">En</a> /
                 <a id="help-alert">ヘルプ</a> /
                 <a href="https://github.com/tomoya-onuki/CVViewer/wiki" target="_blank">マニュアル</a> /
                 <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
@@ -423,7 +440,7 @@
                     <h1>言語</h1>
                     <span0><a><u>Japanese</u></a></span0>
                     <span0>/</span0>
-                    <span0><a href="../en/">English</a></span0>
+                    <span0><a href="./en/">English</a></span0>
                 </block1>
 
                 <block0>
