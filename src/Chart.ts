@@ -41,11 +41,14 @@ export class Chart {
     private frameVis: boolean = true;
     private maxVis: boolean = false;
     private minVis: boolean = false;
-
+    
     private sigDigX: number = 3;
     private sigDigY: number = 3;
     private expX: number = 0;
     private expY: number = 0;
+
+    private sigDigLegendX: number = 3;
+    private sigDigLegendY: number = 3;
 
     private ticksStepX: number = 0.05
     private ticksX: number[] = []
@@ -440,8 +443,8 @@ export class Chart {
                                     maxPotential = v.potential
                                 }
                             })
-                            let x = this.expFormat(maxPotential.toString(), me.expX, me.sigDigX)
-                            let y = this.expFormat(maxCurrent.toString(), me.expY, me.sigDigY)
+                            let x = this.expFormat(maxPotential.toString(), me.expX, me.sigDigLegendX)
+                            let y = this.expFormat(maxCurrent.toString(), me.expY, me.sigDigLegendY)
                             legend.append('text')
                                 .attr('x', leX + 35)
                                 .attr('y', leY)
@@ -463,8 +466,8 @@ export class Chart {
                                     minPotential = v.potential
                                 }
                             })
-                            let x = this.expFormat(minPotential.toString(), me.expX, me.sigDigX)
-                            let y = this.expFormat(minCurrent.toString(), me.expY, me.sigDigY)
+                            let x = this.expFormat(minPotential.toString(), me.expX, me.sigDigLegendX)
+                            let y = this.expFormat(minCurrent.toString(), me.expY, me.sigDigLegendY)
                             legend.append('text')
                                 .attr('x', leX + 35)
                                 .attr('y', leY)
@@ -1008,11 +1011,16 @@ export class Chart {
     }
     public changeExponentX(val: number) {
         this.expX = val
-
     }
     public changeExponentY(val: number) {
         this.expY = val
+    }
 
+    public changeSigDigLegendX(val: number) {
+        if (val > 0) this.sigDigLegendX = val
+    }
+    public changeSigDigLegendY(val: number) {
+        if (val > 0) this.sigDigLegendY = val
     }
 
     public changeTicksStepX(val: number) {
@@ -1415,6 +1423,8 @@ export class Chart {
                 "vis": this.legendVis,
                 "max": this.maxVis,
                 "min": this.minVis,
+                "sigDigLegendX": this.sigDigLegendX,
+                "sigDigLegendY": this.sigDigLegendY,
                 "pos": this.labelStyle.legend.posRatio,
                 "offset": this.labelStyle.legend.offset,
                 "fontSize": this.labelStyle.legend.size,
@@ -1499,6 +1509,8 @@ export class Chart {
         this.legendVis = json.legend.vis
         this.maxVis = json.legend.max
         this.minVis = json.legend.min
+        this.sigDigLegendX = json.legend.sigDigLegendX
+        this.sigDigLegendY = json.legend.sigDigLegendY
         this.labelStyle.legend.posRatio = json.legend.pos
         this.labelStyle.legend.size = json.legend.fontSize
         this.labelStyle.legend.font = json.legend.font

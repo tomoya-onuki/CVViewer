@@ -365,7 +365,9 @@ input[type='text'] {
 }
 
 #x-sig-dig,
-#y-sig-dig {
+#y-sig-dig,
+#legendx-sig-dig,
+#legendy-sig-dig {
     width: 30px;
 }
 

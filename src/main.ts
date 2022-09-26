@@ -353,6 +353,16 @@ export class Main {
             me.chart.changeMinVis(flag)
             me.chart.draw()
         })
+        $('#legendx-sig-dig').on('input', function () {
+            let val: number = Number($(this).val())
+            me.chart.changeSigDigLegendX(val)
+            me.chart.draw()
+        })
+        $('#legendy-sig-dig').on('input', function () {
+            let val: number = Number($(this).val())
+            me.chart.changeSigDigLegendY(val)
+            me.chart.draw()
+        })
 
         // 軸の範囲のセット
         $('#x-axis-min').on('input', function () {
@@ -871,7 +881,7 @@ export class Main {
             if (!this.chart.includesData(data.label)) {
 
                 me.chart.entry(data)
-                
+
                 me.changeUiPane($('#data-ui-select'), $('#data-ui'))
                 this.addDataItems(data)
             }
