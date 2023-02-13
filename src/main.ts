@@ -58,7 +58,7 @@ export class Main {
                             })
                     }
                 }
-                
+
                 const header: string = String($('#file-format-header').val())
                 let separator: string = String($('#file-format-separator-selctor > option:selected').val())
                 if (separator === 'other') {
@@ -66,7 +66,7 @@ export class Main {
                 }
                 const pCol: number = Number($('#file-format-first-col > option:selected').val())
                 const match = String($('#file-format-header-match > option:selected').val())
-                if(match === 'exact') separator = '^' + separator + '$'
+                if (match === 'exact') separator = '^' + separator + '$'
 
                 fReader.readTXT(files, header, separator, pCol)
                     .then((dataList: Data[]) => {
@@ -228,7 +228,7 @@ export class Main {
                 const isDash: boolean = $('#dash-line-mode').prop('checked')
                 me.chart.changeLineColorScheme(type)
                 me.chart.changeLineDashed(isDash)
-                
+
                 $('#cover').hide()
                 me.addGroupItems(groupKey)
 
@@ -702,8 +702,13 @@ export class Main {
             })
 
 
-        let uiKey: string[] = ['file', 'data', 'vis', 'edit']
-        let uiKeyCount: number = 0
+        let uiKey: string[] = ['file', 'data', 'vis', 'edit'];
+        let uiKeyCount: number = 0;
+        window.addEventListener('beforeunload', (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+        });
+
         $(window)
             .resize(function () {
                 let w = Number($('#right-box').width())
