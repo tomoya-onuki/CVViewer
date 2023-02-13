@@ -722,6 +722,10 @@ export class Main {
 
         let uiKey: string[] = ['file', 'data', 'vis', 'edit']
         let uiKeyCount: number = 0
+        window.addEventListener('beforeunload', (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+        });
         $(window)
             .resize(function () {
                 let w = Number($('#right-box').width())
