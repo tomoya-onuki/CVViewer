@@ -21,406 +21,420 @@
 
 <body>
     <div id="left-box">
-        <div class="title">
-            <div class="text0">CVViewer</div>
-            <div class="text1">Cyclic Voltammogram Viewer</div>
-        </div>
-        <div class="info">
-            <div class="highlight">Caution : Closing tab or Reload are lost edit.</div>
-            <div>Supported : GoogleChrome, FireFox, Safari</div>
+
+        <div class="header">
+            <div class="title">
+                <div class="text0">CVViewer</div>
+                <div class="text1">Cyclic Voltammogram Viewer</div>
+            </div>
+            <div class="info">
+                <div class="highlight">Caution : Closing tab or Reload are lost edit.</div>
+                <div>Supported : GoogleChrome, FireFox, Safari</div>
+            </div>
+
+            <div id="selectors">
+                <div id="file-ui-select" class="view-selector">File</div>
+                <div id="data-ui-select" class="view-selector">Data</div>
+                <div id="vis-ui-select" class="view-selector">Display</div>
+                <div id="edit-ui-select" class="view-selector">Edit</div>
+            </div>
         </div>
 
-        <div id="selectors">
-            <div id="file-ui-select" class="view-selector">File</div>
-            <div id="data-ui-select" class="view-selector">Data</div>
-            <div id="vis-ui-select" class="view-selector">Display</div>
-            <div id="edit-ui-select" class="view-selector">Edit</div>
-        </div>
+        <div class="tab-items">
+            <div id="file-ui" class="ui-parts">
+                <div class="block">
+                    <input id="file-input" type="file" value="" multiple />
+                    <label id="file-drop" for="file-input">
+                        <div class="bold">Drop files or</div>
+                        <div class="bold">Click to select from a folder</div>
+                        <div class="info">
+                            <ul>
+                                <li>Supported files are TXT, CSV, TSV, and JSON.</li>
+                                <li>You can re-edit the chart by loading the json file created by this tool.</li>
+                                <li>Multiple files can be loaded at once.</li>
+                                <li>Files are NOT uploaded to a server.</li>
+                                <li>Files with the same name cannot be read.</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
 
-        <div id="file-ui" class="ui-parts">
-            <div class="block">
-                <input id="file-input" type="file" value="" multiple />
-                <label id="file-drop" for="file-input">
-                    <div class="bold">Drop files or</div>
-                    <div class="bold">Click to select from a folder</div>
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="load-opt">Read File Option</h2>
+                    <div id="load-opt">
+                        <div class="block2">
+                            <label for="ave-batch">Averaging on batch</label>
+                            <input type="checkbox" id="ave-batch" class="toggle-switch">
+                        </div>
+                        <div class="header-opt">
+                            <h2>File Format</h2>
+
+                            <div>
+                                <span60>Header</span60>
+                                <input type="text" id="file-format-header" value="Potential/V, Current/A">
+                            </div>
+                            <div>
+                                <span60></span60>
+                                <select id="file-format-header-match">
+                                    <option value="exact">Exact match</option>
+                                    <option value="partial">Partial match</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <span60>Separator</span60>
+                                <select id="file-format-separator-selctor">
+                                    <option value=",">Comma (csv)</option>
+                                    <option value="\s+">Tab (tsv)</option>
+                                    <option value="other">Other (deprecated)</option>
+                                </select>
+                                <input type="text" id="file-format-separator-text" placeholder="その他">
+                            </div>
+
+                            <div>
+                                <span60>1st Col</span60>
+                                <select id="file-format-first-col">
+                                    <option value="0">Potential</option>
+                                    <option value="1">Current</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="dl-graph">Download</h2>
+                    <div id="dl-graph">
+                        <div>
+                            <span60>Name</span60>
+                            <input type="text" value="figure" id="save-fig-name">
+                        </div>
+
+                        <div style="margin-bottom: 5px;">
+                            <span60>Format</span60>
+                            <select id="fig-type">
+                                <option value="png">png</option>
+                                <option value="json">json</option>
+                                <option value="csv">csv</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <span60>Resolution</span60>
+                            <select id="fig-resolution">
+                                <option value="1">low</option>
+                                <option value="2" selected>mid</option>
+                                <option value="5">high</option>
+                                <option value="10">highest</option>
+                            </select>
+                        </div>
+
+
+                        <button id="save-fig-btn">Download</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="data-ui" class="ui-parts">
+                <div class="block">
+                    <h2>Data Selection and Averaging</h2>
+                    Search
+                    <input type="text" id="data-search" placeholder="Search">
+
+                    <input id="data-group-label" type="text" value="" placeholder="Group Label">
+                    <button id="data-grouping-btn">Averaging</button>
+
+                    <button id="file-all-select">All select</button>
+                    <button id="file-all-clear">Clear</button>
+
                     <div class="info">
-                        <ul>
-                            <li>Supported files are TXT, CSV, TSV, and JSON.</li>
-                            <li>You can re-edit the chart by loading the json file created by this tool.</li>
-                            <li>Multiple files can be loaded at once.</li>
-                            <li>Files are NOT uploaded to a server.</li>
-                            <li>Files with the same name cannot be read.</li>
-                        </ul>
+                        A list of averaged data sets can be found on the Edit tab.
                     </div>
-                </label>
+
+                    <div id="data-list"></div>
+
+                </div>
             </div>
 
-            <div class="block">
-                <h2 class="hide-contents" checked="true" for="load-opt">Read File Option</h2>
-                <div id="load-opt">
-                    <div class="block2">
-                        <label for="ave-batch">Averaging on batch</label>
-                        <input type="checkbox" id="ave-batch" class="toggle-switch">
+
+
+            <div id="vis-ui" class="ui-parts">
+
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="meandata-list">Averaging Dataset</h2>
+
+                    <div id="meandata-list">
+                        <div id="dataset-list"></div>
+                        <button id="group-all-show">All Show</button>
+                        <button id="group-all-hide">All Hide</button>
+                        <button id="group-reverse">&#8645;</button>
                     </div>
-                    <div class="header-opt">
-                        <h2>File Format</h2>
+                </div>
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="line-style">Line</h2>
+
+                    <div id="line-style">
+                        <div>
+                            <span40>Weight</span40>
+                            <input type="number" id="line-weight" value="1.5" min="0.5" max="3.0" step="0.5">pt
+                            <span10></span10>
+                            <label for="dash-line-mode">Dashed</label>
+                            <input type="checkbox" id="dash-line-mode" class="toggle-switch">
+                        </div>
 
                         <div>
-                            <span60>Header</span60>
-                            <input type="text" id="file-format-header" value="Potential/V, Current/A">
-                            <select id="file-format-header-match">
-                                <option value="exact">Exact match</option>
-                                <option value="partial">Partial match</option>
+                            <span40>Color</span40>
+                            <select name="line-type" id="line-type-selector">
+                                <option value="mono">Monochrome</option>
+                                <option value="hue">Hue</option>
+                                <option value="bri">Brightness</option>
+                                <option value="sat_blue">Saturation(Blue)</option>
+                                <option value="sat_orange">Saturation(Orange)</option>
+                            </select>
+
+                            <button id="line-type-reverse">&#8645;</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="frame-style">Frame</h2>
+                    <div id="frame-style">
+                        <div class="block2">
+                            <label for="frame-id">Border</label>
+                            <input type="checkbox" id="frame-vis" class="toggle-switch" checked>
+                            <span10></span10>
+                            <label for="grid-vis">Grid line</label>
+                            <input type="checkbox" id="grid-vis" class="toggle-switch">
+                        </div>
+
+                        <div class="block2">
+                            <span30>Size</span30>
+                            <input type="number" value="600" id="svg-width">px
+                            <span>&times;</span>
+                            <input type="number" value="450" id="svg-height">px
+
+                            <button id="svg-size-optimize-btn">Optimize</button>
+                        </div>
+
+                        <div class="block2">
+                            <div>
+                                <div>Margin</div>
+                                <span30>Top</span30>
+                                <input id="margin-top" type="number" value="50" step="5" min="0">
+                                <span>px</span>
+
+                                <span10></span10>
+
+                                <span30>Bottom</span30>
+                                <input id="margin-bottom" type="number" value="50" step="5" min="0">
+                                <span>px</span>
+                            </div>
+                            <div>
+                                <span30>Left</span30>
+                                <input id="margin-left" type="number" value="50" step="5" min="0">
+                                <span>px</span>
+                                <span10></span10>
+                                <span30>Right</span30>
+                                <input id="margin-right" type="number" value="50" step="5" min="0">
+                                <span>px</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="edit-ui" class="ui-parts">
+
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="hide-text">Text</h2>
+
+                    <div id="hide-text">
+                        <div class="block2">
+                            <div id="font-selector" class="font-selector">
+                                <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
+                                <input type="radio" name="font" value="serif" text="Serif">
+                                <input type="radio" name="font" value='"Arial"' text="Arial">
+                                <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
+                                <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
+                                <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
+                                <input type="radio" name="font" value='"Georgia"' text="Georgia">
+                                <input type="radio" name="font" value='"Meiryo"' text="Meiryo">
+                            </div>
+
+                            <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
+
+                            <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
+                            <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+
+                            <div>
+                                <span50>Layout</span50>
+                                <button id="align-top-btn" class="label-alignment-btn">
+                                    <span class="material-icons">&#xe25a;</span>
+                                </button>
+                                <button id="align-vertival-center-btn" class="label-alignment-btn">
+                                    <span class="material-icons">&#xe259;</span>
+                                </button>
+                                <button id="align-bottom-btn" class="label-alignment-btn">
+                                    <span class="material-icons">&#xe258;</span>
+                                </button>
+                                <button id="align-left-btn" class="label-alignment-btn horizontal">
+                                    <span class="material-icons">&#xe258;</span>
+                                </button>
+                                <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
+                                    <span class="material-icons">&#xe259;</span>
+                                </button>
+                                <button id="align-right-btn" class="label-alignment-btn horizontal">
+                                    <span class="material-icons">&#xe25a;</span>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="block2">
+                            <span55>Title</span55>
+                            <input id="set-graph-title" type="text" value="" placeholder="Title Label">
+                            <input type="checkbox" id="title-vis" class="toggle-switch" checked>
+
+                            <span55>Horizontal</span55>
+                            <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="Horizontal">
+                            <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
+
+                            <span55>Vertival</span55>
+                            <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="Vertival">
+                            <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="hide-xaxis">Horizontal Axis</h2>
+
+                    <div id="hide-xaxis">
+                        <div class="set-axis-seg">
+                            <span40>Range</span40>
+                            <input type="text" name="" id="x-axis-min" step="0.1">
+                            <span>~</span>
+                            <input type="text" name="" id="x-axis-max" step="0.1">
+                            <select id="x-axis-range-unit">
+                                <option value="num">V</option>
+                                <option value="ratio">%</option>
                             </select>
                         </div>
 
                         <div>
-                            <span60>Separator</span60>
-                            <select id="file-format-separator-selctor">
-                                <option value=",">Comma (csv)</option>
-                                <option value="\s+">Tab (tsv)</option>
-                                <option value="other">Other (deprecated)</option>
-                            </select>
-                            <input type="text" id="file-format-separator-text" placeholder="その他">
+                            <span0>Exponential notation</span0><input type="text" value="e+0" id="x-axis-unit"
+                                placeholder="e+0">
+                        </div>
+                        <div>
+                            <span0>Significant digits</span0><input type="number" value="3" id="x-sig-dig" min="1">
                         </div>
 
                         <div>
-                            <span60>1st Col</span60>
-                            <select id="file-format-first-col">
-                                <option value="0">Potential</option>
-                                <option value="1">Current</option>
+                            <span80 class="bold">Tick marks</span80>
+                            <span50>Interval</span50>
+                            <input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
+                                id="x-ticks-unit">e+0</span>
+
+                            <span80></span80>
+                            <span50>Direction</span50>
+                            <select id="x-axis-direction">
+                                <option value="out">Outside</option>
+                                <option value="in">Inside</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="hide-yaxis">Vertical Axis</h2>
+
+                    <div id="hide-yaxis">
+                        <div class="set-axis-seg">
+                            <span40>Range</span40>
+                            <input type="text" name="" id="y-axis-min">
+                            <span>~</span>
+                            <input type="text" name="" id="y-axis-max">
+
+                            <select id="y-axis-range-unit">
+                                <option value="num">A</option>
+                                <option value="ratio">%</option>
                             </select>
                         </div>
 
-                    </div>
-                </div>
-            </div>
-
-            <div class="block">
-                <h2 class="hide-contents" checked="true" for="dl-graph">Download</h2>
-                <div id="dl-graph">
-                    <div>
-                        <span60>Name</span60>
-                        <input type="text" value="figure" id="save-fig-name">
-                    </div>
-
-                    <div style="margin-bottom: 5px;">
-                        <span60>Format</span60>
-                        <select id="fig-type">
-                            <option value="png">png</option>
-                            <option value="json">json</option>
-                            <option value="csv">csv</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <span60>Resolution</span60>
-                        <select id="fig-resolution">
-                            <option value="1">low</option>
-                            <option value="2" selected>mid</option>
-                            <option value="5">high</option>
-                            <option value="10">highest</option>
-                        </select>
-                    </div>
-
-
-                    <button id="save-fig-btn">Download</button>
-
-                </div>
-            </div>
-        </div>
-
-        <div id="data-ui" class="ui-parts">
-            <div class="block">
-                <h2>Data Selection and Averaging</h2>
-                Search
-                <input type="text" id="data-search" placeholder="Search">
-
-                <input id="data-group-label" type="text" value="" placeholder="Group Label">
-                <button id="data-grouping-btn">Averaging</button>
-
-                <div class="info">
-                    A list of averaged data sets can be found on the Edit tab.
-                </div>
-
-                <div id="data-list"></div>
-
-                <button id="file-all-select">All select</button>
-                <button id="file-all-clear">Clear</button>
-            </div>
-        </div>
-
-
-
-        <div id="vis-ui" class="ui-parts">
-
-            <div class="block">
-                <h2>Averaging Dataset</h2>
-                <div id="dataset-list"></div>
-                <button id="group-all-show">All Show</button>
-                <button id="group-all-hide">All Hide</button>
-                <button id="group-reverse">&#8645;</button>
-            </div>
-
-            <div class="block">
-                <h2>Line</h2>
-
-                <div>
-                    <span40>Weight</span40>
-                    <input type="number" id="line-weight" value="1.5" min="0.5" max="3.0" step="0.5">pt
-                    <span10></span10>
-                    <label for="dash-line-mode">Dashed</label>
-                    <input type="checkbox" id="dash-line-mode" class="toggle-switch">
-                </div>
-
-                <div>
-                    <span40>Color</span40>
-                    <select name="line-type" id="line-type-selector">
-                        <option value="mono">Monochrome</option>
-                        <option value="hue">Hue</option>
-                        <option value="bri">Brightness</option>
-                        <option value="sat_blue">Saturation(Blue)</option>
-                        <option value="sat_orange">Saturation(Orange)</option>
-                    </select>
-
-                    <button id="line-type-reverse">&#8645;</button>
-                </div>
-            </div>
-
-
-            <div class="block">
-                <h2>Frame</h2>
-                <div class="block2">
-                    <label for="frame-id">Border</label>
-                    <input type="checkbox" id="frame-vis" class="toggle-switch" checked>
-                    <span10></span10>
-                    <label for="grid-vis">Grid line</label>
-                    <input type="checkbox" id="grid-vis" class="toggle-switch">
-                </div>
-
-                <div class="block2">
-                    <span30>Size</span30>
-                    <input type="number" value="600" id="svg-width">px
-                    <span>&times;</span>
-                    <input type="number" value="450" id="svg-height">px
-
-                    <button id="svg-size-optimize-btn">Optimize</button>
-                </div>
-
-                <div class="block2">
-                    <div>
-                        <div>Margin</div>
-                        <span30>Top</span30>
-                        <input id="margin-top" type="number" value="50" step="5" min="0">
-                        <span>px</span>
-
-                        <span10></span10>
-
-                        <span30>Bottom</span30>
-                        <input id="margin-bottom" type="number" value="50" step="5" min="0">
-                        <span>px</span>
-                    </div>
-                    <div>
-                        <span30>Left</span30>
-                        <input id="margin-left" type="number" value="50" step="5" min="0">
-                        <span>px</span>
-                        <span10></span10>
-                        <span30>Right</span30>
-                        <input id="margin-right" type="number" value="50" step="5" min="0">
-                        <span>px</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div id="edit-ui" class="ui-parts">
-
-            <div class="block">
-                <h2 class="hide-contents" checked="true" for="hide-text">Text</h2>
-
-                <div id="hide-text">
-                    <div class="block2">
-                        <div id="font-selector" class="font-selector">
-                            <input type="radio" name="font" value="sans-serif" text="Sans Serif" checked>
-                            <input type="radio" name="font" value="serif" text="Serif">
-                            <input type="radio" name="font" value='"Arial"' text="Arial">
-                            <input type="radio" name="font" value='"Times New Roman"' text="Times New Roman">
-                            <input type="radio" name="font" value='"Helvetica"' text="Helvetica">
-                            <input type="radio" name="font" value='"Helvetica Neue"' text="Helvetica Neue">
-                            <input type="radio" name="font" value='"Georgia"' text="Georgia">
-                            <input type="radio" name="font" value='"Meiryo"' text="Meiryo">
+                        <div>
+                            <span0>Exponential notation</span0><input type="text" value="e-6" id="y-axis-unit"
+                                placeholder="e+0">
                         </div>
-
-                        <input type="number" id="fontsize" value="10" min="5" max="120" step="1">
-
-                        <input type="checkbox" id="font-style-bold-btn" class="switch-btn bold" text="B">
-                        <input type="checkbox" id="font-style-italic-btn" class="switch-btn italic" text="I">
+                        <div>
+                            <span0>Significant digits</span0><input type="number" value="3" id="y-sig-dig" min="1">
+                        </div>
 
                         <div>
-                            <span50>Layout</span50>
-                            <button id="align-top-btn" class="label-alignment-btn">
-                                <span class="material-icons">&#xe25a;</span>
-                            </button>
-                            <button id="align-vertival-center-btn" class="label-alignment-btn">
-                                <span class="material-icons">&#xe259;</span>
-                            </button>
-                            <button id="align-bottom-btn" class="label-alignment-btn">
-                                <span class="material-icons">&#xe258;</span>
-                            </button>
-                            <button id="align-left-btn" class="label-alignment-btn horizontal">
-                                <span class="material-icons">&#xe258;</span>
-                            </button>
-                            <button id="align-horizon-center-btn" class="label-alignment-btn horizontal">
-                                <span class="material-icons">&#xe259;</span>
-                            </button>
-                            <button id="align-right-btn" class="label-alignment-btn horizontal">
-                                <span class="material-icons">&#xe25a;</span>
-                            </button>
+                            <span80 class="bold">Tick marks</span80>
+                            <span50>Interval</span50>
+                            <input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
+                                id="y-ticks-unit">e-6</span>
+
+                            <span80></span80>
+                            <span50>Direction</span50>
+                            <select id="y-axis-direction">
+                                <option value="out">Outside</option>
+                                <option value="in">Inside</option>
+                                <option value="none">None</option>
+                            </select>
                         </div>
                     </div>
+                </div>
 
+                <div class="block">
+                    <h2 class="hide-contents" checked="true" for="hide-legend">Legend</h2>
 
-                    <div class="block2">
-                        <span55>Title</span55>
-                        <input id="set-graph-title" type="text" value="" placeholder="Title Label">
-                        <input type="checkbox" id="title-vis" class="toggle-switch" checked>
+                    <div id="hide-legend">
+                        <div class="block2">
+                            <span0>
+                                <label for="legend-vis">Legend</label>
+                                <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
+                            </span0>
 
-                        <span55>Horizontal</span55>
-                        <input id="set-graph-label-x" type="text" value="Potential / V" placeholder="Horizontal">
-                        <input type="checkbox" id="labelx-vis" class="toggle-switch" checked>
+                            <span0>
+                                <label for="max-vis">Max</label>
+                                <input type="checkbox" id="max-vis" class="toggle-switch">
+                            </span0>
 
-                        <span55>Vertival</span55>
-                        <input id="set-graph-label-y" type="text" value="Current / μA" placeholder="Vertival">
-                        <input type="checkbox" id="labely-vis" class="toggle-switch" checked>
+                            <span0>
+                                <label for="min-vis">Min</label>
+                                <input type="checkbox" id="min-vis" class="toggle-switch">
+                            </span0>
+                        </div>
+
+                        <div class="block2">
+                            <h2>Significant digits</h2>
+                            <span0>Potential</span0>
+                            <input type="number" value="3" id="legendx-sig-dig" min="1">
+                            <span20></span20>
+                            <span0>Current</span0>
+                            <input type="number" value="3" id="legendy-sig-dig" min="1">
+                        </div>
                     </div>
                 </div>
             </div>
-
-
-            <div class="block">
-                <h2 class="hide-contents" checked="true" for="hide-xaxis">Horizontal Axis</h2>
-
-                <div id="hide-xaxis">
-                    <div class="set-axis-seg">
-                        <span40>Range</span40>
-                        <input type="text" name="" id="x-axis-min" step="0.1">
-                        <span>~</span>
-                        <input type="text" name="" id="x-axis-max" step="0.1">
-                        <select id="x-axis-range-unit">
-                            <option value="num">V</option>
-                            <option value="ratio">%</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <span0>Exponential notation</span0><input type="text" value="e+0" id="x-axis-unit"
-                            placeholder="e+0">
-                    </div>
-                    <div>
-                        <span0>Significant digits</span0><input type="number" value="3" id="x-sig-dig" min="1">
-                    </div>
-
-                    <div>
-                        <span80 class="bold">Tick marks</span80>
-                        <span50>Interval</span50>
-                        <input type="number" value="0.05" step="0.05" min="0" id="x-ticks"><span
-                            id="x-ticks-unit">e+0</span>
-
-                        <span80></span80>
-                        <span50>Direction</span50>
-                        <select id="x-axis-direction">
-                            <option value="out">Outside</option>
-                            <option value="in">Inside</option>
-                            <option value="none">None</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="block">
-                <h2 class="hide-contents" checked="true" for="hide-yaxis">Vertical Axis</h2>
-
-                <div id="hide-yaxis">
-                    <div class="set-axis-seg">
-                        <span40>Range</span40>
-                        <input type="text" name="" id="y-axis-min">
-                        <span>~</span>
-                        <input type="text" name="" id="y-axis-max">
-
-                        <select id="y-axis-range-unit">
-                            <option value="num">A</option>
-                            <option value="ratio">%</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <span0>Exponential notation</span0><input type="text" value="e-6" id="y-axis-unit"
-                            placeholder="e+0">
-                    </div>
-                    <div>
-                        <span0>Significant digits</span0><input type="number" value="3" id="y-sig-dig" min="1">
-                    </div>
-
-                    <div>
-                        <span80 class="bold">Tick marks</span80>
-                        <span50>Interval</span50>
-                        <input type="number" value="0.5" step="0.5" min="0" id="y-ticks"><span
-                            id="y-ticks-unit">e-6</span>
-
-                        <span80></span80>
-                        <span50>Direction</span50>
-                        <select id="y-axis-direction">
-                            <option value="out">Outside</option>
-                            <option value="in">Inside</option>
-                            <option value="none">None</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="block">
-                <h2 class="hide-contents" checked="true" for="hide-legend">Legend</h2>
-
-                <div id="hide-legend">
-                    <div class="block2">
-                        <span0>
-                            <label for="legend-vis">Legend</label>
-                            <input type="checkbox" id="legend-vis" class="toggle-switch" checked>
-                        </span0>
-
-                        <span0>
-                            <label for="max-vis">Max</label>
-                            <input type="checkbox" id="max-vis" class="toggle-switch">
-                        </span0>
-
-                        <span0>
-                            <label for="min-vis">Min</label>
-                            <input type="checkbox" id="min-vis" class="toggle-switch">
-                        </span0>
-                    </div>
-
-                    <div class="block2">
-                        <h2>Significant digits</h2>
-                        <span0>Potential</span0>
-                        <input type="number" value="3" id="legendx-sig-dig" min="1">
-                        <span20></span20>
-                        <span0>Current</span0>
-                        <input type="number" value="3" id="legendy-sig-dig" min="1">
-                    </div>
-                </div>
-            </div>
-
         </div>
 
 
 
         <div class="footer">
             <div>
-                <a href="../">Ja</a> /
-                <a><u>En</u></a> /
-                <a id="help-alert">Help</a> /
-                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/readme_en.md" target="_blank">Manual</a> /
+                <a href="../">Ja</a> |
+                <a><u>En</u></a> |
+                <a id="help-alert">Help</a> |
+                <a href="https://github.com/tomoya-onuki/CVViewer/blob/master/readme_en.md" target="_blank">Manual</a> |
                 <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>
             </div>
             <div class="info">&copy; 2022, Onuki Tomoya.</div>
@@ -447,8 +461,7 @@
                 <block0>
                     <h1>Links</h1>
                     <span0>
-                        <a href="https://github.com/tomoya-onuki/CVViewer/wiki"
-                            target="_blank">Manual</a>,
+                        <a href="https://github.com/tomoya-onuki/CVViewer/wiki" target="_blank">Manual</a>,
                     </span0>
                     <span0>
                         <a href="https://github.com/tomoya-onuki/CVViewer" target="_blank">GitHub</a>

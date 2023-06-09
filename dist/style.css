@@ -1,6 +1,5 @@
 body {
     font-size: 80%;
-    /* overflow: hidden; */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -71,16 +70,13 @@ td,th {
 }
 
 #left-box {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 250px;
-    height: calc(100vh - 40px);
-    margin: 20px 0px 20px 40px;
-    padding: 0 20px 0 0;
+    margin: 0px 0px 20px 40px;
     color: #222;
     z-index: 2;
-    /* border-right: #aaa solid 1px; */
 
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -99,6 +95,21 @@ td,th {
     margin: 0px 0px 0px 0px;
 }
 
+#left-box .header {
+    position: fixed;
+    width: 250px;
+    background-color: #fff;
+    height: 140px;
+    z-index: 10;
+    padding: 20px 0 0 0;
+}
+#left-box .tab-items {
+    margin-top: 170px;
+    margin-bottom: 80px;
+    background: #fff;
+    /* overflow-y: scroll; */
+    overflow-x: hidden;
+}
 #left-box .footer {
     position: fixed;
     bottom: 0;
@@ -404,9 +415,10 @@ input[type='text'] {
     border: #666 solid 1px;
     color: #222;
     border-radius: 5px;
-    width: 60px;
+    width: 50px;
     height: 20px;
     padding: 0 0 0 5px;
+    margin: 3px 0px;
     font-size: 90%;
 }
 
@@ -893,7 +905,7 @@ span5 {
 
 .hide-btn {
     cursor: pointer;
-    margin: 0 0 0 6px;
+    margin: 0 0 0 0px;
 }
 
 .hide-btn:hover {

@@ -127,9 +127,11 @@ export class myUI {
     public hideBtn() {
         $('.hide-contents').each(function (idx) {
             const isCheck = $(this).attr('checked')
+            const label = $(this).text() + " "
+            $(this).text("")
 
             const $label = $('<label></label>')
-                .text(parseHTMLcode('&#9650;'))
+                .text(label + parseHTMLcode('&#9650;'))
                 .attr('for', `hide-btn${idx}`)
                 .addClass('hide-btn')
 
@@ -145,17 +147,17 @@ export class myUI {
             let $target = $(`#${id}`)
 
             if (!isCheck) {
-                $label.text(parseHTMLcode('&#9660;'))
+                $label.text(label + parseHTMLcode('&#9660;'))
                 $target.hide()
             }
 
             $chbox.on('input', function () {
                 const isShow: boolean = $(this).prop('checked')
                 if (isShow) {
-                    $label.text(parseHTMLcode('&#9650;'))
+                    $label.text(label + parseHTMLcode('&#9650;'))
                     $target.show()
                 } else {
-                    $label.text(parseHTMLcode('&#9660;'))
+                    $label.text(label + parseHTMLcode('&#9660;'))
                     $target.hide()
                 }
             })

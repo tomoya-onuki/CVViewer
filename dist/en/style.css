@@ -1,6 +1,5 @@
 body {
     font-size: 80%;
-    /* overflow: hidden; */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -10,8 +9,7 @@ body {
 table {
     border-collapse: collapse;
 }
-
-td, th {
+td,th {
     padding: 2px 30px 2px 0px;
 }
 
@@ -72,16 +70,13 @@ td, th {
 }
 
 #left-box {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 250px;
-    height: calc(100vh - 40px);
-    margin: 20px 0px 20px 40px;
-    padding: 0 20px 0 0;
+    margin: 0px 0px 20px 40px;
     color: #222;
     z-index: 2;
-    /* border-right: #aaa solid 1px; */
 
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -100,6 +95,21 @@ td, th {
     margin: 0px 0px 0px 0px;
 }
 
+#left-box .header {
+    position: fixed;
+    width: 250px;
+    background-color: #fff;
+    height: 120px;
+    z-index: 10;
+    padding: 20px 0 0 0;
+}
+#left-box .tab-items {
+    margin-top: 120px;
+    margin-bottom: 80px;
+    background: #fff;
+    /* overflow-y: scroll; */
+    overflow-x: hidden;
+}
 #left-box .footer {
     position: fixed;
     bottom: 0;
@@ -351,7 +361,7 @@ input[type='text'] {
 #set-graph-title,
 #set-graph-label-x,
 #set-graph-label-y {
-    width: 130px;
+    width: 120px;
 }
 
 
@@ -405,9 +415,10 @@ input[type='text'] {
     border: #666 solid 1px;
     color: #222;
     border-radius: 5px;
-    width: 60px;
+    width: 50px;
     height: 20px;
     padding: 0 0 0 5px;
+    margin: 3px 0px;
     font-size: 90%;
 }
 
@@ -666,11 +677,6 @@ span0 {
     display: inline-block;
 }
 
-span80 {
-    display: inline-block;
-    width: 80px;
-}
-
 span70 {
     display: inline-block;
     width: 70px;
@@ -710,7 +716,6 @@ span10 {
     display: inline-block;
     width: 10px;
 }
-
 span15 {
     display: inline-block;
     width: 15px;
@@ -736,24 +741,21 @@ span5 {
     border: #eee 1px solid;
     z-index: 5;
 }
-
 #help-modal h1 {
     margin: 0 0 5px 0;
 }
-
 #help-modal .block {
     margin: 5px 0 30px 0;
 }
 
-#help-modal td,
-#help-modal th {
+#help- td,
+#help- th {
     width: 120px;
     text-align: left;
     height: 30px;
     border: #bbb 1px solid;
     padding: 2px 5px 2px 10px;
 }
-
 #help-modal ul,
 #help-modal ol {
     margin: 0 0 0 -24px;
@@ -903,7 +905,7 @@ span5 {
 
 .hide-btn {
     cursor: pointer;
-    margin: 0 0 0 6px;
+    margin: 0 0 0 0px;
 }
 
 .hide-btn:hover {
@@ -916,25 +918,22 @@ span5 {
 
 .header-opt input[type='text'] {
     margin: 5px 0px 0px 0px;
-    width: 125px;
+    width: 148px;
 }
-
 .header-opt select {
     margin: 5px 0px 0px 0px;
     width: 100px;
 }
 
 .header-opt #file-format-header-match {
-    width: 46px;
+    width: 100px;
     padding: 2px;
 }
-
 .header-opt #file-format-separator-text {
     width: 50px;
     display: none;
     font-size: 80%;
 }
-
 #file-format-convert-col {
     height: 18px;
     width: 18px;
