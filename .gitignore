@@ -4,3 +4,4 @@ node_modules
 data
 .txt
 archive
+*.key
